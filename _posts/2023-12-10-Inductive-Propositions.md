@@ -294,7 +294,7 @@ As a first example, these lemmas examines the definitions of regular expressions
 - If at lease one of expressions `re1` and `re2` matches string `s`, then `Union re1 re2` matches `s`.
 - If there is a list `l` of strings, in which `re` matches every string in `l` , then `Star re` matches the concatenation of `l`. 
 
-```
+```coq
 (* Exercise: 3 stars, standard (exp_match_ex1) *)
 Lemma empty_is_empty : forall T (s : list T),
   ~ (s =~ EmptySet).
