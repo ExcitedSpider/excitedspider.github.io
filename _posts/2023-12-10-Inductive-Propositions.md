@@ -293,6 +293,7 @@ As a first example, these lemmas examines the definitions of regular expressions
 - The expression `EmptySet` does not match any string.
 - If at lease one of expressions `re1` and `re2` matches string `s`, then `Union re1 re2` matches `s`.
 - If there is a list `l` of strings, in which `re` matches every string in `l` , then `Star re` matches the concatenation of `l`. 
+
 ```
 (* Exercise: 3 stars, standard (exp_match_ex1) *)
 Lemma empty_is_empty : forall T (s : list T),
@@ -383,11 +384,13 @@ Qed.
 
 ## Case Study: Reflection
 A *reflection* is a corresponding boolean expression to a proposition. Having a reflection implies the proposition is decidable as a boolean expression can be calculated in a deterministic process within finite steps. A naive reminder:
+
 ```coq
 (n =? m) = true <-> m=n
 ```
 
 There are many propositions that have reflections. As an abstraction, the "reflection principle" can be defined as:
+
 ```coq
 Inductive reflect (P : Prop) : bool -> Prop :=
   | ReflectT (H :   P) : reflect P true
@@ -396,6 +399,7 @@ Inductive reflect (P : Prop) : bool -> Prop :=
 The relation `reflect` takes two arguments, a proposition P and a boolean b. It states that P reflects the boolean b, that is, P holds if and only if b is true. An advantage of having such abstraction is that we can perform case analysis while at the same time generate appropriate hypothesis.
 
 First we show a reflection relation between `=?` and `=`
+
 ```
 Lemma eqbP : forall n m, reflect (n = m) (n =? m).
 Proof.
