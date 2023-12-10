@@ -76,7 +76,7 @@ Finally, the proposition `Collatz_holds_for` can be viewed as a subset of `nat`,
 Conjecture collatz : forall n, Collatz_holds_for n.
 ```
 
-So far (2023), mathematicians haven't find a way to prove or disprove this Conjecture.
+So far (2023), mathematicians haven't find a way to prove or disprove this Conjecture[^3].
 ### Example: Permutations
 A permutation of a ordered set is a rearrangement into a new order by some rules. For example, the proposition `Perm3` defines a set of permutation rules on 3-elements set. 
 
