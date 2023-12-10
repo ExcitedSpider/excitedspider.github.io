@@ -39,7 +39,7 @@ Fail Fixpoint reaches_1_in (n : nat): nat :=
   else 1 + reaches_1_in (f n).
 ```
 
-Coq rejects it because there is no guarantee that this calculation would eventually halt, thus it's not a decidable problem. But we can express the concept as an *inductively defined property* of numbers:
+Coq rejects it because there is no guarantee that this calculation would eventually halt, thus it's not a decidable problem  (It is proved to be undecidable formally[^3]). But we can express the concept as an *inductively defined property* of numbers:
 
 ```coq
 Inductive Collatz_holds_for : nat -> Prop :=
