@@ -50,10 +50,9 @@ $on-laptop:        800px !default;
   "minima/syntax-highlighting"
 ;
 
-.note, blockquote.note {
+.note, blockquote.note,
+.info, blockquote.info {
     background: rgba($brand-color, 0.16);
-    // border-left: $border-radius solid $blue-300;
-    // border-radius: $border-radius;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.08);
     padding: .8rem;
     letter-spacing: 0;
@@ -63,11 +62,10 @@ $on-laptop:        800px !default;
     
     &::before {
         color: $brand-color;
-        content: "Note";
+        content: "🪧 Note";
         display: block;
         font-weight: bold;
-        text-transform: uppercase;
-        font-size: .75em;
+        font-size: 1em;
         padding-bottom: .125rem;
     }
     
@@ -75,8 +73,16 @@ $on-laptop:        800px !default;
       color: $brand-color;
       display: block;
       font-weight: bold;
-      text-transform: uppercase;
-      font-size: .75em;
+      font-size: 1em;
       padding-bottom: .125rem;
     }
+}
+
+.info, blockquote.info {
+  background: rgba($grey-color-light, 0.16);
+
+  &::before {
+    color: $grey-color;
+    content: "ℹ️ Info";
+  }
 }
