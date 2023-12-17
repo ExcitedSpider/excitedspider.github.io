@@ -263,6 +263,8 @@ There is no way to allay such concerns completely. But there are reasons why we 
 - The core of proof system of Coq is rather small compared to general purpose programming languages. As we see that even conjunctions, disjunctions, quantifiers are not built-in features of Coq.
 - Coq is based on the Curry-Howard correspondence, which gives it a strong math foundation. Because propositions are just type and proofs are just terms (data structures), it is able to use ***type checkers*** to check the correctness of proofs. 
 
+### Type Checkers
+
 Type checkers are relatively small and straightforward programs. Therefore, the part of the code we have to believe is correct is minimal. 
 
 There are many things a type checker can do. For example, it makes sure a `match` expression in the proof object is indeed *exhaustive*.
@@ -283,6 +285,9 @@ Fail Fixpoint infinite_loop {X : Type} (n : nat) {struct n} : X :=
 ```
 
 It is worth mentioning that the correctness of Coq does not depend on the tactic machinery. As we see that, a proof script is only a way to construct the proof object. When you type `Qed`, Coq build the term for validity from scratch and runs the type checker on that term, so it has nothing to do with the correctness of implementations of tactics. 
+
+What could possibly happen when the implementations of tactics are incorrect is that the term built by proof script is not valid, thus, it cannot pass the type checker.
+
 ## References
 [^1]: Curry–Howard correspondence. (2023). Retrieved from [wikipedia](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence)
 [^2]: Constructive proof. (2023). Retrieved from https://en.wikipedia.org/wiki/Constructive_proof
