@@ -3,6 +3,7 @@ layout: post
 title:  "Inductive Propositions"
 categories: [Software-Foundations]
 description: Apart from normal "declarative" style, propositions can also be defined *inductively*.
+tags: [Coq]
 ---
 
 * TOC

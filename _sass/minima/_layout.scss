@@ -185,9 +185,29 @@
   @include relative-font-size(1.75);
 }
 
+.tags {
+  & > * {
+    background-color: rgba($brand-color, 0.2);
+    padding-inline: 4px;
+    padding-block: 2px;
+    font-size: 16px;
+    border-radius: 8px;
+    color: $grey-color;
+  }
+}
+
 .post-list {
   margin-left: 0;
   list-style: none;
+
+  & h3 {
+    display: flex;
+    align-items: baseline;
+  }
+
+  & .tags {
+    margin-left: 8px;
+  }
 
   > li {
     margin-bottom: $spacing-unit;
@@ -208,11 +228,15 @@
 .post-meta {
   font-size: $small-font-size;
   color: $grey-color;
+
+  & > *{
+    margin-right: 8px;
+  }
 }
 
-.dt-tags {
-  margin-left: 10px;
-}
+// .dt-tags {
+//   margin-left: 10px;
+// }
 
 .post-link {
   display: block;

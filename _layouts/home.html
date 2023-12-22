@@ -18,7 +18,7 @@ layout: default
         <span class="post-meta">{{ post.date | date: date_format }}
           {%- if post.categories -%}
           <span>
-            Tags:
+            Category:
             {% for item in post.categories %}
               <span>{{ item }}</span>
             {% endfor %}
@@ -29,6 +29,13 @@ layout: default
           <a class="post-link" href="{{ post.url | relative_url }}">
             {{ post.title | escape }}
           </a>
+          {%- if post.tags -%}
+            <span class="tags">
+              {% for item in post.tags %}
+                <span>{{ item }}</span>
+              {% endfor %}
+            </span>
+          {%- endif -%}
         </h3>
         {{ post.description }}
         

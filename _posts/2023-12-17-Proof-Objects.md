@@ -3,6 +3,7 @@ layout: post
 title:  "Proof Objects"
 categories: [Software-Foundations]
 description: The Curry-Howard Correspondence.
+tags: [Coq]
 ---
 
 * TOC
