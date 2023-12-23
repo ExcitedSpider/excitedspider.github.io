@@ -100,7 +100,9 @@ header {
     & .post-meta {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
+      font-size: 16px;
+
+      font-family: Teko, sans-serif;
     }
 
     & h3 {
