@@ -147,6 +147,10 @@ article.post {
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
   }
+
+  .page-content>.wrapper {
+    padding: 16px;
+  }
 }
 
 .site-footer {
