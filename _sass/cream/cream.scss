@@ -17,9 +17,10 @@ a {
   }
 }
 
-.tags {
+.post-meta, .tags  {
   font-family: Teko, sans-serif;
 }
+
 
 .site-header
 {
@@ -105,8 +106,6 @@ header {
       display: flex;
       justify-content: space-between;
       font-size: 16px;
-
-      font-family: Teko, sans-serif;
     }
 
     & h3 {
