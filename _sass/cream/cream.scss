@@ -46,6 +46,7 @@ header {
   .page-content-background {
     position: absolute;
     z-index: -100;
+    top: 0;
   }
 
   display: flex;
@@ -59,6 +60,7 @@ header {
     background-color: white;
     padding: 30px;
     box-sizing: border-box;
+    margin-top: 46px;
   }
 }
 
@@ -154,5 +156,5 @@ article.post {
 }
 
 .site-footer {
-  float: right;
+  background-color: $background-color;
 }
