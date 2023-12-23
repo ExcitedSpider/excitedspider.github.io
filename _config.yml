@@ -32,7 +32,7 @@ github_username:  excitedspider
 
 author: Chew Y. Feng
 
-paginate: 5
+paginate: 6
 paginate_path: "/page:num/"
 
 markdown: kramdown

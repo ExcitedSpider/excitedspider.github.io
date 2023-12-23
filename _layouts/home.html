@@ -10,38 +10,44 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "All Posts" }}</h2>
+    <h2 class="post-list-heading">{{ page.list_title | default: "Recent Posts" }}</h2>
     <ul class="post-list">
       {%- for post in paginator.posts -%}
       <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}
-          {%- if post.categories -%}
-          <span>
-            Category:
-            {% for item in post.categories %}
-              <span>{{ item }}</span>
-            {% endfor %}
-          </span>
-          {%- endif -%}
-        </span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-          {%- if post.tags -%}
-            <span class="tags">
-              {% for item in post.tags %}
+        <a href="{{ post.url | relative_url }}">
+          {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+          <span class="post-meta">
+            <span class="post-meta-date">
+              {{ post.date | date: date_format }}
+            </span>
+            {%- if post.categories -%}
+            <span class="post-meta-category">
+              {% for item in post.categories %}
                 <span>{{ item }}</span>
               {% endfor %}
             </span>
+            {%- endif -%}
+          </span>
+          <h3>
+            <div class="post-link">
+              {{ post.title | escape }}
+            </div>
+            {%- if post.tags -%}
+              <span class="tags">
+                {% for item in post.tags %}
+                  <span>{{ item }}</span>
+                {% endfor %}
+              </span>
+            {%- endif -%}
+          </h3>
+          <div class="post-description">
+            {{ post.description }}
+          </div>
+          
+          {%- if site.show_excerpts -%}
+            {{ post.excerpt }}
           {%- endif -%}
-        </h3>
-        {{ post.description }}
-        
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
+        </a>
       </li>
       {%- endfor -%}
     </ul>
