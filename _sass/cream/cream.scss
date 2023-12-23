@@ -68,9 +68,11 @@ header {
   & li {
     margin-bottom: 0;
     min-width: 0;
+    height: 100%;
 
     & a {
       color: inherit;
+      display: block;
     }
 
     & a:hover {
@@ -138,6 +140,7 @@ article.post {
 @media screen and (max-width: 800px) {
   .page-content .post-list {
     grid-template-columns: 1fr;
+    grid-auto-rows: auto;
   }
 }
 
