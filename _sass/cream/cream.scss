@@ -50,6 +50,8 @@ header {
     top: 0;
     left: 0;
     right: 0;
+
+    overflow-x: hidden; // don't know why css doodle 100vw would actually wider than 100vw
   }
 
   display: flex;
