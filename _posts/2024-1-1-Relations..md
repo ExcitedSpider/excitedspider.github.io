@@ -2,7 +2,7 @@
 layout: post
 title:  "Relation Properties"
 categories: [Software-Foundations]
-description: Abstract Interface and Data Structure
+description: Play with math ideas in Coq.
 tags: [Coq, "Discrete Math"]
 ---
 
