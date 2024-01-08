@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Operator Applications [CPP] | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Operator Applications [CPP]" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Those confusing stuff." />
+<meta property="og:description" content="Those confusing stuff." />
+<link rel="canonical" href="/c++/2023/11/28/Operators-CPP.html" />
+<meta property="og:url" content="/c++/2023/11/28/Operators-CPP.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-28T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Operator Applications [CPP]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-28T17:15:31+11:00","datePublished":"2023-11-28T00:00:00+11:00","description":"Those confusing stuff.","headline":"Operator Applications [CPP]","mainEntityOfPage":{"@type":"WebPage","@id":"/c++/2023/11/28/Operators-CPP.html"},"url":"/c++/2023/11/28/Operators-CPP.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Operator Applications [CPP]</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-28T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 28, 2023
+      </time><time>
+        Modified At: Nov 28, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>C++</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#member-access-operators" id="markdown-toc-member-access-operators">Member Access Operators</a></li>
+  <li><a href="#manual-memory-management-by-operators" id="markdown-toc-manual-memory-management-by-operators">Manual Memory Management by Operators</a>    <ul>
+      <li><a href="#motivation" id="markdown-toc-motivation">Motivation</a></li>
+      <li><a href="#memory-fragmentation-and-buckets" id="markdown-toc-memory-fragmentation-and-buckets">Memory Fragmentation and Buckets</a></li>
+      <li><a href="#free-store-operators" id="markdown-toc-free-store-operators">Free Store Operators</a></li>
+      <li><a href="#placement-operators" id="markdown-toc-placement-operators">Placement Operators</a></li>
+    </ul>
+  </li>
+  <li><a href="#precedence-and-evaluation-order" id="markdown-toc-precedence-and-evaluation-order">Precedence and Evaluation Order</a></li>
+  <li><a href="#type-conversions" id="markdown-toc-type-conversions">Type Conversions</a>    <ul>
+      <li><a href="#integer-promotion" id="markdown-toc-integer-promotion">Integer Promotion</a></li>
+      <li><a href="#silent-truncation" id="markdown-toc-silent-truncation">Silent Truncation</a></li>
+      <li><a href="#conversion-to-bool" id="markdown-toc-conversion-to-bool">Conversion to bool</a></li>
+      <li><a href="#pointers-to-void" id="markdown-toc-pointers-to-void">Pointers to <code class="language-plaintext highlighter-rouge">void*</code></a></li>
+      <li><a href="#explicit-type-conversion" id="markdown-toc-explicit-type-conversion">Explicit Type Conversion</a></li>
+    </ul>
+  </li>
+  <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+</ul>
+
+<h2 id="member-access-operators">Member Access Operators</h2>
+<p>One of the most confusing operators families are the member access operators:</p>
+<ul>
+  <li>subscript <code class="language-plaintext highlighter-rouge">[]</code></li>
+  <li>indirection <code class="language-plaintext highlighter-rouge">*</code></li>
+  <li>address-of <code class="language-plaintext highlighter-rouge">&amp;</code></li>
+  <li>member-of-object <code class="language-plaintext highlighter-rouge">.</code></li>
+  <li>member-of-pointer <code class="language-plaintext highlighter-rouge">-&gt;</code>
+It’s often confused which operators are suitable to use. Fortunately, compilers and IDE are very good at telling the types and largely ease the pain.</li>
+</ul>
+
+<h2 id="manual-memory-management-by-operators">Manual Memory Management by Operators</h2>
+<p>One way to manually manage <em>free store</em> (which is also known as <em>heap</em> in CPP, but I don’t really like this ambiguous name) is to overload the operator <code class="language-plaintext highlighter-rouge">new</code>.</p>
+
+<h3 id="motivation">Motivation</h3>
+<p>Each time program invokes <code class="language-plaintext highlighter-rouge">new</code> , what it actually happens is CPP asks the OS to allocate a new free store in memory (<code class="language-plaintext highlighter-rouge">HeapAlloc</code> on Windows or <code class="language-plaintext highlighter-rouge">malloc</code> on Unix). In some settings, free store allocations simply involve too much latency - i.e. high-frequency trading so one may want to avoid it. A general way to do this is to allocate a big space on the launch of the program and then allocate to variables who need storage.</p>
+
+<h3 id="memory-fragmentation-and-buckets">Memory Fragmentation and Buckets</h3>
+<p>Manage the memory is a surprisingly complicated task. One of the issue is <em>Memory Fragmentation</em>. Memory fragmentation is a problem when the allocation and deallocation of blocks of memory lead to a state where available memory is divided into small, disjoint segments, which are not able to be allocate to a large object even if the capacity of them is enough.
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/External_Fragmentation.svg/2560px-External_Fragmentation.svg.png" alt="Memory Fragmentation" /></p>
+<center>Memory Fragmentation, From Wikipedia</center>
+
+<p>One way to tackle it is to chop memory into <em>buckets</em>, which are fixe-sized blocks in memory. The OS will not allocate memory fewer than the size of a bucket.  This scheme prevents memory fragmentation to some extent, but with an overhead with possible(and very likely) waste of memory.</p>
+
+<h3 id="free-store-operators">Free Store Operators</h3>
+<p>There are four operators that are needed to be overload to implement manual memory management:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="kt">size_t</span><span class="p">);</span>
+<span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="kt">size_t</span><span class="p">);</span>
+<span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Note that the return type of <code class="language-plaintext highlighter-rouge">new</code> and the parameter type of <code class="language-plaintext highlighter-rouge">delete</code> is  <code class="language-plaintext highlighter-rouge">void*</code>. It means that the free store operators deal in raw, uninitialized memory.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span> <span class="o">&lt;</span><span class="n">cstddef</span><span class="o">&gt;</span>
+<span class="cp">#include &lt;new&gt;
+</span>
+<span class="k">struct</span> <span class="nc">Bucket</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="k">static</span> <span class="kt">size_t</span> <span class="n">data_size</span><span class="p">{</span> <span class="mi">4096</span> <span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">byte</span> <span class="n">data</span><span class="p">[</span><span class="n">data_size</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="nc">Heap</span> <span class="p">{</span>
+  <span class="kt">void</span><span class="o">*</span> <span class="n">allocate</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">bytes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">bytes</span> <span class="o">&gt;</span> <span class="n">Bucket</span><span class="o">::</span><span class="n">data_size</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n_heap_buckets</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">bucket_used</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">bucket_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="c1">// 6</span>
+        <span class="k">return</span> <span class="n">buckets</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n_heap_buckets</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">buckets</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bucket_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// 7</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n_heap_buckets</span><span class="p">{</span> <span class="mi">10</span> <span class="p">};</span> <span class="c1">// 4</span>
+  <span class="n">Bucket</span> <span class="n">buckets</span><span class="p">[</span><span class="n">n_heap_buckets</span><span class="p">]{};</span>
+  <span class="kt">bool</span> <span class="n">bucket_used</span><span class="p">[</span><span class="n">n_heap_buckets</span><span class="p">]{};</span> <span class="c1">// 5</span>
+<span class="p">};</span>
+
+<span class="n">Heap</span> <span class="n">heap</span><span class="p">;</span> <span class="c1">// 1</span>
+
+<span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n_bytes</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 2</span>
+  <span class="k">return</span> <span class="n">heap</span><span class="p">.</span><span class="n">allocate</span><span class="p">(</span><span class="n">n_bytes</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 3</span>
+  <span class="k">return</span> <span class="n">heap</span><span class="p">.</span><span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Line 1 create the heap at the namespace scope. Its lifetime begins when the program starts. Line 2 and 3 overloads the <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code> operators in the namespace; Now if one use <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code>, dynamic memory management will use <code class="language-plaintext highlighter-rouge">heap</code> instead. In <code class="language-plaintext highlighter-rouge">heap</code>, the memory is chop into 10 buckets (line 4). The information whether the bucket is allocated is recorded in an array of <code class="language-plaintext highlighter-rouge">bool</code> (line 5 6 7).</p>
+
+<p>The other parts of the program can use the pre-allocated memory of <code class="language-plaintext highlighter-rouge">heap</code> by using the <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code> operators now. When there is no free bucket left, <code class="language-plaintext highlighter-rouge">heap</code> can tells the main program by the <code class="language-plaintext highlighter-rouge">std::bad_alloc</code> exceptions.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Buckets:   %p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">heap</span><span class="p">.</span><span class="n">buckets</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">breakfast</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="p">{</span> <span class="mh">0xC0FFEE</span> <span class="p">};</span>
+  <span class="k">auto</span> <span class="n">dinner</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="p">{</span> <span class="mh">0xDEADBEEF</span> <span class="p">};</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Breakfast: %p 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">breakfast</span><span class="p">,</span> <span class="o">*</span><span class="n">breakfast</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Dinner:    %p 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">dinner</span><span class="p">,</span> <span class="o">*</span><span class="n">dinner</span><span class="p">);</span>
+  <span class="k">delete</span> <span class="n">breakfast</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="n">dinner</span><span class="p">;</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">new</span> <span class="kt">char</span><span class="p">;</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Allocated a char.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"std::bad_alloc caught.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="placement-operators">Placement Operators</h3>
+<p>Another interesting set of operators that can manage memory is the <em>Placement Operators</em>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Although they are similar to free store operators, placement operators are used to construct objects in arbitrary memory.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;new&gt;  // Required for placement new
+</span>
+<span class="k">class</span> <span class="nc">MyClass</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">MyClass</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">tag</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">strcpy_s</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag</span><span class="p">);</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">[</span><span class="n">strlen</span><span class="p">(</span><span class="n">tag</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">tag</span> <span class="o">&lt;&lt;</span> <span class="s">":Constructor of MyClass called."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="o">~</span><span class="n">MyClass</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">tag</span> <span class="o">&lt;&lt;</span> <span class="s">":Destructor of MyClass called."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="nl">private:</span>
+    <span class="kt">char</span> <span class="n">tag</span><span class="p">[</span><span class="mi">3</span><span class="p">]{};</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">classSize</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">MyClass</span><span class="p">);</span>
+    <span class="c1">// Allocate a buffer to store 3 objects</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">classSize</span><span class="p">];</span>
+
+    <span class="c1">// Construct objects in the buffer</span>
+    <span class="n">MyClass</span><span class="o">*</span> <span class="n">myObject1</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">)</span> <span class="n">MyClass</span><span class="p">(</span><span class="s">"o1"</span><span class="p">);</span>
+    <span class="n">MyClass</span><span class="o">*</span> <span class="n">myObject2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">[</span><span class="n">classSize</span><span class="p">])</span> <span class="n">MyClass</span><span class="p">(</span><span class="s">"o2"</span><span class="p">);</span>
+    <span class="n">MyClass</span><span class="o">*</span> <span class="n">myObject3</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">[</span><span class="n">classSize</span> <span class="o">*</span> <span class="mi">2</span><span class="p">])</span> <span class="n">MyClass</span><span class="p">(</span><span class="s">"o3"</span><span class="p">);</span>
+
+    <span class="c1">// deallocate the memory</span>
+    <span class="n">myObject2</span><span class="o">-&gt;~</span><span class="n">MyClass</span><span class="p">();</span>
+    <span class="n">myObject3</span><span class="o">-&gt;~</span><span class="n">MyClass</span><span class="p">();</span>
+    <span class="n">myObject1</span><span class="o">-&gt;~</span><span class="n">MyClass</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this example, we use placement operators to construct objects in the buffer which is allocated at the beginning of the program. To de-allocate the memory, programmers must call the object’s destructor directly and exactly once. The output shows</p>
+<pre><code class="language-plain">o1:Constructor of MyClass called.
+o2:Constructor of MyClass called.
+o3:Constructor of MyClass called.
+o2:Destructor of MyClass called.
+o3:Destructor of MyClass called.
+o1:Destructor of MyClass called.
+</code></pre>
+
+<h2 id="precedence-and-evaluation-order">Precedence and Evaluation Order</h2>
+<p>A fact: CPP language standard explicitly defines the precedence of operators (e.g. In the expression <code class="language-plaintext highlighter-rouge">a + b*c</code>, the product operator has higher precedence than the sum operator), but <strong>it does not define the evaluation order</strong>. This is because the language wants to give compiler writers to find clever optimization opportunities.</p>
+
+<p>For example:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stop</span><span class="p">()</span> <span class="o">+</span> <span class="n">drop</span><span class="p">()</span> <span class="o">*</span> <span class="n">roll</span><span class="p">()</span>
+</code></pre></div></div>
+<p>It is not guaranteed that the evaluation order is : <code class="language-plaintext highlighter-rouge">drop()</code>, <code class="language-plaintext highlighter-rouge">roll()</code>, <code class="language-plaintext highlighter-rouge">stop()</code>.</p>
+
+<p>Some exceptions are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">a &amp;&amp; b</code> and <code class="language-plaintext highlighter-rouge">a || b</code> guarantees that a evaluate before b.</li>
+  <li><code class="language-plaintext highlighter-rouge">a ? b :c</code> guarantees that a evaluate before b and c</li>
+  <li><code class="language-plaintext highlighter-rouge">a,b,c</code> guarantees that the order is a, then b, then c.</li>
+</ul>
+
+<h2 id="type-conversions">Type Conversions</h2>
+<p>Operators often involve type conversions in CPP. And unfortunately, CPP is overzealous to do conversions implicitly. It’s not a good idea and programmers should pay attention to it.</p>
+
+<h3 id="integer-promotion">Integer Promotion</h3>
+<p>Integer promotion refers to the process when a smaller integer (such as <code class="language-plaintext highlighter-rouge">char</code>, <code class="language-plaintext highlighter-rouge">short</code>, and in some cases <code class="language-plaintext highlighter-rouge">bool</code>) encounters an operator that evaluate outside its range, then it is “promoted” to a larger integer type.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Type of result: "</span> <span class="o">&lt;&lt;</span> <span class="k">typeid</span><span class="p">(</span><span class="n">result</span><span class="p">).</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> 
+<span class="c1">// Type of result: int</span>
+</code></pre></div></div>
+
+<h3 id="silent-truncation">Silent Truncation</h3>
+<p>When a number is assigned to a variable which cannot represent it, it be will <em>silently truncated</em>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdint&gt;
+#include &lt;cstdio&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 0b111111111 = 511</span>
+  <span class="kt">uint8_t</span> <span class="n">x</span> <span class="o">=</span> <span class="mb">0b111111111</span><span class="p">;</span> <span class="c1">// 255</span>
+  <span class="kt">int8_t</span> <span class="n">y</span> <span class="o">=</span> <span class="mb">0b111111111</span><span class="p">;</span> <span class="c1">// Implementation defined.</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"x: %u</span><span class="se">\n</span><span class="s">y: %d"</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>If the destination is <code class="language-plaintext highlighter-rouge">unsigned</code>, the result is as many bits as it can fits.</li>
+  <li>If the destination is <code class="language-plaintext highlighter-rouge">signed</code>, the result is undefined.</li>
+</ul>
+
+<h3 id="conversion-to-bool">Conversion to bool</h3>
+<p>Pointers, integers and float-point numbers can be implicitly converted to bool. The conversion is <code class="language-plaintext highlighter-rouge">true</code> is the value is nonzero.</p>
+
+<h3 id="pointers-to-void">Pointers to <code class="language-plaintext highlighter-rouge">void*</code></h3>
+<p>Pointers can always be implicitly converted to <code class="language-plaintext highlighter-rouge">void*</code>.</p>
+
+<h3 id="explicit-type-conversion">Explicit Type Conversion</h3>
+<p>Braced Initialization ensures that only safe conversions are allowed. This is why modern CPP prefers braced initialization.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int32_t</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="kt">int64_t</span> <span class="n">b</span><span class="p">{</span> <span class="n">a</span> <span class="p">};</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Non-narrowing conversion!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="kt">int32_t</span> <span class="n">c</span><span class="p">{</span> <span class="n">b</span> <span class="p">};</span> <span class="c1">// Bang!</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this situation, <em>explicit type conversions</em> are needed.</p>
+
+<p>One way is <em>C-Style Casts</em>, which is dangerous and not recommended. You need to ensure what is in the memory and what’s the behaviour of a specific compiler.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">trainwreck</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">read_only</span><span class="p">)</span> <span class="p">{</span>
+<span class="err"> </span> <span class="k">auto</span> <span class="n">as_unsigned</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">read_only</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A more civil way is to use <code class="language-plaintext highlighter-rouge">reinterpret_cast</code> or <code class="language-plaintext highlighter-rouge">static_cast</code></p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">int</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">chPtr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+
+<span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">10.5</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">reinterpret_cast</code> is used for low-level reinterpreting of the bit pattern of an object, while <code class="language-plaintext highlighter-rouge">static_cast</code> performs conversions according to the language’s conversion rules and is safer in comparison.</p>
+
+<p>To use <code class="language-plaintext highlighter-rouge">static_cast</code> in user-defined class, one needs to implement <em>User-Defined Type Conversion</em>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Celsius</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">temp</span><span class="p">;</span>
+
+<span class="nl">public:</span>
+    <span class="n">Celsius</span><span class="p">(</span><span class="kt">float</span> <span class="n">t</span><span class="p">)</span> <span class="o">:</span> <span class="n">temp</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="c1">// Conversion operator to convert Celsius to Fahrenheit</span>
+    <span class="k">operator</span> <span class="kt">float</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">temp</span> <span class="o">*</span> <span class="mf">1.8</span><span class="n">f</span> <span class="o">+</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Celsius</span> <span class="n">degree_c</span><span class="p">{</span> <span class="mf">26.0</span> <span class="p">};</span>
+    <span class="k">auto</span> <span class="n">degree_f</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">degree_c</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Degree Fahrenheit: %f"</span><span class="p">,</span> <span class="n">degree_f</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this example, class <code class="language-plaintext highlighter-rouge">Celsius</code> defines a conversion to float Fahrenheit and the program employs <code class="language-plaintext highlighter-rouge">static_cast</code> to perform casting.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>This article discussed 2 topics: memory management and type conversions, which are great examples of how operators are used in modern CPP.</p>
+
+  </div><a class="u-url" href="/c++/2023/11/28/Operators-CPP.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
