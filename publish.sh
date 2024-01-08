@@ -1,7 +1,17 @@
 #!/bin/bash
 set -e
 
-git switch -c pub 
+branch_name="pub"
+
+# Check if the branch exists
+if git rev-parse --verify "$branch_name" >/dev/null 2>&1; then
+  # Switch to the existing branch
+  git checkout "$branch_name"
+else
+  # Create and switch to a new branch
+  git checkout -b "$branch_name"
+fi
+
 git reset --hard master
 bundle exec jekyll build
 git add .
