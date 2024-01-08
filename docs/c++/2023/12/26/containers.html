@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Containers | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Containers" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Abstract Interface and Data Structure" />
+<meta property="og:description" content="Abstract Interface and Data Structure" />
+<link rel="canonical" href="/c++/2023/12/26/containers.html" />
+<meta property="og:url" content="/c++/2023/12/26/containers.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-12-26T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Containers" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-12-26T16:00:31+11:00","datePublished":"2023-12-26T00:00:00+11:00","description":"Abstract Interface and Data Structure","headline":"Containers","mainEntityOfPage":{"@type":"WebPage","@id":"/c++/2023/12/26/containers.html"},"url":"/c++/2023/12/26/containers.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Containers</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>C++</span>
+        
+      </span><time class="dt-published" datetime="2023-12-26T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Dec 26, 2023
+      </time><time>
+        Modified At: Dec 26, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>C++</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#sequential-containers" id="markdown-toc-sequential-containers">Sequential Containers</a>    <ul>
+      <li><a href="#arrays" id="markdown-toc-arrays">Arrays</a>        <ul>
+          <li><a href="#iterators" id="markdown-toc-iterators">Iterators</a></li>
+        </ul>
+      </li>
+      <li><a href="#vectors" id="markdown-toc-vectors">Vectors</a></li>
+      <li><a href="#niche-sequential-containers" id="markdown-toc-niche-sequential-containers">Niche Sequential Containers</a></li>
+    </ul>
+  </li>
+  <li><a href="#associative-containers" id="markdown-toc-associative-containers">Associative Containers</a>    <ul>
+      <li><a href="#sets" id="markdown-toc-sets">Sets</a></li>
+      <li><a href="#multisets-and-unordered-sets" id="markdown-toc-multisets-and-unordered-sets">Multisets and Unordered Sets</a></li>
+      <li><a href="#maps" id="markdown-toc-maps">Maps</a></li>
+      <li><a href="#multimaps-and-unordered-maps" id="markdown-toc-multimaps-and-unordered-maps">Multimaps and Unordered Maps</a></li>
+    </ul>
+  </li>
+  <li><a href="#niche-containers" id="markdown-toc-niche-containers">Niche Containers</a>    <ul>
+      <li><a href="#graphs" id="markdown-toc-graphs">Graphs</a></li>
+      <li><a href="#property-trees" id="markdown-toc-property-trees">Property Trees</a></li>
+    </ul>
+  </li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<p>A <em>container</em> is a special data structure provided in the <em>standard template library (STL)</em>. There are three kinds of containers:</p>
+<ul>
+  <li><em>Sequential</em> containers store elements consecutively in the memory.</li>
+  <li><em>Associative</em> containers store sorted elements by their keys</li>
+  <li><em>Unordered associative</em> containers store hashed object by their keys</li>
+</ul>
+
+<h2 id="sequential-containers">Sequential Containers</h2>
+<h3 id="arrays">Arrays</h3>
+<p>The STL provides <code class="language-plaintext highlighter-rouge">std:array</code> in the <code class="language-plaintext highlighter-rouge">&lt;array&gt;</code> header. The underlying storage model of <code class="language-plaintext highlighter-rouge">std:array</code> is just fixed-length array, thus, the <code class="language-plaintext highlighter-rouge">std:array</code> is virtually a wrapper for the C-style arrays.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TEST</span><span class="p">(</span><span class="n">Array</span><span class="p">,</span> <span class="n">DefaultInitialize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="o">&gt;</span> <span class="n">local_array</span><span class="p">;</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="n">Array</span><span class="p">,</span> <span class="n">Initialize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="o">&gt;</span> <span class="n">local_array</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">};</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">local_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>it’s a good practice to use <code class="language-plaintext highlighter-rouge">array</code> instead of C-style array virtually all situations for two reasons:</p>
+<ul>
+  <li>It supports virtually all the same usage patterns as operator <code class="language-plaintext highlighter-rouge">[]</code>, plus some useful helper methods. e.g. <code class="language-plaintext highlighter-rouge">array.size()</code> returns the size of the array; <code class="language-plaintext highlighter-rouge">array.empty()</code> tells if the array’s size is zero.</li>
+  <li>For some situations that require data to be in C-style arrays - for example, functions that declare a pointer to array as a parameter - it’s convenient to use <code class="language-plaintext highlighter-rouge">array.data()</code> to get the pointers.</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span> <span class="mi">9</span><span class="o">&gt;</span> <span class="n">color</span><span class="p">{</span> <span class="sc">'o'</span><span class="p">,</span> <span class="sc">'c'</span><span class="p">,</span> <span class="sc">'t'</span><span class="p">,</span> <span class="sc">'a'</span><span class="p">,</span> <span class="sc">'r'</span><span class="p">,</span> <span class="sc">'i'</span><span class="p">,</span> <span class="sc">'n'</span><span class="p">,</span> <span class="sc">'e'</span> <span class="p">};</span>
+<span class="k">const</span> <span class="k">auto</span><span class="o">*</span> <span class="n">color_ptr</span> <span class="o">=</span> <span class="n">color</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="o">*</span><span class="n">color_ptr</span> <span class="o">==</span> <span class="sc">'o'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>An <code class="language-plaintext highlighter-rouge">array</code> does not allocate dynamic memory, rather, it keeps all its elements. The copy and move operation would generally be expensive.</p>
+
+<h4 id="iterators">Iterators</h4>
+<p><strong>All</strong> STL containers have built-in <em>iterators</em>, including <code class="language-plaintext highlighter-rouge">array</code>s. It is a great advantages to conventional C-style arrays. Iterators allow algorithms to explore the container from the beginning to the end, without considering the data structure and implementation of the container.</p>
+
+<p>To be more specific, an iterator supports at least the following operations:</p>
+<ul>
+  <li>Get the current element by operator <code class="language-plaintext highlighter-rouge">*</code></li>
+  <li>Go to the next element by operator <code class="language-plaintext highlighter-rouge">++</code></li>
+  <li>Assign an iterator to another one by operator <code class="language-plaintext highlighter-rouge">=</code></li>
+</ul>
+
+<p>The uniforms way to get iterators from all STL containers:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">begin()</code> gets the iterator pointing to the beginning of the data.</li>
+  <li><code class="language-plaintext highlighter-rouge">end()</code> gets the iterator pointing <strong>after</strong> the last element. The design is called a <em>half-open range</em>.</li>
+</ul>
+
+<p>The design of half-open range has some advantages. For example, one can always check if the container is empty by test if <code class="language-plaintext highlighter-rouge">begin()</code> returns the same value as <code class="language-plaintext highlighter-rouge">end()</code></p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">fib</span><span class="p">{};</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">fib</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">==</span> <span class="n">fib</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</code></pre></div></div>
+
+<p>Another advantage of half-open range is that it fits into C++’s range expression</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="o">&gt;</span> <span class="n">fib</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">sum</span><span class="p">{};</span>
+<span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">element</span> <span class="o">:</span> <span class="n">fib</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">sum</span> <span class="o">+=</span> <span class="n">element</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">sum</span> <span class="o">==</span> <span class="mi">12</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="vectors">Vectors</h3>
+<p>The <code class="language-plaintext highlighter-rouge">std::vector</code> is a sequential container with dynamic size, or it is a <em>dynamic array</em><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. In many programming languages like JavaScript and Python, this is the basic case of sequential data structures. In practices, the vector is the most commonly used container in STL.</p>
+
+<p>If you have fixed number of elements, it is recommended to use <code class="language-plaintext highlighter-rouge">array</code>. Otherwise, The <code class="language-plaintext highlighter-rouge">vector</code> is your choice.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span><span class="o">*&gt;</span> <span class="n">codebreakers</span><span class="p">;</span> <span class="c1">// default constructor</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">fib</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span> <span class="c1">// braced constructor</span>
+
+<span class="c1">// contructed by iterators</span>
+<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="o">&gt;</span> <span class="n">fib_arr</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">fib_vec</span><span class="p">(</span><span class="n">fib_arr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">fib_arr</span><span class="p">.</span><span class="n">end</span><span class="p">());</span> 
+</code></pre></div></div>
+
+<p>The vector stores element in dynamic memory. It supports an allocator type as an optional template parameter. By default, it uses the <code class="language-plaintext highlighter-rouge">std::allocator&lt;T&gt;</code>, which manages memory by the operators <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code>.</p>
+
+<p>Since the vector is implemented as a dynamic array, the copy operation can be very expensive, but the move operation is usually very fast.</p>
+
+<p>Allocations are expensive. As the size of the vector grows, the vector will request additional memory and move all current elements to the new space when the capacity cannot handle all the elements. Luckily, there is a way to optimize it: If you know ahead of time how many elements could be there, you can use the <code class="language-plaintext highlighter-rouge">reserve</code> method to allocate the capacity.</p>
+
+<p>Inserting at any position except the tail of a vector could be expensive, for it need to move elements around to make space.</p>
+
+<h3 id="niche-sequential-containers">Niche Sequential Containers</h3>
+<p>The <code class="language-plaintext highlighter-rouge">std::deque</code> serves as a double-end queue. It doesn’t guarantees that all elements are sequential in memory. Instead, it is usually scattered about.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">std::list</code> is a doubly linked list. Insertions are way cheaper than that of vectors. You should consider using <code class="language-plaintext highlighter-rouge">list</code> if there’re frequent insertions.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">std::stack</code> and <code class="language-plaintext highlighter-rouge">std::queue</code> serve as the classical data structures stack and queue respectively.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">std::priority_queue</code> is a heap that keeps elements sorted.</p>
+
+<h2 id="associative-containers">Associative Containers</h2>
+<p>Associative containers, in general, are designed for fast element search. On the other hand, sequential containers are used for consecutive access. Three properties can be used to describe associative containers:</p>
+<ul>
+  <li>Whether elements contain only keys or key-value pairs</li>
+  <li>Whether they are <em>ordered</em></li>
+  <li>Whether the container allows non-<em>unique</em> keys</li>
+</ul>
+
+<p>You use these two properties to select which container is appropriate.</p>
+<h3 id="sets">Sets</h3>
+<p>The <code class="language-plaintext highlighter-rouge">std::set</code> contains <em>ordered</em>, <em>unique</em> keys. The class template <code class="language-plaintext highlighter-rouge">set&lt;T, Comparator, Allocator&gt;</code> accepts three parameters: a key type, a comparator, and an allocator.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">emp</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">fib</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">emp</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">fib</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>The most common way to access an element is to use <code class="language-plaintext highlighter-rouge">set.find()</code>. Besides that, since the set is ordered, it is acceptable to use <code class="language-plaintext highlighter-rouge">lower_bound</code> or <code class="language-plaintext highlighter-rouge">upper_bound</code> to find elements in a specific range. All of these access methods return an iterator.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">fib</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">fib</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">fib</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">fib</span><span class="p">.</span><span class="n">lower_bound</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="o">*</span><span class="n">itr</span> <span class="o">==</span> <span class="mi">3</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>To add elements into the set, you could use <code class="language-plaintext highlighter-rouge">insert</code>, <code class="language-plaintext highlighter-rouge">emplace</code> or <code class="language-plaintext highlighter-rouge">emplace_hint</code>. The <code class="language-plaintext highlighter-rouge">emplace_hint</code> accepts an iterator which indicates the search start point (a hint). A notable speedup would be gained if you can give the right hint.</p>
+
+<p>The underlying data structure for the set is the red-black tree, which support incredibly fast searching and inserting<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>.</p>
+
+<h3 id="multisets-and-unordered-sets">Multisets and Unordered Sets</h3>
+<p>As the name suggests, the <code class="language-plaintext highlighter-rouge">std::multiset</code> contains <em>sorted, non-unique</em> keys. It supports almost the same operation as a set. You might want to use a multiset if it is important to record the times that a element is inserted. The multiset is also implemented as a red-black tree.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">std::unordered_set</code> is available for <em>unsorted, unique</em> keys. The methods it supports are similar to those of a set, but the implementation is usually a hash table, rather than a red-black tree. It is even faster than a set in the aspect of searching on average, but with a extremely small possibilities to case a hash collision <sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup>.</p>
+
+<p>The STL provides a hasher class template <code class="language-plaintext highlighter-rouge">std::hash&lt;T&gt;</code>.</p>
+
+<h3 id="maps">Maps</h3>
+<p>The <code class="language-plaintext highlighter-rouge">std::map</code> represents another family of commonly used associative containers that store key-value pairs.</p>
+
+<p>The class template <code class="language-plaintext highlighter-rouge">map&lt;Key, Value, Comparator, Allocator&gt;</code> suggests that there are four parameters available, in which only first two are required.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">emp</span><span class="p">;</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">emp</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">pub_year</span><span class="p">{</span>
+      <span class="p">{</span> <span class="n">colour_of_magic</span><span class="p">,</span> <span class="mi">1983</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="n">the_light_fantastic</span><span class="p">,</span> <span class="mi">1986</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="n">equal_rites</span><span class="p">,</span> <span class="mi">1987</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="n">mort</span><span class="p">,</span> <span class="mi">1987</span> <span class="p">},</span>
+    <span class="p">};</span>
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">pub_year</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>The common practice for maps is to use it as a <em>associative array</em>, or a <em>dictionary</em>, which is a collection of key-value pairs with each key can appear at most once in the collection. An associative array supports three elementary operations: ‘lookup’, ‘remove’ and ‘insert’.</p>
+
+<p>The implementation of a map is usually a red-black tree.</p>
+
+<h3 id="multimaps-and-unordered-maps">Multimaps and Unordered Maps</h3>
+
+<p>Like the set, there are also corresponding variants for maps to support non-unique and unordered keys. They are the <code class="language-plaintext highlighter-rouge">std::multimap</code> and <code class="language-plaintext highlighter-rouge">std::unordered_map</code>. There is not really much to say about them.</p>
+
+<h2 id="niche-containers">Niche Containers</h2>
+
+<h3 id="graphs">Graphs</h3>
+<p>The Boost Graph Library (BGL) provides a set of containers for storing and manipulating graphs. Worth mentioning that the abstract interface of BGL is not the same with that of STL, for the intrinsic complexity of traversing a graph is much harder.</p>
+
+<p><img src="https://www.boost.org/doc/libs/1_75_0/libs/graph/doc/figs/quick_start.gif" alt="Graph Example" /></p>
+
+<p>For more information about BGL, visit <a href="https://www.boost.org/doc/libs/1_75_0/libs/graph/doc/quick_tour.html">A Quick Tour of the Boost Graph Library</a></p>
+
+<h3 id="property-trees">Property Trees</h3>
+<p>A property tree is a tree structure with each leave storing a piece of associated data. It is often used to represent tree-like data including JSON and XML.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">boost::property_tree</code> provides an implementation of property trees. Besides, it also includes some parsing and transformation methods. For example, the methods <code class="language-plaintext highlighter-rouge">read_json</code> and <code class="language-plaintext highlighter-rouge">write_json</code> in <code class="language-plaintext highlighter-rouge">&lt;boost/property_tree/json_parser&gt;</code> can be handy when you try to manipulate JSON in C++.</p>
+
+<p>For more information, visit <a href="https://www.boost.org/doc/libs/1_61_0/doc/html/property_tree.html">Boost.PropertyTree</a></p>
+
+<h2 id="reference">Reference</h2>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Dynamic array. (2023). Retrieved from https://en.wikipedia.org/wiki/Dynamic_array <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>Red–black tree. (2023). Retrieved from https://en.wikipedia.org/wiki/Red%E2%80%93black_tree <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>Hash table. (2023). Retrieved from https://en.wikipedia.org/wiki/Hash_table <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><a class="u-url" href="/c++/2023/12/26/containers.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Induction, Sub-theorems and Informal Proof [Coq] | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Induction, Sub-theorems and Informal Proof [Coq]" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Study Notes of software validation" />
+<meta property="og:description" content="Study Notes of software validation" />
+<link rel="canonical" href="/software-foundations/2023/11/16/Coq-Inductions.html" />
+<meta property="og:url" content="/software-foundations/2023/11/16/Coq-Inductions.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-16T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Induction, Sub-theorems and Informal Proof [Coq]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-20T10:40:39+11:00","datePublished":"2023-11-16T00:00:00+11:00","description":"Study Notes of software validation","headline":"Induction, Sub-theorems and Informal Proof [Coq]","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/11/16/Coq-Inductions.html"},"url":"/software-foundations/2023/11/16/Coq-Inductions.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Induction, Sub-theorems and Informal Proof [Coq]</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-16T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 16, 2023
+      </time><time>
+        Modified At: Nov 20, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="proof-by-induction">Proof by Induction</h2>
+<p>As we know that “proof P(n) by induction” is:</p>
+<ol>
+  <li>Proof that P(0) holds</li>
+  <li>Proof that <strong>if P(n-1) holds</strong>, P(n) holds as well on n &gt; 1
+Note that in step 2, there is an assumption P(n-1) holds</li>
+</ol>
+
+<p>One example for induction proof follows:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">add_0_r_firsttry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>This theorem cannot be proved by simplicity because the +(notation of <code class="language-plaintext highlighter-rouge">plus</code> function) is defined by match:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">plus</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">m</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">plus</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>One cannot use the definition of <code class="language-plaintext highlighter-rouge">plus</code> to simplify <code class="language-plaintext highlighter-rouge">n + 0</code> since <code class="language-plaintext highlighter-rouge">n</code> is an arbitrary number. Destruction does not work either for the similar reason. Induction proof of this theorem provides:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Proof</span><span class="pi">.</span><span class="w">
+</span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">IHn'</span><span class="o">].</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="c">(* n = 0 *)</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="c">(* n = S n' *)</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">IHn'</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> 
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>The power of induction is that apart from the case analysis, we can also introduce an <em>induction hypothesis</em>. In the induction clause <code class="language-plaintext highlighter-rouge">induction n as [|n' IHn']</code>, <code class="language-plaintext highlighter-rouge">n'</code> is the param for the second constructor just like the <code class="language-plaintext highlighter-rouge">destruct</code> tactic does; we also introduce a hypothesis <code class="language-plaintext highlighter-rouge">IHn'</code> into the context:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">IHn'</span><span class="p">:</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n'</span><span class="w">
+</span></code></pre></div></div>
+<p>The hypothesis said the P holds true for P(n-1). Then it is able to rewrite the equation using this hypothesis to make it equals.</p>
+
+<p>For reference: the definition of <code class="language-plaintext highlighter-rouge">nat</code>:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Here we have another example: given a function that doubles the value, verify it sure does the job.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">double</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="p">:</span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">O</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">double</span><span class="w"> </span><span class="no">n'</span><span class="o">))</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">double_plus</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="o">,</span><span class="w"> </span><span class="no">double</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+    </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">iHn'</span><span class="o">].</span><span class="w"> </span><span class="c">(* iHn': double n' = n' + n' *)</span><span class="w">
+    </span><span class="c">(* n=0; goal: double 0 = 0 + 0 *)</span><span class="w"> 
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+    </span><span class="c">(* n=S n'; goal: double (S n') = S n' + S n' *)</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">iHn'</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">plus_n_Sm</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>where <code class="language-plaintext highlighter-rouge">plus_n_Sm</code> states that for $n+m+1 = n + (m + 1)$</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">plus_n_Sm</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="no">m</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>The first case is trivial. On the second case, we run <code class="language-plaintext highlighter-rouge">double</code> first by using <code class="language-plaintext highlighter-rouge">simpl</code> tactic to replace <code class="language-plaintext highlighter-rouge">double (S n')</code> with <code class="language-plaintext highlighter-rouge">S (S (double n'))</code>.  Then it is able to use the induction hypothesis holds for <code class="language-plaintext highlighter-rouge">n'</code> to replace <code class="language-plaintext highlighter-rouge">double</code> function by <code class="language-plaintext highlighter-rouge">n' + n'</code>.</p>
+
+<h2 id="sub-theorems">Sub-Theorems</h2>
+<p>It is a common pattern to refer to another theorem within a theorem. Coq provides a grammar that allows programmers to do this “proofs within proofs” trick.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">mult_0_plus'</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w">
+  </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w">
+  </span><span class="no">assert</span><span class="w"> </span><span class="o">(</span><span class="no">H</span><span class="p">:</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="o">).</span><span class="w">
+    </span><span class="c">(* proof to the asserted theorem *)</span><span class="w">
+    </span><span class="o">{</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">add_comm</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">add_comm</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="o">}</span><span class="w">
+    </span><span class="c">(* rewrite by the asserted theorem *)</span><span class="w">
+  </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+  </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="formal--informal-proof">Formal &amp; Informal Proof</h2>
+<p>What are we writing are <em>formal proofs</em>, in which the readers are programs, like Coq. There are some differences comparing to <em>informal proofs</em>, which are human-readable.</p>
+<ul>
+  <li>In formal proof, the state of each step is <strong>implicit</strong>, while informal proof could reminds the readers several times where things stand.</li>
+  <li>It is required to follow the exact definition of tactics in formal proof. In informal proof, the proof is written in <strong>natural language</strong>, and can be flexible for different level of readers. 
+For learners, a good practice is to translate the formal proof into an informal one.</li>
+</ul>
+
+<p>Example:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">add_comm</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">iHn'</span><span class="o">].</span><span class="w"> 
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">add_n_O</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">plus_n_Sm</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">iHn'</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w"> 
+</span></code></pre></div></div>
+
+<p>Translated informal proof:</p>
+<ul>
+  <li>
+    <p>Theorem: for all n and m, n + m = m + n</p>
+
+    <p>Proof by induction on n.</p>
+    <ul>
+      <li>
+        <p>First, suppose n = 0, we want to show that</p>
+
+        <p>0 + m = m + 0.</p>
+
+        <p>For the left side, we use the definition of +.</p>
+
+        <p>0 + m = m.</p>
+
+        <p>For the right side, we learned from <code class="language-plaintext highlighter-rouge">add_n_O</code> theorem that</p>
+
+        <p>for all n, n + 0 = n.</p>
+
+        <p>Thus it can be re-wrote to</p>
+
+        <p>m + 0 = m.</p>
+
+        <p>The both side equals.</p>
+      </li>
+      <li>
+        <p>Second, suppose n = S n’ and n’ + m = m + n’, we want to show that</p>
+
+        <p>S n’ + m = m + S n’</p>
+
+        <p>For the left side. we have</p>
+
+        <p>S n’ + m = S(n’ + m)</p>
+
+        <p>By the definition of operator +. From <code class="language-plaintext highlighter-rouge">plus_n_Sm</code> theorem we learned</p>
+
+        <p>forall n m : nat, S (n + m) = n + (S m).</p>
+
+        <p>We can rewrite the right side by the <code class="language-plaintext highlighter-rouge">plus_n_Sm</code> theorem:</p>
+
+        <p>m + S n’ = S (m + n’).</p>
+
+        <p>Use the induction hypothesis, this follows from</p>
+
+        <p>S (m + n’) = S(n’ + m).</p>
+
+        <p>Which is identical to the left side. Qed.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>The style of this proof is a little pedantic tho, but it’s valid. This example shows that the formal proof can be translated into an informal proof which is often the case when doing math.</p>
+
+  </div><a class="u-url" href="/software-foundations/2023/11/16/Coq-Inductions.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
