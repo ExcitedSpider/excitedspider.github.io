@@ -41,9 +41,14 @@ markdown: kramdown
 theme: minima
 minima:
   skin: solarized-light
+  date_format: '%b %-d, %Y'
 plugins:
   - jekyll-feed
   - jekyll-paginate
+  - jekyll-last-modified-at
+
+last-modified-at:
+    date-format: '%b %-d, %Y'
 
 # Exclude from processing.
 # The following items will not be processed, by default.

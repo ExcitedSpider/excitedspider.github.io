@@ -425,11 +425,56 @@ Proof.
   (* Let's save the page*) 
   Admitted.
 ```
+
+## A Step-Indexed Evaluator
+
+We can't define a evaluation function in Coq that might fall in a indefinite loop, because Coq is not just a general purpose programming language, but it is, more importantly, a consistent logic. A simple makeshift is that we can add a number as a parameter that decreases after every step and terminates after its value hits 0.  
+
+```coq
+Fixpoint ceval_step2 (st : state) (c : com) (i : nat) : state :=
+  match i with
+  | O => empty_st
+  | S i' => (* decrease 1 on each step *)
+    match c with
+      | <{ skip }> =>
+          st
+      | <{ l := a1 }> =>
+          (l !-> aeval st a1 ; st)
+      | <{ c1 ; c2 }> =>
+          let st' := ceval_step2 st c1 i' in
+          ceval_step2 st' c2 i'
+      | <{ if b then c1 else c2 end }> =>
+          if (beval st b)
+            then ceval_step2 st c1 i'
+            else ceval_step2 st c2 i'
+      | <{ while b1 do c1 end }> =>
+          if (beval st b1)
+          then let st' := ceval_step2 st c1 i' in
+               ceval_step2 st' c i'
+          else st
+    end
+  end.
+```
+
+Furthermore, we can use `option`to suggests whether the program halts after a success evaluation or reaching the step limitation.
+
+## Extraction
+
+Extraction is to generate an efficient program in other language, such as Haskell. It's straightforward to do so.
+
+```coq
+Extraction Language Haskell.
+Extraction "imp1.hs" ceval_step.
+```
+
+A extracted program can be viewed as a _certified_ interpreter. More controlled extraction can be found on the chapter [EXTRACTING OCAML FROM COQ](https://softwarefoundations.cis.upenn.edu/lf-current/Extraction.html).
+
 ## Reference
 
 [^1]: https://softwarefoundations.cis.upenn.edu/lf-current/toc.html
 [^2]: Chomsky normal form. (2023). Retrieved from https://en.wikipedia.org/wiki/Chomsky_normal_form
-[^3]: Curry–Howard correspondence. (2023). Retrieved from https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence#Related_proofs-as-programs_correspondences
-[^4]: https://en.wikipedia.org/wiki/State_(computer_science)
+[^3]: [Curry–Howard correspondence.](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence#Related_proofs-as-programs_correspondences)
+[^4]: [State (computer science)](https://en.wikipedia.org/wiki/State_(computer_science))
 [^5]: https://en.wikipedia.org/wiki/Partial_function
 [^6]: https://en.wikipedia.org/wiki/Halting_problem
+
