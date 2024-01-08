@@ -1,4 +1,7 @@
-git checkout -b pub
+#!/bin/bash
+set -e
+
+git switch -c pub 
 git reset --hard master
 bundle exec jekyll build
 git add .
