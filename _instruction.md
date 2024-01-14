@@ -41,4 +41,6 @@ Reference:
 
 ## Publish
 
-Just push to main branch.
+```
+./publish.sh
+```
