@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Somethings Worth Noting Regarding FP in Haskell"
+categories: [Software-Foundations]
+description: Partial Functions, Folds and as-pattern
+tags: [Haskell, "Functional Programming"]
+---
+
+
 Shout out to [Real World Haskell](https://book.realworldhaskell.org/).
 ## Partial and Total functions
 Following mathematics jargons, functions that works on all possible inputs are *total functions*. Correspondingly, functions that are not total are *partial* functions.
