@@ -148,10 +148,19 @@ article.post {
   }
 }
 
+// mobile
 @media screen and (max-width: 800px) {
   .page-content .post-list {
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
+  }
+
+  .post-list li .post-link {
+    font-size: 18px;
+  }
+
+  .post-list .tags {
+    font-size: 14px;
   }
 
   .page-content>.wrapper {
