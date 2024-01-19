@@ -38,9 +38,9 @@ $$P(w_n | w_{n-1}) = \frac{C(w_{n-1}w_n)}{\sum C(w_{n-1}w)} \tag 1$$
 
 Accordingly, a generalized n-gram model give the probability of next word according to Eq. (2). 
 
-	$$
-	P(w_n | w_{1:n-1}) \approx P(w_n | w_{n-1}) \tag 2
-	$$
+$$
+P(w_n | w_{1:n-1}) \approx P(w_n | w_{n-1}) \tag 2
+$$
 
 It's not hard to see that for a n-gram model, the probability of a complete sentence is:
 
@@ -59,8 +59,6 @@ Many approaches are developed to solve this.
 - Unknown words cause zeros:  we can use a **closed vocabulary** where unseen words are not allowed. or mark the out out vocabulary (OOV) words as a special token `<UNK>`. Estimate the probabilities for `<UNK>` just like any other regular word in the training set
 - ***Smoothing*** can treat words that are in our vocabulary but in an unseen context. 
 - ***interpolation*** and ***Backoff*** draw on "primitive" n-gram information to ameliorate the lack of information in a higher-n-gram model.
-
-Laplace smoothing simply adds one to each count. 
 
 ### Smoothing
 Smoothing (or discounting) means we shave off a bit of probability from some frequent events to those events that we never seen. Intuitively, you can imagine this approach would add bias to the model because after smoothing, the distribution is not the maximum likelihood. And you are right.
