@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Somethings Worth Noting Regarding FP in Haskell"
+title:  "FP in Haskell - Practical Concerns"
 categories: [Software-Foundations]
 description: Partial Functions, Folds and as-pattern
 tags: [Haskell, "Functional Programming"]
