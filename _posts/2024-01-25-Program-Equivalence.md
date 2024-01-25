@@ -130,7 +130,7 @@ Qed.
 
 ### Assignments
 
-An assignment is redundant is assign to its value.
+An assignment is redundant is assign to the same value that the variable currently holds.
 
 ```coq
 Theorem assign_aequiv : forall (X : string) (a : aexp),
@@ -155,6 +155,7 @@ Qed.
 The behavior equivalence is also a *congruence*. Informally, it is a congruence in the sense that two subprograms implies the equivalence of the larger programs. For example:
 
 $$c_1 = c_1' \implies c2 = c2' \implies (c_1;c_2) = (c_1';c_2')$$
+
 This fact is important in the sense that it allows us to replace a small part of a large program by an equivalent subprogram without proving those parts that didn't change.   
 
 Formalize the idea of congruence into Coq needs some work. The most basic one is the sequence commands.
