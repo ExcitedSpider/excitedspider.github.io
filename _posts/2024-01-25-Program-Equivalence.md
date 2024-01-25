@@ -6,6 +6,9 @@ description: Formalize equivalence relations.
 tags: [Coq, PLT]
 ---
 
+* TOC
+{:toc}
+
 This is a summary for the programming language theory for chapter "Program Equivalence"  [^1]. 
 
 ## Behavioral Equivalence
