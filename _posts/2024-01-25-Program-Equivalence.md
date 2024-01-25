@@ -9,7 +9,7 @@ tags: [Coq, PLT]
 * TOC
 {:toc}
 
-This is a summary for the programming language theory for chapter "Program Equivalence"  [^1]. 
+This is a summary for the programming language foundation, chapter "Program Equivalence"  [^1]. 
 
 ## Behavioral Equivalence
 The concept of ***equivalence*** is crucial to understand what is a correct program. For an example, if  program $A$ is correct and $B$ is equivalent to $A$, then it is guaranteed that $B$ is correct. 
