@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Program Equivalence"
+title:  "Hoare Logic Basic"
 categories: [Software-Foundations]
 description: Assertions, Hoare Triples and Proof Rules. 
 tags: [Coq, PLT]
