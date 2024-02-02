@@ -224,6 +224,7 @@ Theorem hoare_while : forall P (b:bexp) c,
 - Hoare Triples are built on assertions.
 - Hoare Triples can be reasoned mechanically through proof rules 
 
+## Reference
 
 [^1]: [PROGRAMMING LANGUAGE FOUNDATIONS](https://softwarefoundations.cis.upenn.edu/plf-current/index.html)
 [^2]: [Wikipedia: Hoare logic](https://en.wikipedia.org/wiki/Hoare_logic)
