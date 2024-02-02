@@ -75,6 +75,7 @@ A sequence of commands can be "torn down" by look at each command.  The rule is:
 $$
 {\displaystyle {\dfrac {\{P\}S\{Q\}\quad ,\quad \{Q\}T\{R\}}{\{P\}S;T\{R\}}}}
 $$
+
 which can be easily translated to Coq:
 
 ```coq
@@ -98,6 +99,7 @@ where $P[E/x]$ means the assertion $P$ in which every free occurrence of x as be
 For example, what the precondition could be in this triple?
 
 $$\{ ??? \}~X:= X + Y~\{X=1\}$$
+
 If we replace $X$ with $X+Y$ in the postcondition, a valid precondition is acquired. 
 
 $$\{ X+Y = 1 \}~X:= X + Y~\{X=1\}$$
@@ -165,6 +167,7 @@ Qed.
 ### Consequence
 
 $${\displaystyle {\dfrac {P_{1}\rightarrow P_{2}\quad ,\quad \{P_{2}\}S\{Q_{2}\}\quad ,\quad Q_{2}\rightarrow Q_{1}}{\{P_{1}\}S\{Q_{1}\}}}}$$
+
 This rule allows strengthening the precondition or(and) weaken the postconditions.
 
 For example, if my precondition is $\{ X > 10 \}$ , I can strengthen it to $\{X > 20\}$. For most of the time, this rule is used to adjust the assertions to what we need.
@@ -201,6 +204,7 @@ Qed.
 ### Loops
 
 $${\displaystyle {\dfrac {\{P\wedge B\}S\{P\}}{\{P\}{\texttt {while}}\ B\ {\texttt {do}}\ S\ {\texttt {end}}\{\neg B\wedge P\}}}}$$
+
 This rule captures the most important behaviors of loops:
 - The loop body will be executed only if $B$ is true
 - The loop terminates when $B$ becomes false.
