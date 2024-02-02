@@ -40,7 +40,7 @@ Definition Assertion := state → Prop.
 The central of Hoare Logic is the *Hoare Triple*. A triple describes how the execution of a piece of code changes the state ([program state](https://en.wikipedia.org/wiki/State_(computer_science))). The formal notation of a triple is:
 
 $$
-\{P\}~c~\{Q\}
+\\{P\\}~c~\\{Q\\}
 $$
 
 where P and Q are assertions, c is the piece of code (commands) that being executed. P is named the _precondition_ and Q the _postcondition_. This triple asserts that if the state satisfy $P$, after code $c$ was executed, the state should satisfy $Q$. 
@@ -73,7 +73,7 @@ A wonderful idea of Hoare Logic is that the proof mirrors the structure of the p
 A sequence of commands can be "torn down" by look at each command.  The rule is:
 
 $$
-{\displaystyle {\dfrac {\{P\}S\{Q\}\quad ,\quad \{Q\}T\{R\}}{\{P\}S;T\{R\}}}}
+{\\displaystyle {\\dfrac {\\{P\\}S\\{Q\\}\\quad ,\\quad \\{Q\\}T\\{R\\}}{\\{P\\}S;T\\{R\\}}}}
 $$
 
 which can be easily translated to Coq:
@@ -91,18 +91,18 @@ Although it is intuitive, but one should see that it shows how Hoare Logic can *
 For imperative programs, the typical command that changes the program state is assignment. Thus, it is the most fundamental of the Hoare logic.
 
 $$
-{\dfrac {}{\{P[E/x]\}x:=E\{P\}}}
+{\\dfrac {}{\\{P[E/x]\\}x:=E\\{P\\}}}
 $$
 
 where $P[E/x]$ means the assertion $P$ in which every free occurrence of x as been replaced by E.    
 
 For example, what the precondition could be in this triple?
 
-$$\{ ??? \}~X:= X + Y~\{X=1\}$$
+$$\\{ ??? \\}~X:= X + Y~\\{X=1\\}$$
 
 If we replace $X$ with $X+Y$ in the postcondition, a valid precondition is acquired. 
 
-$$\{ X+Y = 1 \}~X:= X + Y~\{X=1\}$$
+$$\\{ X+Y = 1 \\}~X:= X + Y~\\{X=1\\}$$
 
 This trick works because it exploits the definition of assignment. Besides, this trick is so mechanical that it could be implemented in Coq trivially.
 
@@ -135,11 +135,11 @@ Proof.
 Qed.
 ```
 
-A common error is to use this rule in a "forward" way. In other words, this is incorrect: ${\displaystyle \{P\}x:=E\{P[E/x]\}}$
+A common error is to use this rule in a "forward" way. In other words, this is incorrect: ${\\displaystyle \\{P\\}x:=E\\{P[E/x]\\}}$
 
 We give a counterexample of it to show that it is indeed incorrect:
 
-$${\displaystyle \{\text{True}\}~x:=a~\{X = a\}}$$
+$${\\displaystyle \\{\\text{True}\\}~x:=a~\\{X = a\\}}$$
 
 ```coq
 Theorem hoare_asgn_wrong : exists a:aexp,
@@ -166,25 +166,25 @@ Qed.
 
 ### Consequence
 
-$${\displaystyle {\dfrac {P_{1}\rightarrow P_{2}\quad ,\quad \{P_{2}\}S\{Q_{2}\}\quad ,\quad Q_{2}\rightarrow Q_{1}}{\{P_{1}\}S\{Q_{1}\}}}}$$
+$${\\displaystyle {\\dfrac {P_{1}\\rightarrow P_{2}\\quad ,\\quad \\{P_{2}\\}S\\{Q_{2}\\}\\quad ,\\quad Q_{2}\\rightarrow Q_{1}}{\\{P_{1}\\}S\\{Q_{1}\\}}}}$$
 
 This rule allows strengthening the precondition or(and) weaken the postconditions.
 
-For example, if my precondition is $\{ X > 10 \}$ , I can strengthen it to $\{X > 20\}$. For most of the time, this rule is used to adjust the assertions to what we need.
+For example, if my precondition is $\\{ X > 10 \\}$ , I can strengthen it to $\\{X > 20\\}$. For most of the time, this rule is used to adjust the assertions to what we need.
 
 ### Conditions
 A conditional command `if b then s else t end` naturally has this form in logic: 
 
-$${\displaystyle {\dfrac {\{B\wedge P\}S\{Q\}\quad ,\quad \{\neg B\wedge P\}T\{Q\}}{\{P\}{\texttt {if}}\ B\ {\texttt {then}}\ S\ {\texttt {else}}\ T\ {\texttt {end}}\{Q\}}}}$$
+$${\\displaystyle {\\dfrac {\\{B\\wedge P\\}S\\{Q\\}\\quad ,\\quad \\{\\neg B\\wedge P\\}T\\{Q\\}}{\\{P\\}{\\texttt {if}}\\ B\\ {\\texttt {then}}\\ S\\ {\\texttt {else}}\\ T\\ {\\texttt {end}}\\{Q\\}}}}$$
 
-That is, in the `then` branch, we know $B$ is evaluated to $\text{True}$; and in the `else` branch, $B$ is evaluated to $\text{False}$.  We could use this information in reasoning. Moreover, if $B$ (or $\lnot B$) contradicts $P$, we could rule out that branch because its hypothesis contains a contradiction. 
+That is, in the `then` branch, we know $B$ is evaluated to $\\text{True}$; and in the `else` branch, $B$ is evaluated to $\\text{False}$.  We could use this information in reasoning. Moreover, if $B$ (or $\\lnot B$) contradicts $P$, we could rule out that branch because its hypothesis contains a contradiction. 
 
 Formalization in coq:
 
 ```coq
 Theorem hoare_if : forall P Q (b:bexp) c1 c2,
-  {{ P /\ b }} c1 {{Q}} ->
-  {{ P /\ ~ b}} c2 {{Q}} ->
+  {{ P /\\ b }} c1 {{Q}} ->
+  {{ P /\\ ~ b}} c2 {{Q}} ->
   {{P}} if b then c1 else c2 end {{Q}}.
 
 (* example *)
@@ -203,12 +203,12 @@ Qed.
 
 ### Loops
 
-$${\displaystyle {\dfrac {\{P\wedge B\}S\{P\}}{\{P\}{\texttt {while}}\ B\ {\texttt {do}}\ S\ {\texttt {end}}\{\neg B\wedge P\}}}}$$
+$${\\displaystyle {\\dfrac {\\{P\\wedge B\\}S\\{P\\}}{\\{P\\}{\\texttt {while}}\\ B\\ {\\texttt {do}}\\ S\\ {\\texttt {end}}\\{\\neg B\\wedge P\\}}}}$$
 
 This rule captures the most important behaviors of loops:
 - The loop body will be executed only if $B$ is true
 - The loop terminates when $B$ becomes false.
-- We call $P$ a loop invariant to $S$ if $\{P \wedge B\}S\{P\}$. This means P will be true at the end of the loop body if $B$ is true in the beginning. Otherwise, (if P contradicts B), it still holds because the precondition becomes trivial.
+- We call $P$ a loop invariant to $S$ if $\\{P \\wedge B\\}S\\{P\\}$. This means P will be true at the end of the loop body if $B$ is true in the beginning. Otherwise, (if P contradicts B), it still holds because the precondition becomes trivial.
 
 Note that Hoare Logic only cares about loops that terminates. In other word, only partial correctness can be proven. There is a variant version of loop rule that can be formulated to prove total correctness[^2].  But as deciding if a program halts is known as undecidable, it is hard to work with total correctness, or it would require special designs of programming languages.
 
@@ -216,8 +216,8 @@ Formalize it in Coq
 
 ```coq
 Theorem hoare_while : forall P (b:bexp) c,
-  {{P /\ b}} c {{P}} ->
-  {{P}} while b do c end {{P /\ ~ b}}.
+  {{P /\\ b}} c {{P}} ->
+  {{P}} while b do c end {{P /\\ ~ b}}.
 ```
 ## Summary
 - Assertions are properties of program states.
