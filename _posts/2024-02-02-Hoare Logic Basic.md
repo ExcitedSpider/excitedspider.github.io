@@ -208,7 +208,7 @@ $${\displaystyle {\dfrac {\{P\wedge B\}S\{P\}}{\{P\}{\texttt {while}}\ B\ {\text
 This rule captures the most important behaviors of loops:
 - The loop body will be executed only if $B$ is true
 - The loop terminates when $B$ becomes false.
-- We call $P$ a loop invariant to $S$ if $\{P \wedge B\}S\{P\}$. This means P will be true at the end of the loop body if $B$ is true in the beginning. Otherwise, (if P contradicts B), it still holds because the precondition becomes trivial.
+- We call $P$ a loop invariant to $S$ if $\\{P \wedge B\\}S\\{P\\}$. This means P will be true at the end of the loop body if $B$ is true in the beginning. Otherwise, (if P contradicts B), it still holds because the precondition becomes trivial.
 
 Note that Hoare Logic only cares about loops that terminates. In other word, only partial correctness can be proven. There is a variant version of loop rule that can be formulated to prove total correctness[^2].  But as deciding if a program halts is known as undecidable, it is hard to work with total correctness, or it would require special designs of programming languages.
 
