@@ -8,6 +8,9 @@ tags: [Coq, PLT]
 
 * TOC
 {:toc}
+
+{% raw %}
+
 The _Floyd-Hoare Logic_, or _Hoare Logic_, is a formal logic system which is able to reason about the correctness of computer programs **rigorously** and **compositionally**. It is rigorous in the sense that it bases on formal logics. It is compositional because it allows researchers to look at the syntactic constructs of a imperative program. 
 
 There are two main ideas of Hoare Logics:
@@ -122,7 +125,7 @@ To translate this rule into Coq:
 
 ```coq
 Theorem hoare_asgn : ∀ Q X a,
-  {{Q [X ⊢> a]}} X := a {{Q}}.
+  {{Q [X |-> a]}} X := a {{Q}}.
 
 Example hoare_asgn_examples1 :
   exists P,
@@ -228,3 +231,5 @@ Theorem hoare_while : forall P (b:bexp) c,
 
 [^1]: [PROGRAMMING LANGUAGE FOUNDATIONS](https://softwarefoundations.cis.upenn.edu/plf-current/index.html)
 [^2]: [Wikipedia: Hoare logic](https://en.wikipedia.org/wiki/Hoare_logic)
+
+{% endraw %}

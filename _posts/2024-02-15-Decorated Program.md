@@ -9,6 +9,8 @@ tags: [Coq, PLT]
 * TOC
 {:toc}
 
+{% raw %}
+
 ## Decorated Programs
 The aesthetics of Hoare Logic is that it follows the structure of the program itself, which enables a powerful way to reason about a program -- by decoration.
 
@@ -113,7 +115,10 @@ There is no silver bullet to solve the problem, but a few tips might help:
 - Simplified Decorated Programs are equivalent to a fully decorated one, and it could help to avoid verbose, and thus, easier to read.
 - The verification of a decorated program could be made automated.
 - Finding loop invariants is relatively hard in this art.
+
 ## Referrecne
 
 [^1]: https://softwarefoundations.cis.upenn.edu/plf-current/Hoare2.html
 [^2]: https://excitedspider.github.io/software-foundations/2024/02/02/Hoare-Logic-Basic.html
+
+{% endraw %}
