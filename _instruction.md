@@ -1,5 +1,11 @@
 # Instructions
 
+## Prerequisites
+
+Please make sure all the dependencies are installed.
+
+For Ubuntu: https://jekyllrb.com/docs/installation/ubuntu/
+
 ## Run Locally
 
 
