@@ -47,14 +47,13 @@ Hi! I am **Chew (Qiuyi)**. I'm currently a master's student at the **University 
 - [MyCompiler](https://github.com/ExcitedSpider/Compiler): A tiny compiler front-end, made when I was a bachelor student.
 - [Tic-Tac-Toe](https://github.com/ExcitedSpider/Tic-Tac-Toe-Server): A multiplayer board game, which originated from a subject assignment during my master's.
 
-### Contact
+### Articles
+
+You will find most of my articles in this blog. Other that it, I also have:
+
+- [Type Programming and Writing Type-Safe Code](https://juejin.cn/post/7202413628809199676): An article wrote during my tenure at ByteDance, collected by the official ByteDance Front-end technical group.
+- My [Archieved Chinese Blog](https://excitedspider.github.io/archive.excitedspider.github.io/): After moving to Melbourne, I decided to use English for blogging. So I wouldn't update that one anymore.
+
+### Contact Me
 
 If you are interested in me, please don't hesitate to contact me on [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/qiuyi-feng-348968287), or send me an email through <chew.y.feng@outlook.com>
-
-## The Blog
-
-I have a long-time hobby of writing and I believe that writing can help me to organize my thoughts. This blog is mainly for me to organize and share the knowledge in the field of CS. After moving to Melbourne, I decided to use English to write a whole new blog, for language practices as well. 
-
-By the way, I used to write a blog in Chinese: [Archive](Archive). Feel free to check it out.
-
-[Archive]: https://excitedspider.github.io/archive.excitedspider.github.io/
