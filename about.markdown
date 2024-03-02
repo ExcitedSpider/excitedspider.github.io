@@ -6,7 +6,7 @@ permalink: /about/
 
 ## Who am I
 
-Hi! I am **Chew (Qiuyi)**. I'm currently a master's student at the **University of Melbourne** studying Computer Science. My current interests include **distributed system**, **computation theory** and **programming languages**. Feel free to contact me if you are interested. 
+Hi! I am **Chew (Qiuyi)**. I'm currently a master's student at the **University of Melbourne** studying Computer Science. My current interests include **distributed system** and **programming languages theories**. Feel free to contact me if you are interested. 
 
 ### Education
 
@@ -33,6 +33,23 @@ Hi! I am **Chew (Qiuyi)**. I'm currently a master's student at the **University 
 
 [Tencent Ltd]: https://www.tencent.com/en-us/
 [ByteDance Ltd]:https://www.bytedance.com/en/
+
+### Personal Projects
+
+**Featured**
+- [Figma Design Token Dock](https://github.com/ExcitedSpider/figma-design-token-dock): A Figma plugin to export figma style to design token json.
+  ![Preview](/assets/images/20240302-figma-design-token-dock.png)
+- [JSX2PNG](https://github.com/ExcitedSpider/jsx-to-png): A react library to convert react jsx svg component to image.
+- [useEcharts](https://github.com/ExcitedSpider/qe-use-echarts): A react hook to employ Echarts, which is originally an imperative library.
+- [Typescript-Json-Schema](https://github.com/ExcitedSpider/typescript-json-schema): Generate json-schema from type definitions.
+
+**Others**
+- [MyCompiler](https://github.com/ExcitedSpider/Compiler): A tiny compiler front-end, made when I was a bachelor student.
+- [Tic-Tac-Toe](https://github.com/ExcitedSpider/Tic-Tac-Toe-Server): A multiplayer board game, which originated from a subject assignment during my master's.
+
+### Contact
+
+If you are interested in me, please don't hesitate to contact me on [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/qiuyi-feng-348968287), or send me an email through <chew.y.feng@outlook.com>
 
 ## The Blog
 
