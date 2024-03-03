@@ -39,6 +39,7 @@ Hi! I am **Chew (Qiuyi)**. I'm currently a master's student at the **University 
 **Featured**
 - [Figma Design Token Dock](https://github.com/ExcitedSpider/figma-design-token-dock): A Figma plugin to export style to design token as JSON.
   ![Preview](/assets/images/20240302-figma-design-token-dock.png)
+- [Design Rule Linter](https://www.figma.com/community/plugin/886210367389281399/design-rule-linter): A Figma Plugin to check design principles automatically.
 - [JSX2PNG](https://github.com/ExcitedSpider/jsx-to-png): A react library to convert react SVG component to image.
 - [useEcharts](https://github.com/ExcitedSpider/qe-use-echarts): A react hook to employ Echarts, which is originally an imperative library.
 - [Typescript-Json-Schema](https://github.com/ExcitedSpider/typescript-json-schema): Generate Json-Schema from type definitions.
