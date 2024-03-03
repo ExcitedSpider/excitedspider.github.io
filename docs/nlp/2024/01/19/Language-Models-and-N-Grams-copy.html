@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Language Models and N-Grams | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Language Models and N-Grams" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What is a language models (LMs), and the very basic example of LMs – the n-grams" />
+<meta property="og:description" content="What is a language models (LMs), and the very basic example of LMs – the n-grams" />
+<link rel="canonical" href="/nlp/2024/01/19/Language-Models-and-N-Grams-copy.html" />
+<meta property="og:url" content="/nlp/2024/01/19/Language-Models-and-N-Grams-copy.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-19T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Language Models and N-Grams" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2024-01-25T18:26:45+11:00","datePublished":"2024-01-19T00:00:00+11:00","description":"What is a language models (LMs), and the very basic example of LMs – the n-grams","headline":"Language Models and N-Grams","mainEntityOfPage":{"@type":"WebPage","@id":"/nlp/2024/01/19/Language-Models-and-N-Grams-copy.html"},"url":"/nlp/2024/01/19/Language-Models-and-N-Grams-copy.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Language Models and N-Grams</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2024-01-19T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Jan 19, 2024
+      </time><time>
+        Modified At: Jan 25, 2024
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>NLP</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This article concerns two questions</p>
+<ul>
+  <li>what is a language models (LMs), and</li>
+  <li>the very basic example of LMs: the n-grams</li>
+</ul>
+
+<h2 id="language-models">Language Models</h2>
+<p>People talk a lot about Language Models, but what are them exactly? Perhaps surprisingly, models that assign <strong>probabilities</strong> to sequences of words are called language models or LMs. To illustrate the idea, consider a (piece of) sentence “its water is so transparent that”. A LM should be able to give the possibility of word “the” coming after the sentence. In other words, a LM could decide:</p>
+
+\[P(\text{the}|\text{its water is so transparent that})\]
+
+<p>For me, it is more easy to understand that</p>
+
+<blockquote>
+  <p>LM = “input a sequence of words, output the distribution of probability of the next word. “</p>
+</blockquote>
+
+<p>Probabilities are useful. For example, In <em>speech recognition</em>, probabilities can help identity which word is the speaker actually saying giving the context. In <em>error correction</em>, a LM could suggest a grammatical or spelling error if it saw an extremely small probabilities. It is also useful to use the language models in a <em>generative</em> way, in a process which mathematicians called it <strong><em>sampling</em></strong>.</p>
+
+<h3 id="sampling">Sampling</h3>
+<p>Sampling from a language model can output a “sample” sentence. The simplest version could be just repeatedly run the LM, with each word drawn from distribution.</p>
+
+<h2 id="n-grams">N-Grams</h2>
+
+<h3 id="general-idea">General Idea</h3>
+<p>N-grams are a good exemplar for LMs, and they are popular in many basic NLP tasks as well. the word “n-gram” means using the latest n words to approximates the probability. For example, a bi-gram model assumes that</p>
+
+\[P(\text{the}|\text{its water is so transparent that}) \approx P(\text{the}|\text{that})\]
+
+<p>It may sounds like the hypothesis is silly in the first place, but it surprisingly works in many applications. The assumption that the probability of a word depends on the previous words is called a <strong>Markov assumption</strong>.</p>
+
+<p>What’s the benefit to adopt the Markov assumption? The most obvious advantage is that the implementation is much easier. Take bi-grams for example, the model can just learn the probability by counting the appearance of each word pairs in the training set showing in Eq. (1). In a fancier term, it is the maximum likelihood estimation (MLE).</p>
+
+\[P(w_n | w_{n-1}) = \frac{C(w_{n-1}w_n)}{\sum C(w_{n-1}w)} \tag 1\]
+
+<p>Accordingly, a generalized n-gram model give the probability of next word according to Eq. (2).</p>
+
+\[P(w_n | w_{1:n-1}) \approx P(w_n | w_{n-1}) \tag 2\]
+
+<p>It’s not hard to see that for a n-gram model, the probability of a complete sentence is:</p>
+
+\[P(w_{1:n})\approx \prod_{k=1}^n P(w_k|w_{k-1}) \tag 3\]
+
+<p>Why n-grams work? Because we believe the <strong>relative frequency</strong> has something to do with the semantic meaning of natural language. To be more specific, n-gram models could capture <strong>syntactic facts</strong>: What comes after “eat” is usually a noun or an adjective. And it can even cultural information - if people like Chinese food more than Australian food, the model could capture <code>P(Chinese | eat) &gt; P(Australian | eat)</code> .</p>
+
+<p>Generally speaking, LM captures some of the characteristics of the corpus. A language model trained on Shakespeare’s plays is expected to perform poorly for regular applications in which most of the sentences are informal English ones.</p>
+
+<h3 id="the-zeroes">The Zeroes</h3>
+<p>Intuition is that the longer the context, the more coherent. But longer context would increase training cost, and it might suffers from lack of combination of words (the <strong>zeros</strong>).</p>
+
+<p>The zeroes - combinations of words that don’t ever occur in the training set but do occur in the test set. If we are building a trigram, we do see “denied the rumors” and “take the loan” in the training set, but when “denied the loan” occurs in the test set that we have never seen it before, according to Eq. (3), the probability of such sentence is reduced to 0.</p>
+
+<p>Many approaches are developed to solve this.</p>
+<ul>
+  <li>Unknown words cause zeros:  we can use a <strong>closed vocabulary</strong> where unseen words are not allowed. or mark the out out vocabulary (OOV) words as a special token <code class="language-plaintext highlighter-rouge">&lt;UNK&gt;</code>. Estimate the probabilities for <code class="language-plaintext highlighter-rouge">&lt;UNK&gt;</code> just like any other regular word in the training set</li>
+  <li><strong><em>Smoothing</em></strong> can treat words that are in our vocabulary but in an unseen context.</li>
+  <li><strong><em>interpolation</em></strong> and <strong><em>Backoff</em></strong> draw on “primitive” n-gram information to ameliorate the lack of information in a higher-n-gram model.</li>
+</ul>
+
+<h3 id="smoothing">Smoothing</h3>
+<p>Smoothing (or discounting) means we shave off a bit of probability from some frequent events to those events that we never seen. Intuitively, you can imagine this approach would add bias to the model because after smoothing, the distribution is not the maximum likelihood. And you are right.</p>
+
+<p>In Laplace smoothing, we simply adds one to each count thus there is no zeros in the. Take bigram for example, if we see a pair appears once in the real corpus, we record it actually twice. It introduces a huge bias.</p>
+
+<p>Add-k smoothing is a modified version of Laplace smoothing. Instead of adding 1, add a small fraction k (.01?).</p>
+<h3 id="interpolation-and-backoff">interpolation and Backoff</h3>
+<p>In <strong>backoff</strong>, we use trigram if the evidence suffice, else we use the bigram (and unigram if necessary). Sufficient evidence = not zero.</p>
+
+<p>In <strong>interpolation</strong>, we mix the probability from all n-gram LMs. The term <strong>linear interpolation</strong> means the probability our LM gives is a linear combination of all n-gram models (Eq. 4)</p>
+
+\[P(w_n|w_{n-2}w_{n-1}) = \sum_{i=0} \lambda_i P(w_n|w_{n-1:n-i}) \tag 4\]
+
+<h2 id="evaluation-of-language-models">Evaluation of Language Models</h2>
+<p>Generally, there are two types of evaluation:</p>
+<ul>
+  <li><strong><em>extrinsic evaluation</em></strong> is to embed a LM in the real-world application (say a machine translator). it is practical, direct, but expensive, sometimes even impossible</li>
+  <li><strong><em>intrinsic evaluation</em></strong> is to measure the performance of an application by some metrics, independent of any application (traditional ML). But an intrinsic improvement doesn’t guarantee an extrinsic improvement</li>
+</ul>
+
+<p>We would like to go for intrinsic evaluation first. The most popular intrinsic evaluation metric is the <strong><em>perplexity</em></strong>. Perplexity describes how “surprising” the test set sounds like to our LM. Formally, the perplexity of a LM is the inverse probability of the test set. A test set consisted with N words $W = w_1 \cdots w_N$,</p>
+
+<p>We have perplexity</p>
+
+\[\text{perplexity}(W) = P(w_1w_2\cdots w_N)^{-\frac{1}{N}} \tag 4\]
+
+<p>To calculate the perplexity, we should follow how the LM is defined. For instance, the perplexity of a bigram is (apply Eq .2 in Eq. 4)</p>
+
+\[\text{perplexity}(W) = {\prod_{i=1}^N P(w_i|w_i-1)}^{-\frac{1}{N}} \tag 5\]
+
+<p>Lower perplexity often implies a better LM, as the test set is less surprising to our LM. But if we want to assure that it is indeed better in the real-world application, we still need to carry out extrinsic evaluation.</p>
+
+  </div><a class="u-url" href="/nlp/2024/01/19/Language-Models-and-N-Grams-copy.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
