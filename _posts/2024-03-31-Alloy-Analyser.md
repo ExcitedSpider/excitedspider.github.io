@@ -119,12 +119,15 @@ It says "In the next state, there is one password being updated"
 delete_all[user] => after (no user.passwords)
 ```
 
-All temporal operators: 
 ![temporalops](/assets/images/20240329155752.png)
+All temporal operators
 
 ## Alloy Language
 **Signatures** are type declarations.
+
 ![sigs](/assets/images/20240329160557.png)
+Common Signature Declarations
+
 Example: Passbook is a database that stores the relation of (user, url, password).
 ```
 sig URL {} 
