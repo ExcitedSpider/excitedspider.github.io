@@ -38,7 +38,8 @@ Factor(x,y,z) — {(x,y,z) | x = y * z}
 In summary, we have Sets = Relations = Predicates in alloy
 ### Operators
 **Set operators**
-![](/assets/images/20240331-alloy-setop.png)
+
+![setops](/assets/images/20240331-alloy-setop.png)
 
 **Relation operators**
 ```
@@ -76,9 +77,13 @@ urlPasswords ++ updatedPassword = {(U0, UR0, P3), (U0, UR1, P2), (U1, UR0, P2)}
 Note that if the relation has an arity of n, the first (n-1) are seen as domain, the last one is the range.
 
 **Propositional Logic Operators** 
-![](/assets/images/20240331-alloy-propop.png)
+
+![propop](/assets/images/20240331-alloy-propop.png)
+
 **Quantifiers**
-![](/assets/images/20240331-alloy-quantifiers.png)
+
+![quantifiers](/assets/images/20240331-alloy-quantifiers.png)
+
 The last four can also be used to declare sets.
 ## Temporal Logic
 One major feature of Alloy is that it can reason about *temporal logic* by *temporal operators*. 
@@ -86,7 +91,7 @@ One major feature of Alloy is that it can reason about *temporal logic* by *temp
 Alloy adopts a model-based specification system, in which the system is defined as a ***state machine model***. In an abstract state machine model, the state e
 volves over time
 
-![](/assets/images/20240329164131.png)
+![statemachine](/assets/images/20240329164131.png)
 
 We can describe the transition as ***preconditions*** (what the state should satisfy before the transition) and ***postconditions*** (constraints after the transition).
 
@@ -115,11 +120,11 @@ delete_all[user] => after (no user.passwords)
 ```
 
 All temporal operators: 
-![](/assets/images/20240329155752.png)
+![temporalops](/assets/images/20240329155752.png)
 
 ## Alloy Language
 **Signatures** are type declarations.
-![](/assets/images/20240329160557.png)
+![sigs](/assets/images/20240329160557.png)
 Example: Passbook is a database that stores the relation of (user, url, password).
 ```
 sig URL {} 
