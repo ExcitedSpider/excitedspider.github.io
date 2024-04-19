@@ -65,7 +65,7 @@ int main() {
 	/* Execute the SQL query, simple query no transaction definition */
 	exec sql SELECT CustID, SalesPerson, Status
 	FROM Orders
-	WHERE OrderID = :OrderID    // ”:” indicates to refer to  C variable
+	WHERE OrderID = :OrderID;// ”:” indicates to refer to  C variable
 	INTO :CustID, :SalesPerson, :Status;
 	
 	printf ("Customer number: %d\n", CustID);
@@ -108,7 +108,7 @@ DCApplication() {
 	}
 }
 
-Long DoDebitCredit(long BranchId,	long TellerId, long AccId, long delta) {
+Long DoDebitCredit(long BranchId, long TellerId, long AccId, long delta) {
 	exec sql UPDATE accounts
 	SET AccBalance =AccBalance + :delta
 	WHERE AccId = :AccId;
@@ -214,14 +214,15 @@ The semantic of flat transaction is ***“all-or-nothing”***
 
 A better solution: stepping back to an earlier state _inside the same transaction_ by **_savepoints_**
 
-![[Pasted image 20240407110700.png]]
+![SavePoints](/assets/images/Pasted image 20240407110700.png)
+
 Savepoints are explicitly established by the application program and can be reestablished by invoking a modified ROLLBACK function, which is aimed at an internal savepoint rather than at the beginning of the transaction.
 
 An alternative to savepoints is nested transactions (or subtransactions)
 
 Nested transactions are a generalization of savepoints. Whereas savepoints allow organizing a transaction into a _sequence_ of actions that can be rolled back individually, nested transactions form a _hierarchy_ of pieces of work.
 
-![[Pasted image 20240407111000.png]]
+![NestedTransaction](/assets/images/Pasted image 20240407111000.png)
 
 Definition of nested Transaction:
 
@@ -245,7 +246,6 @@ _TP monitors_ are the least well-defined software term. They function differentl
 
 The main function of a TP monitor is **to _integrate_ other system components and manage resources**.
 
-![[Pasted image 20240407112651.png]]
 The TP monitor integrates different system components to provide a uniform applications and operations interface with the same failure semantics (ACID properties).
 
 In this subject, TP monitors are defined to be
@@ -261,28 +261,24 @@ Services:
 
 ### Structures of TP Monitors
 
-One process per terminal
+**One process per terminal**
 
-![[Pasted image 20240407114615.png]]
 Each process can run all applications. Each process may have to access any one of the databases. This design is typical of time-sharing systems. It has many processes and many control blocks.
 
 Very memory expensive, context switching causes problems too..
 
-Only one terminal process
+**Only one terminal process**
 
-![[Pasted image 20240407114648.png]]
 In this solution, there is just one process in the entire system. It talks to all terminals, does presentation handling, receives the requests, contains the code for all services of all applications, can access any database, and creates dynamic threads to multiplex itself among the incoming request
 
 This would work under a multithreaded environment but cannot do proper parallel processing, one error leads to large scale problems, not really distributed and rather monolithic
 
-Many Servers, One Scheduler
+**Many Servers, One Scheduler**
 
-![[Pasted image 20240407114806.png]]
 Multiple processes have one requester, which is the process handling the communication with the clients.
 
-Multiple communication processes and servers
+**Multiple communication processes and servers**
 
-![[Pasted image 20240407114946.png]]
 **Generalization of the coexistence approach: multiple application servers invoked by multiple requesters.** The association between these groups of functionally distinct processes, load control, activation/deactivation of processes, and so on, must now be coordinated by a separate instance, the monitor process.
 
 ## Transaction Concurrency Control
@@ -374,7 +370,9 @@ Exclusive Semaphores. An exclusive semaphore is a pointer to a linked list of pr
 
 To acquire a semaphore, a process needs to call `get()`
 
-![[Pasted image 20240417095100.png]]
+An example `get()` of an exclusive semaphore
+![Semaphore-Get](/assets/images/Pasted image 20240417095100.png)
+
 Note that `CS` stands for “compare-and-swap“ (a spin lock)
 ```c
 boolean cs(int *cell, int *old, int *new)
@@ -386,7 +384,8 @@ else { *old = *cell; return FALSE;}
 
  After finishing all things, a process call `give()` to wake up the first process in the waiting list
 
-![[Pasted image 20240417095419.png]]
+An example `give()` of an exclusive semaphore
+![Semaphore-Give](/assets/images/Pasted image 20240417095419.png)
 
 Problem of Exclusive Semaphore: Dead Locks
 
@@ -425,7 +424,8 @@ Therefore, we need to use concurrency control to support properties of concurren
 
 The tool: dependency graphs
 
-![[Pasted image 20240417154210.png]] 
+![DependencyGraphs](/assets/images/Pasted image 20240417154210.png)
+
 **The dependencies induced by history fragments.** Each graph shows the two transaction nodes _T1_ and _T2_ and the arcs labeled with the object 〈name,version〉 pairs.
 
 A simple observation: read doesn’t cause concurrency issue
