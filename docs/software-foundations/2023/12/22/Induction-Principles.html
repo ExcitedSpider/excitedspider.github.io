@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Induction Principles | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Induction Principles" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="the underlying mechanism of the tactic induction." />
+<meta property="og:description" content="the underlying mechanism of the tactic induction." />
+<link rel="canonical" href="/software-foundations/2023/12/22/Induction-Principles.html" />
+<meta property="og:url" content="/software-foundations/2023/12/22/Induction-Principles.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-12-22T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Induction Principles" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-12-22T16:09:42+11:00","datePublished":"2023-12-22T00:00:00+11:00","description":"the underlying mechanism of the tactic induction.","headline":"Induction Principles","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/12/22/Induction-Principles.html"},"url":"/software-foundations/2023/12/22/Induction-Principles.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Induction Principles</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>Coq</span>
+        
+      </span><time class="dt-published" datetime="2023-12-22T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Dec 22, 2023
+      </time><time>
+        Modified At: Dec 22, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>The tactic <code class="language-plaintext highlighter-rouge">induction</code> can be applied to each <code class="language-plaintext highlighter-rouge">inductive</code> defined data type or propositions. The underlying mechanism for the correctness are the <em>induction principles</em>.</p>
+
+<h2 id="induction-principles">Induction principles</h2>
+<p>Induction principles are the propositions which are depend on the inductive types. For examples, the natural number <code class="language-plaintext highlighter-rouge">nat</code> has following induction principle:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Check</span><span class="w"> </span><span class="no">nat_ind</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="o">,</span><span class="w">
+    </span><span class="no">P</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="o">(</span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="no">n</span><span class="o">))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It states that, suppose P is a property of natural numbers. To show P holds for all instances of natural numbers, it suffices to show that</p>
+<ul>
+  <li>P holds for 0</li>
+  <li>P holds for <code class="language-plaintext highlighter-rouge">S n</code> if P holds for <code class="language-plaintext highlighter-rouge">n</code></li>
+</ul>
+
+<blockquote class="note">
+  <p>As <code class="language-plaintext highlighter-rouge">nat_ind</code>, the names of induction principles are the names of inductive type appending  <code class="language-plaintext highlighter-rouge">_ind</code> by default. Just mention, this implementation detail is not important at all.</p>
+</blockquote>
+
+<p>By applying <code class="language-plaintext highlighter-rouge">nat_ind</code>, we can principally achieve the effect of the tactic <code class="language-plaintext highlighter-rouge">induction</code>, that is, the goal <code class="language-plaintext highlighter-rouge">P n</code> is partitioned to two goals: prove <code class="language-plaintext highlighter-rouge">P 0</code> and <code class="language-plaintext highlighter-rouge">P (S n)</code> by giving hypothesis <code class="language-plaintext highlighter-rouge">P n</code>.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise (plus_one_r') *)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">plus_one_r'</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="no">nat</span><span class="o">,</span><span class="w">
+  </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">nat_ind</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">intros</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">  
+</span></code></pre></div></div>
+
+<p>In fact, Coq generates induction principles for every inductively defined data type, even including those that are not recursive. These generated principles follows a similar pattern:</p>
+
+<p>For every constructors c1, … , cn, Coq generates a theorem with this shape:</p>
+
+<pre><code class="language-plain">t_ind: forall P: t -&gt; Prop, 
+	&lt;case for c1&gt; -&gt;
+	&lt;case for c2&gt; -&gt; ... -&gt;
+	&lt;case for cn&gt; -&gt; 
+	forall n:t, P n 
+</code></pre>
+
+<p>First, an example where the constructor take no arguments:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">rgb</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="kp">red</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">green</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">blue</span><span class="pi">.</span><span class="w">
+  
+</span><span class="k">Check</span><span class="w"> </span><span class="no">rgb_ind</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">P</span><span class="p">:</span><span class="w"> </span><span class="no">rgb</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="o">,</span><span class="w">
+  </span><span class="no">P</span><span class="w"> </span><span class="kp">red</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+  </span><span class="no">P</span><span class="w"> </span><span class="no">green</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+  </span><span class="no">P</span><span class="w"> </span><span class="no">blue</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">r</span><span class="p">:</span><span class="w"> </span><span class="no">rgb</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">r</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If any of the constructors are recursive, one or more induction hypotheses are made according to the number of recursive parameter:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise  (booltree_ind) *)</span><span class="w">
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">booltree</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">bt_empty</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">bt_leaf</span><span class="w"> </span><span class="o">(</span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">)</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">bt_branch</span><span class="w"> </span><span class="o">(</span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">t1</span><span class="w"> </span><span class="no">t2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">booltree_property_type</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">booltree</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">base_case</span><span class="w"> </span><span class="o">(</span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree_property_type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Prop</span><span class="w">
+  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">bt_empty</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">leaf_case</span><span class="w"> </span><span class="o">(</span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree_property_type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Prop</span><span class="w">
+  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">b</span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">bt_leaf</span><span class="w"> </span><span class="no">b</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">branch_case</span><span class="w"> </span><span class="o">(</span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree_property_type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Prop</span><span class="w">
+  </span><span class="c">(* Note the order of paramters need to match how it is defined *)</span><span class="w">
+  </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">b</span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">b1</span><span class="p">:</span><span class="w"> </span><span class="no">booltree</span><span class="o">),</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">b1</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> 
+	 </span><span class="kr">forall</span><span class="w"> </span><span class="no">b2</span><span class="p">:</span><span class="w"> </span><span class="no">booltree</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">b2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> 
+	 </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">bt_branch</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">b1</span><span class="w"> </span><span class="no">b2</span><span class="o">).</span><span class="w"> 
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">booltree_ind_type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree_property_type</span><span class="o">),</span><span class="w">
+    </span><span class="no">base_case</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="no">leaf_case</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="no">branch_case</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree</span><span class="o">),</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">b</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(* Check it matches the auto-generated theorem *)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">booltree_ind_type_correct</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">booltree_ind_type</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">exact</span><span class="w"> </span><span class="no">booltree_ind</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For case <code class="language-plaintext highlighter-rouge">bt_branch</code>, two induction hypotheses are made because the constructor  <code class="language-plaintext highlighter-rouge">bt_branch</code> takes two <code class="language-plaintext highlighter-rouge">booltree</code>s.</p>
+<h2 id="polymorphism">Polymorphism</h2>
+<p>To deal polymorphism, Coq generates <em>parameterized</em> induction principles. i.e. The rule is rather similar to the basic case, but with a polymorphic arguments on the front.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+	</span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w">
+	</span><span class="o">|</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(* generated by Coq *)</span><span class="w">
+</span><span class="no">list_ind</span><span class="w"> </span><span class="p">:</span><span class="w">
+	</span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="o">),</span><span class="w">
+	   </span><span class="no">P</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+	   </span><span class="o">(</span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">l</span><span class="o">))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+	   </span><span class="kr">forall</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">l</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The whole induction principle is parameterized by <code class="language-plaintext highlighter-rouge">X</code> as well.</p>
+<h2 id="more-on-the-tactic-induction">More on the tactic <code class="language-plaintext highlighter-rouge">induction</code></h2>
+
+<p>The tactic <code class="language-plaintext highlighter-rouge">induction</code> is a wrapper for the induction principles. Thus, it is not a built-in mechanism of Coq.  It does a lot of bookkeeping making the induction principles more easy to use:</p>
+<ul>
+  <li>First, we don’t need to figure out the names of induction principles.</li>
+  <li>It “re-generalize” the variable which we perform induction on.
+    <ul>
+      <li>To show that, we can try to apply <code class="language-plaintext highlighter-rouge">induction</code> directly to a variable in the goal.</li>
+    </ul>
+  </li>
+  <li>It allows us to rename the induction hypotheses.</li>
+</ul>
+
+<h2 id="inductive-propositions">Inductive Propositions</h2>
+
+<p>With all the explanation of the tactic  <code class="language-plaintext highlighter-rouge">induction</code>, it is more easy to understand why the tactic <code class="language-plaintext highlighter-rouge">induction</code> works on inductive propositions. The rule is just the similar as inductive types - Coq examines each constructor and then generate hypotheses and subgoals correspondingly.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+	</span><span class="o">|</span><span class="w"> </span><span class="no">ev_0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="mi">0</span><span class="w">
+	</span><span class="o">|</span><span class="w"> </span><span class="no">ev_SS</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="no">n</span><span class="o">)))</span><span class="w">
+
+</span><span class="k">Check</span><span class="w"> </span><span class="no">ev_ind</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="o">,</span><span class="w">
+    </span><span class="no">P</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="o">(</span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="no">n</span><span class="o">)))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">ev</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note that the second case has two hypotheses: <code class="language-plaintext highlighter-rouge">ev n</code> and <code class="language-plaintext highlighter-rouge">P n</code>. This is exactly what would happen if we use the tactic <code class="language-plaintext highlighter-rouge">induction</code>.</p>
+
+<h2 id="summary">Summary</h2>
+<ul>
+  <li>Induction principles are the underlying mechanism of the tactic <code class="language-plaintext highlighter-rouge">induction</code></li>
+  <li>Induction principles work both on each inductively defined type and proposition</li>
+</ul>
+
+  </div><a class="u-url" href="/software-foundations/2023/12/22/Induction-Principles.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

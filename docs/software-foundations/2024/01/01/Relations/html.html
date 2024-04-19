@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Relation Properties | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Relation Properties" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Play with math ideas in Coq." />
+<meta property="og:description" content="Play with math ideas in Coq." />
+<link rel="canonical" href="/software-foundations/2024/01/01/Relations/html" />
+<meta property="og:url" content="/software-foundations/2024/01/01/Relations/html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-01T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Relation Properties" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2024-01-01T18:33:45+11:00","datePublished":"2024-01-01T00:00:00+11:00","description":"Play with math ideas in Coq.","headline":"Relation Properties","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2024/01/01/Relations/html"},"url":"/software-foundations/2024/01/01/Relations/html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Relation Properties</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>Coq</span>
+        
+          <span>Discrete Math</span>
+        
+      </span><time class="dt-published" datetime="2024-01-01T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Jan 1, 2024
+      </time><time>
+        Modified At: Jan 1, 2024
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#basic-properties" id="markdown-toc-basic-properties">Basic Properties</a>    <ul>
+      <li><a href="#partial-functions" id="markdown-toc-partial-functions">Partial Functions</a></li>
+      <li><a href="#reflexive-relation" id="markdown-toc-reflexive-relation">Reflexive Relation</a></li>
+      <li><a href="#transitive-relation" id="markdown-toc-transitive-relation">Transitive Relation</a></li>
+      <li><a href="#symmetric-relation" id="markdown-toc-symmetric-relation">Symmetric Relation</a></li>
+      <li><a href="#other-properties" id="markdown-toc-other-properties">Other Properties</a></li>
+    </ul>
+  </li>
+  <li><a href="#reflexive-transitive-closure" id="markdown-toc-reflexive-transitive-closure">Reflexive, Transitive Closure</a></li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>This post studies the classic concept in set theory: <em>relations</em>. It’s not hard though, but this it demonstrates the how mathematical ideas can be translated into Coq.</p>
+
+<p>A relations is a set contains pairs of ordered elements. A generic relation is expressed by the symbol $R$. Formally, for some two elements $a$, $b$ we have:
+\((a,b) \in R\)
+In Coq, the identifier <code class="language-plaintext highlighter-rouge">relation</code> is defined as a proposition parameterized by two parameters in the same set. It’s more narrow than the mathematical term, but this “narrow down” make the program relatively simple and reasonable.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="basic-properties">Basic Properties</h2>
+<p>Let’s talk about some common properties mathematicians like to work on relations.</p>
+<h3 id="partial-functions">Partial Functions</h3>
+<p>A partial function is a binary relation over two sets that associates every element of the first set to at most one element of the second set <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. More formally: for every <code class="language-plaintext highlighter-rouge">x</code>, there is at most one <code class="language-plaintext highlighter-rouge">y</code> such that <code class="language-plaintext highlighter-rouge">R x y</code>.</p>
+
+<blockquote>
+  <p>[!note]
+A partial function, or a function, can be viewed as a special case of relation. In contrast, a total function is a special case of partial function, which requires for for every <code class="language-plaintext highlighter-rouge">x</code>, there is exactly one <code class="language-plaintext highlighter-rouge">y</code> such that <code class="language-plaintext highlighter-rouge">R x y</code>. i.e.
+\(\text{Total Function} \subset \text{Partial Function} \subset  \text{Relation}\)</p>
+</blockquote>
+
+<p>Some relations are not functions. For example, a relation that works on any input (total relation).</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise (total_relation_not_partial_function) *)</span><span class="w">
+
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">total_relation</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+</span><span class="o">|</span><span class="w"> </span><span class="no">total_n</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="p">:</span><span class="w"> </span><span class="no">total_relation</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">total_relation_not_partial_function</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="o">~</span><span class="w"> </span><span class="o">(</span><span class="no">partial_function</span><span class="w"> </span><span class="no">total_relation</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">not</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">partial_function</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+  </span><span class="no">assert</span><span class="w"> </span><span class="o">(</span><span class="mi">0</span><span class="o">=</span><span class="mi">1</span><span class="o">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="no">Nonsense</span><span class="pi">.</span><span class="w"> 
+  </span><span class="o">{</span><span class="w">
+    </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="p">:</span><span class="o">=</span><span class="mi">2</span><span class="o">).</span><span class="w">
+    </span><span class="kp">apply</span><span class="w"> </span><span class="no">total_n</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">total_n</span><span class="pi">.</span><span class="w"> 
+  </span><span class="o">}</span><span class="w">
+  </span><span class="no">discriminate</span><span class="w"> </span><span class="no">Nonsense</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>As this example shows, to prove a “not” proposition, it is common to construct a nonsense by a false hypothesis. This trick is similar to the “proof by contradiction” technique in those informal proofs in math or CS courses.</p>
+
+<h3 id="reflexive-relation">Reflexive Relation</h3>
+<p>A relation is reflexive if for every element $a$, $R(a,a) \in R$.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">reflexive</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">a</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For example, the relation “less than or equal to” <code class="language-plaintext highlighter-rouge">&lt;=</code> is reflexive, simply because each number equals itself.</p>
+<h3 id="transitive-relation">Transitive Relation</h3>
+<p>A relation is transitive if $(a,b) \in R$ and $(b,c) \in R$, we always have $(a,c) \in R$.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">transitive</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">c</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We can prove than the relation “less than” <code class="language-plaintext highlighter-rouge">&lt;</code> is transitive.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">lt_trans''</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="no">transitive</span><span class="w"> </span><span class="no">lt</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">lt</span><span class="pi">.</span><span class="w"> </span><span class="kp">unfold</span><span class="w"> </span><span class="no">transitive</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">o</span><span class="w"> </span><span class="no">Hnm</span><span class="w"> </span><span class="no">Hmo</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">induction</span><span class="w"> </span><span class="no">o</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">o'</span><span class="o">].</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">inversion</span><span class="w"> </span><span class="no">Hmo</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">inversion</span><span class="w"> </span><span class="no">Hmo</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_S</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">Hnm</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_S</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">IHo'</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">  
+</span></code></pre></div></div>
+
+<p>There are many ways to prove this transitive property. Say, you can also try induction on hypothesis <code class="language-plaintext highlighter-rouge">Hnm</code> or <code class="language-plaintext highlighter-rouge">Hmo</code>.</p>
+<h3 id="symmetric-relation">Symmetric Relation</h3>
+<p>A relation $R$ is symmetric if $(a,b) \in R$ then it must have $(b,a) \in R$.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">symmetric</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">a</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We shows that the relation “less than or equal to” <code class="language-plaintext highlighter-rouge">&lt;=</code> is not symmetric by the “contradiction” trick.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">le_not_symmetric</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="o">~</span><span class="w"> </span><span class="o">(</span><span class="no">symmetric</span><span class="w"> </span><span class="no">le</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">not</span><span class="pi">.</span><span class="w"> </span><span class="kp">unfold</span><span class="w"> </span><span class="no">symmetric</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+  </span><span class="no">assert</span><span class="w"> </span><span class="o">(</span><span class="mi">1</span><span class="o">&lt;=</span><span class="mi">0</span><span class="o">).</span><span class="w"> </span><span class="o">{</span><span class="w">
+    </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_S</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_n</span><span class="pi">.</span><span class="w">
+  </span><span class="o">}</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_Sn_n</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We can say a relation is <em>anti-symmetric</em> if $(a,b) \in R$ and $(b,a) \in R$, it must be $a=b$. A good example is also the relation <code class="language-plaintext highlighter-rouge">&lt;=</code>.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">antisymmetric</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="no">b</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">a</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">b</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(** Exercise (le_antisymmetric) *)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">le_antisymmetric</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="no">antisymmetric</span><span class="w"> </span><span class="no">le</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">antisymmetric</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">a</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">induction</span><span class="w"> </span><span class="no">a</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">H0</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="no">b</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">inversion</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">H0</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="no">b</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">inversion</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="no">assert</span><span class="w"> </span><span class="o">((</span><span class="no">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">b</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">S</span><span class="w"> </span><span class="no">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">b</span><span class="o">)).</span><span class="w"> 
+      </span><span class="o">{</span><span class="w">
+        </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+        </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+        </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+      </span><span class="o">}</span><span class="w">
+      </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+      </span><span class="kp">apply</span><span class="w"> </span><span class="no">IHa</span><span class="pi">.</span><span class="w">
+      </span><span class="o">*</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_S_n</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H0</span><span class="pi">.</span><span class="w">
+      </span><span class="o">*</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">le_S_n</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The reason why proof is relatively harder is maybe I need to keep another variable <code class="language-plaintext highlighter-rouge">b</code> in the goal.</p>
+
+<h3 id="other-properties">Other Properties</h3>
+<ul>
+  <li>A relation is an <em>equivalence</em> if it’s reflexive, symmetric and transitive</li>
+  <li>A relation is a <em>partial order</em> when it’s reflexive, anti-symmetric and transitive.</li>
+</ul>
+
+<h2 id="reflexive-transitive-closure">Reflexive, Transitive Closure</h2>
+
+<p>A reflexive, transitive closure for a relation $R$ is another relation $R^\prime$ that contains $R$ and is both reflexive and transitive<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup>.</p>
+
+<p>According to the definition, the most straightforward definition is</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">rt_step</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="o">(</span><span class="no">H</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">rt_refl</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">rt_trans</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w">
+        </span><span class="o">(</span><span class="no">Hxy</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="o">)</span><span class="w">
+        </span><span class="o">(</span><span class="no">Hyz</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w">
+        </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">z</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>An equivalent definition follows. This definition generates more convenient inductions compared to what the previous one does.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w">
+                             </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w">
+                             </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">Prop</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">rt1n_refl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">rt1n_trans</span><span class="w"> </span><span class="o">(</span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w">
+      </span><span class="o">(</span><span class="no">Hxy</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">Hrest</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w">
+      </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">z</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Exercises involve proof of the equivalence of two definition</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Lemma</span><span class="w"> </span><span class="no">rsc_R</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+  </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="o">)</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_trans</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_refl</span><span class="pi">.</span><span class="w">   </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(** Exercise: (rsc_trans) *)</span><span class="w">
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">rsc_trans</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+      </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w">  </span><span class="o">-&gt;</span><span class="w">
+      </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+      </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">z</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="no">Hxy</span><span class="w"> </span><span class="no">Hyz</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">induction</span><span class="w"> </span><span class="no">Hxy</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">Hyz</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_trans</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">Hxy</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">IHHxy</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">Hyz</span><span class="pi">.</span><span class="w"> </span><span class="ne">exact</span><span class="w"> </span><span class="no">Hyz</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">  
+
+</span><span class="c">(** Exercise: (rtc_rsc_coincide) *)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">rtc_rsc_coincide</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+    </span><span class="no">clos_refl_trans</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="no">clos_refl_trans_1n</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">split</span><span class="pi">.</span><span class="w">
+  </span><span class="o">{</span><span class="w">
+    </span><span class="kp">intros</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_trans</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_refl</span><span class="pi">.</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt1n_refl</span><span class="pi">.</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rsc_trans</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w"> </span><span class="ne">exact</span><span class="w"> </span><span class="no">IHclos_refl_trans1</span><span class="pi">.</span><span class="w"> </span><span class="ne">exact</span><span class="w"> </span><span class="no">IHclos_refl_trans2</span><span class="pi">.</span><span class="w">
+  </span><span class="o">}</span><span class="w">
+  </span><span class="o">{</span><span class="w">
+    </span><span class="kp">intros</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt_refl</span><span class="pi">.</span><span class="w">
+    </span><span class="o">-</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">rt_trans</span><span class="w"> </span><span class="kp">with</span><span class="w"> </span><span class="no">y</span><span class="pi">.</span><span class="w">
+      </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="o">(</span><span class="no">rt_step</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">Hxy</span><span class="o">).</span><span class="w">
+      </span><span class="o">+</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">IHclos_refl_trans_1n</span><span class="pi">.</span><span class="w">  
+  </span><span class="o">}</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w"> 
+</span></code></pre></div></div>
+
+<h2 id="reference">Reference</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Partial function. (2023). Retrieved from https://en.wikipedia.org/wiki/Partial_function <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>RelProperties of Relations. (2023). Retrieved from https://softwarefoundations.cis.upenn.edu/lf-current/Rel.html <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><a class="u-url" href="/software-foundations/2024/01/01/Relations/html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

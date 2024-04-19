@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Polymorphism and Higher-order Function in Coq | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Polymorphism and Higher-order Function in Coq" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="abstracting and reusing functions" />
+<meta property="og:description" content="abstracting and reusing functions" />
+<link rel="canonical" href="/software-foundations/2023/11/22/Poly-Coq.html" />
+<meta property="og:url" content="/software-foundations/2023/11/22/Poly-Coq.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-22T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Polymorphism and Higher-order Function in Coq" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-22T18:05:21+11:00","datePublished":"2023-11-22T00:00:00+11:00","description":"abstracting and reusing functions","headline":"Polymorphism and Higher-order Function in Coq","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/11/22/Poly-Coq.html"},"url":"/software-foundations/2023/11/22/Poly-Coq.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Polymorphism and Higher-order Function in Coq</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-22T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 22, 2023
+      </time><time>
+        Modified At: Nov 22, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#polymorphism" id="markdown-toc-polymorphism">Polymorphism</a>    <ul>
+      <li><a href="#type-inference" id="markdown-toc-type-inference">Type Inference</a></li>
+      <li><a href="#implicit-type-arguments" id="markdown-toc-implicit-type-arguments">Implicit Type Arguments</a></li>
+      <li><a href="#more-polymorphic-datatypes" id="markdown-toc-more-polymorphic-datatypes">More Polymorphic Datatypes</a></li>
+    </ul>
+  </li>
+  <li><a href="#functions-as-data" id="markdown-toc-functions-as-data">Functions as Data</a>    <ul>
+      <li><a href="#filter" id="markdown-toc-filter">Filter</a></li>
+      <li><a href="#map" id="markdown-toc-map">Map</a></li>
+      <li><a href="#fold" id="markdown-toc-fold">Fold</a></li>
+      <li><a href="#church-numerals" id="markdown-toc-church-numerals">Church Numerals</a></li>
+      <li><a href="#functions-that-makes-functions" id="markdown-toc-functions-that-makes-functions">Functions that makes functions</a></li>
+      <li><a href="#hm-type-notation" id="markdown-toc-hm-type-notation">HM Type Notation</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>The article explores the popular two features in programming:</p>
+<ul>
+  <li>Polymorphism: abstracting functions over the types of the data they manipulate</li>
+  <li>Higher-order Functions: treating functions as data</li>
+</ul>
+
+<h2 id="polymorphism">Polymorphism</h2>
+
+<blockquote>
+  <p>I also have an article about polymorphism in CPP in which the concept of polymorphism is discussed deeper. Check it out: <a href="/c++/2023/11/18/Runtime-Polymorphism-CPP.html">Runtime-Polymorphism-CPP</a></p>
+</blockquote>
+
+<p>Coq support <em>polymorphic inductive type</em>, which means we can define polymorphic datatype. Here is an example of polymorphic list:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">).</span><span class="w">
+
+
+</span><span class="k">Check</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">(</span><span class="no">nil</span><span class="w"> </span><span class="no">nat</span><span class="o">))</span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">nat</span><span class="w">
+</span></code></pre></div></div>
+<p>In addition to parameters defined in argument list <code class="language-plaintext highlighter-rouge">(x:X)</code> and <code class="language-plaintext highlighter-rouge">(l: list X)</code>, the polymorphic datatype takes an additional argument <code class="language-plaintext highlighter-rouge">(X:type)</code>. In application, the <code class="language-plaintext highlighter-rouge">X</code> in the definition of <code class="language-plaintext highlighter-rouge">list</code> becomes a parameter to the constructors.</p>
+
+<p>Similarly, functions can be defined polymorphically.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="kp">repeat</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">count</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="no">X</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">count'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">(</span><span class="kp">repeat</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count'</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_repeat1</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kp">repeat</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">(</span><span class="no">nil</span><span class="w"> </span><span class="no">nat</span><span class="o">)).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="type-inference">Type Inference</h3>
+<p>It’s could be sometime tedious to specify which type are using each time. To solve this, Coq supports <em>type inference</em> to guess the type from the context. For example, this definition is the same as the previous one.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">repeat'</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count</span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="no">X</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">count'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">(</span><span class="no">repeat'</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count'</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Coq can guess the information of types of X x count by the use of constructor <code class="language-plaintext highlighter-rouge">nil</code> and <code class="language-plaintext highlighter-rouge">cons</code>. But I don’t personally like this definition, since it scarifies the readability.</p>
+
+<p>Another type inference feature is to use a “hole” <code class="language-plaintext highlighter-rouge">_</code> to replace the type argument when invoking functions. It tells Coq “please guess the type and fill in the hole”:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">repeat''</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="p">_</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">count'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">(</span><span class="no">repeat''</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count'</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">list123'</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="no">cons</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">(</span><span class="no">nil</span><span class="w"> </span><span class="p">_</span><span class="o">))).</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="implicit-type-arguments">Implicit Type Arguments</h3>
+<p>In most cases, we can even avoid writing <code class="language-plaintext highlighter-rouge">_</code>s by telling Coq always to infer the type arguments. 
+The first way to do this is to use <code class="language-plaintext highlighter-rouge">Arguments</code> directives:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Arguments</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="o">}.</span><span class="w">
+</span><span class="k">Arguments</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="o">}.</span><span class="w">
+</span><span class="k">Arguments</span><span class="w"> </span><span class="kp">repeat</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="o">}.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">list123''</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="no">nil</span><span class="o">)).</span><span class="w">
+</span></code></pre></div></div>
+<p>After executing <code class="language-plaintext highlighter-rouge">Arguments</code>, we don’t have to supply the type arguments for the functions anymore. It is <strong>by default</strong> to let Coq guess it.</p>
+
+<p>A more convenient way to make implicit type arguments is to use curly braces instead of parens:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">repeat'''</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">count</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">count'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">(</span><span class="no">repeat'''</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">count'</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>I think this definition meet my aesthetic: every parameter has type notations, and the type parameter <code class="language-plaintext highlighter-rouge">X</code> is by default implicitly given.</p>
+
+<p>The prefix <code class="language-plaintext highlighter-rouge">@</code> can be added to the front of a function to force the implicit arguments to be explicit.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Compute</span><span class="w"> </span><span class="no">repeat'''</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">2</span><span class="o">.</span><span class="w">
+</span><span class="no">Fail</span><span class="w"> </span><span class="k">Compute</span><span class="w"> </span><span class="o">@</span><span class="no">repeat'''</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">2</span><span class="o">.</span><span class="w">
+</span><span class="k">Compute</span><span class="w"> </span><span class="o">@</span><span class="no">repeat'''</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">2</span><span class="o">.</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>The <code class="language-plaintext highlighter-rouge">Fail</code> keyword make sure that the following command indeed fails</p>
+</blockquote>
+
+<p>Proofs involving implicit type arguments do not nontrivially have more difficulty. Just remember the grammar rules. (Exercise poly_exercises)</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">app_nil_r</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">),</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">l</span><span class="p">:</span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">,</span><span class="w">
+  </span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">X'</span><span class="w"> </span><span class="no">l'</span><span class="w"> </span><span class="no">iHl</span><span class="o">].</span><span class="w"> </span><span class="c">(* extra type argument: X' *)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">iHl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">app_assoc</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="no">list</span><span class="w"> </span><span class="no">A</span><span class="o">),</span><span class="w">
+  </span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">A'</span><span class="w"> </span><span class="no">l'</span><span class="w"> </span><span class="no">iHl</span><span class="o">].</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">iHl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">rev_app_distr</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">(</span><span class="no">l1</span><span class="w"> </span><span class="no">l2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+  </span><span class="no">rev</span><span class="w"> </span><span class="o">(</span><span class="no">l1</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">l2</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">l2</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">l1</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="no">l1</span><span class="w"> </span><span class="no">l2</span><span class="pi">.</span><span class="w">
+  </span><span class="k">Print</span><span class="w"> </span><span class="no">app</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">induction</span><span class="w"> </span><span class="no">l1</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">app_nil_r</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">IHl1</span><span class="pi">.</span><span class="w">  </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">app_assoc</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="more-polymorphic-datatypes">More Polymorphic Datatypes</h3>
+<p>Polymorphic pairs and options defined as</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">prod</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+	</span><span class="o">|</span><span class="w"> </span><span class="no">pair</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">Y</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">option</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">Some</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">None</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>An example of using them is the exercise split:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* X Y are both implicitly defined *)</span><span class="w">
+
+</span><span class="k">Fixpoint</span><span class="w"> </span><span class="kp">split</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="o">*</span><span class="no">Y</span><span class="o">))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">(</span><span class="no">list</span><span class="w"> </span><span class="no">Y</span><span class="o">)</span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">nil</span><span class="o">,</span><span class="w"> </span><span class="no">nil</span><span class="o">)</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="o">,</span><span class="no">y</span><span class="o">)</span><span class="p">::</span><span class="o">[]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">([</span><span class="no">x</span><span class="o">],[</span><span class="no">y</span><span class="o">])</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="o">,</span><span class="no">y</span><span class="o">)</span><span class="p">::</span><span class="no">t</span><span class="w"> </span><span class="o">=&gt;(</span><span class="no">x</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">fst</span><span class="w"> </span><span class="o">(</span><span class="kp">split</span><span class="w"> </span><span class="no">t</span><span class="o">),</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">snd</span><span class="w"> </span><span class="o">(</span><span class="kp">split</span><span class="w"> </span><span class="no">t</span><span class="o">))</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_split</span><span class="p">:</span><span class="w">
+  </span><span class="kp">split</span><span class="w"> </span><span class="o">[(</span><span class="mi">1</span><span class="o">,</span><span class="no">false</span><span class="o">)</span><span class="p">;</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="no">false</span><span class="o">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">([</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="o">],[</span><span class="no">false</span><span class="p">;</span><span class="no">false</span><span class="o">]).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="functions-as-data">Functions as Data</h2>
+<p>Like many other modern programming languages, Coq treats functions as <strong>first-class citizens</strong>, allowing them to be passed as arguments to other functions.</p>
+
+<p>Functions that manipulate other functions are referred as <em>higher-order</em> functions.</p>
+<h3 id="filter">Filter</h3>
+<p>The most simple non-trivial case to use higher-order functions is arguably the filter function, which takes a list and a <em>predicate</em> on the list, “filtering” the list by the predicate.  (exercise <code class="language-plaintext highlighter-rouge">filter_even_gt7</code>)</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">filter</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="p">:</span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">test</span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">-&gt;</span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="p">:</span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[]</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">
+    </span><span class="kr">if</span><span class="w"> </span><span class="no">test</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="o">(</span><span class="no">filter</span><span class="w"> </span><span class="no">test</span><span class="w"> </span><span class="no">t</span><span class="o">)</span><span class="w">
+    </span><span class="kr">else</span><span class="w"> </span><span class="no">filter</span><span class="w"> </span><span class="no">test</span><span class="w"> </span><span class="no">t</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(* keep the item which is even and bigger than 7 *)</span><span class="w"> 
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">filter_even_gt7</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="no">filter</span><span class="w"> </span><span class="o">(</span><span class="kr">fun</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">andb</span><span class="w"> </span><span class="o">(</span><span class="no">even</span><span class="w"> </span><span class="no">n</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">blt_nat</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="no">n</span><span class="o">))</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_filter_even_gt7_1</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="no">filter_even_gt7</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">6</span><span class="p">;</span><span class="mi">9</span><span class="p">;</span><span class="mi">10</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">12</span><span class="p">;</span><span class="mi">8</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">10</span><span class="p">;</span><span class="mi">12</span><span class="p">;</span><span class="mi">8</span><span class="o">].</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The expression <code class="language-plaintext highlighter-rouge">(fun l =&gt; (length l) =? 1)</code> is an <em>anonymous function</em>.</p>
+
+<h3 id="map">Map</h3>
+<p>Another commonly used higher-order function is <code class="language-plaintext highlighter-rouge">map</code>. (exercise <code class="language-plaintext highlighter-rouge">map_rev</code>)</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">map</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">-&gt;</span><span class="no">Y</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="o">[]</span><span class="w">     </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[]</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="no">h</span><span class="o">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="o">(</span><span class="no">map</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">t</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_map2</span><span class="p">:</span><span class="w">
+  </span><span class="no">map</span><span class="w"> </span><span class="no">odd</span><span class="w"> </span><span class="o">[</span><span class="mi">2</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">5</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="no">false</span><span class="p">;</span><span class="no">true</span><span class="p">;</span><span class="no">false</span><span class="p">;</span><span class="no">true</span><span class="o">].</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">map_tail</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">Y</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+  </span><span class="no">map</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="no">x</span><span class="o">])</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">map</span><span class="w"> </span><span class="no">f</span><span class="o">(</span><span class="no">l</span><span class="o">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="no">f</span><span class="w"> </span><span class="no">x</span><span class="o">].</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> 
+</span><span class="kp">intros</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">IHl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">map_rev</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">Y</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+  </span><span class="no">map</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="o">(</span><span class="no">rev</span><span class="w"> </span><span class="no">l</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="o">(</span><span class="no">map</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">l</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+</span><span class="kp">intros</span><span class="pi">.</span><span class="w"> </span><span class="kp">induction</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="o">-</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">IHl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">map_tail</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="fold">Fold</h3>
+<p><code class="language-plaintext highlighter-rouge">Fold</code> is a fancy FP name for <code class="language-plaintext highlighter-rouge">reduce</code> in many other languages, which takes a accumulator, an initial value and a list to perform the “reduce” process:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="kp">fold</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">-&gt;</span><span class="no">Y</span><span class="o">-&gt;</span><span class="no">Y</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">list</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">Y</span><span class="o">)</span><span class="w">
+                         </span><span class="p">:</span><span class="w"> </span><span class="no">Y</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">b</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="o">(</span><span class="kp">fold</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="no">b</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">fold_example1</span><span class="w"> </span><span class="p">:</span><span class="w">
+  </span><span class="kp">fold</span><span class="w"> </span><span class="no">mult</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">4</span><span class="o">]</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="o">.</span><span class="w"> </span><span class="c">(* 1*2*3*4 *)</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="church-numerals">Church Numerals</h3>
+<p>The Church Numerals or Church Encodings is s means of representing data and operators in the <a href="https://en.wikipedia.org/wiki/Lambda_calculus">lambda calculus</a>. Number n are represented by applying functions n times:
+\(f^{\circ n}=\underbrace {f\circ f\circ \cdots \circ f} _{n{\text{ times}}}.\)</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">cnat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">one</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">cnat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">fun</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">x</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">two</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">cnat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">fun</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="w"> </span><span class="no">x</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>If we pass <code class="language-plaintext highlighter-rouge">S</code> (the constructor of <code class="language-plaintext highlighter-rouge">nat</code>) as the function f, we can reduce the Church Numerals to the unitary representation of numbers.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Example</span><span class="w"> </span><span class="no">two_church_peano</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">two</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="functions-that-makes-functions">Functions that makes functions</h3>
+<p>Another kind of higher-order functions are those which construct another functions</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">nat_manipulation</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">f</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">fun</span><span class="w"> </span><span class="o">(</span><span class="no">k</span><span class="p">:</span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">k</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">add_5</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">nat_manipulation</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="no">plus</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">add_t_test</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">add_5</span><span class="w"> </span><span class="mi">15</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="o">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>The function <code class="language-plaintext highlighter-rouge">nat_manipulation</code> receive a <code class="language-plaintext highlighter-rouge">nat</code> and a function which takes 2 <code class="language-plaintext highlighter-rouge">nat</code>s to get a new <code class="language-plaintext highlighter-rouge">nat</code>.</p>
+
+<p>In fact, coq supports <em>partial application</em>, which means supplying insufficient arguments to a function is acceptable, and this operation produces a new function with partial arguments bound. The most simple example is <code class="language-plaintext highlighter-rouge">plus</code>.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Check</span><span class="w"> </span><span class="no">plus</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">plus3</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">plus</span><span class="w"> </span><span class="mi">3</span><span class="o">.</span><span class="w"> 
+</span><span class="k">Check</span><span class="w"> </span><span class="no">plus3</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_plus3</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">plus3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="o">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="hm-type-notation">HM Type Notation</h3>
+<p>Coq use the <a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">HM type notation</a> to describe functions. It is an classical type system originated from lambda calculus. It’s better to look at it.</p>
+
+<p>As we saw the type of plus:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Check</span><span class="w"> </span><span class="no">plus</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">nat</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Each <code class="language-plaintext highlighter-rouge">-&gt;</code> in this expression as actually a <em>binary</em> operator on types. The operators are <em>right-associative</em>, which means it is a shorthand for <code class="language-plaintext highlighter-rouge">nat -&gt; (nat -&gt; nat)</code>.</p>
+
+<p>The power of HM type notation is that this expression has many ways to interpret. It can be read both</p>
+<ul>
+  <li>“<code class="language-plaintext highlighter-rouge">plus</code> is a one-argument function that takes a <code class="language-plaintext highlighter-rouge">nat</code> and returns a one-argument function” ,and,</li>
+  <li>“<code class="language-plaintext highlighter-rouge">plus</code> can take 2 <code class="language-plaintext highlighter-rouge">nat</code>s, and returns a another <code class="language-plaintext highlighter-rouge">nat</code>”.</li>
+</ul>
+
+<p>It is also legal to have quantifiers in the notation. The Church Numerals are:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">cnat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">X</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>The quantifier <code class="language-plaintext highlighter-rouge">forall X: Type</code> states that <code class="language-plaintext highlighter-rouge">cnat</code> type needs an explicit type argument.</p>
+
+  </div><a class="u-url" href="/software-foundations/2023/11/22/Poly-Coq.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

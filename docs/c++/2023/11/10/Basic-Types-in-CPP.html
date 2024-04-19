@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Types and References [CPP] | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Types and References [CPP]" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Data Type, Pointers, Addresses and Object initialization" />
+<meta property="og:description" content="Data Type, Pointers, Addresses and Object initialization" />
+<link rel="canonical" href="/c++/2023/11/10/Basic-Types-in-CPP.html" />
+<meta property="og:url" content="/c++/2023/11/10/Basic-Types-in-CPP.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-10T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Types and References [CPP]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-15T23:42:59+11:00","datePublished":"2023-11-10T00:00:00+11:00","description":"Data Type, Pointers, Addresses and Object initialization","headline":"Types and References [CPP]","mainEntityOfPage":{"@type":"WebPage","@id":"/c++/2023/11/10/Basic-Types-in-CPP.html"},"url":"/c++/2023/11/10/Basic-Types-in-CPP.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Types and References [CPP]</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-10T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 10, 2023
+      </time><time>
+        Modified At: Nov 15, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>C++</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="types">Types</h2>
+<h3 id="the-size_t-type">The <code class="language-plaintext highlighter-rouge">size_t</code> type</h3>
+<p>Use the <code class="language-plaintext highlighter-rouge">size_t</code> type to encode size of objects. It is guaranteed to store the maximum size of objects getting by <code class="language-plaintext highlighter-rouge">sizeof</code> operator.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstddef&gt;
+#include &lt;cstdio&gt;
+</span>
+<span class="kt">size_t</span> <span class="n">size_c</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">);</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">size_t</code> lives in <code class="language-plaintext highlighter-rouge">&lt;cstddef&gt;</code>.</p>
+
+<p>Usage: get number of elements in an array</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">short</span> <span class="n">array</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">32</span> <span class="p">};</span>
+<span class="kt">size_t</span> <span class="n">n_elements</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">short</span><span class="p">);</span>
+</code></pre></div></div>
+<h3 id="class--struct">Class &amp; Struct</h3>
+<ul>
+  <li>The main difference between a class and a struct is the default access level.  Class is <code class="language-plaintext highlighter-rouge">private</code> by default while a struct is <code class="language-plaintext highlighter-rouge">public</code> by default.</li>
+  <li>Structs are called PODs (plain old data) by some programmers.</li>
+</ul>
+
+<h3 id="initialization">Initialization</h3>
+<p>These 4 methods are initialize variables to 0.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">b</span><span class="p">{};</span>
+<span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="kt">int</span> <span class="n">d</span><span class="p">;</span> <span class="c1">// maybe</span>
+</code></pre></div></div>
+<p>Using braces <code class="language-plaintext highlighter-rouge">{}</code> is called <em>braced initialization</em>, which is a C++ standard. An equal symbol is not required and should be avoided by modern C++ community.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">PodStruct</span> <span class="p">{</span>
+	<span class="kt">uint64_t</span> <span class="n">a</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">b</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+	<span class="kt">bool</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">PodStruct</span> <span class="n">initialized_pod</span><span class="p">{</span> <span class="mi">42</span><span class="p">,</span> <span class="s">"hello"</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>A fully featured class is <em>always initialized</em>, which is to make sure there is at least a default constructor. 
+The reason why parentheses initialization <code class="language-plaintext highlighter-rouge">()</code> is the syntax has ambiguous grammar (overlapped with function declaration).</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Taxonomist</span> <span class="p">{</span> <span class="o">--</span><span class="n">snip</span><span class="o">--</span> <span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">Taxonomist</span> <span class="n">t8</span><span class="p">();</span> <span class="c1">// might not be parsed as initialization</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Narrowing Conversions is not allowed in braced initialization, which is another nice feature.
+A general rule: <strong>use braced initializer everywhere</strong>. (except for some C++ stdlib)</p>
+
+<p>The <em>member Initializer Lists</em> grammar is the primary mechanism for initializing class members</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Avout</span> <span class="p">{</span>
+	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="n">apert</span><span class="p">;</span>
+
+	<span class="n">Avout</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> <span class="kt">long</span> <span class="n">year_of_apert</span><span class="p">)</span>
+		<span class="o">:</span> <span class="n">name</span><span class="p">{</span> <span class="n">name</span> <span class="p">},</span> <span class="n">apert</span><span class="p">{</span> <span class="n">year_of_apert</span> <span class="p">}</span> <span class="p">{</span>
+	<span class="p">}</span>
+	<span class="kt">void</span> <span class="n">announce</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"My name is %s and my next apert is %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">apert</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Member initialization execute before the constructor’s body. This design simplifies the extra trivial work and ensures validity of all members before constructor executes.</p>
+<h2 id="reference">Reference</h2>
+<h3 id="address-and-pointers">Address and Pointers</h3>
+
+<p>An address in x86 is 4 bytes (32-bit), while in x86 is 8 bytes (64-bits) 
+The <em>address space layout randomization</em> design by OSs guarantees the address <code class="language-plaintext highlighter-rouge">&amp;</code> get each time is random.
+Use <code class="language-plaintext highlighter-rouge">&amp;</code> to get address, but dereference operator, the pointer declaration, and multiplication all use asterisks <code class="language-plaintext highlighter-rouge">*</code>. Shit language designs.
+Modern C++ recommends using member-of-pointer operator (<code class="language-plaintext highlighter-rouge">-&gt;</code>) to dereference and access a member, that is to say, these 2 lines are of same effects:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ClockOfTheLongNow</span><span class="o">*</span> <span class="n">clock_ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">clock</span><span class="p">;</span>
+
+<span class="n">clock_ptr</span><span class="o">-&gt;</span><span class="n">get_year</span><span class="p">();</span> <span class="c1">// 1</span>
+<span class="p">(</span><span class="o">*</span><span class="n">clock_ptr</span><span class="o">*</span><span class="p">).</span><span class="n">get_year</span><span class="p">();</span> <span class="c1">// 2</span>
+</code></pre></div></div>
+<p>C++ has a feature: an array can <em>decay</em> to a pointer.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+</span>
+<span class="k">struct</span> <span class="nc">College</span> <span class="p">{</span>
+	<span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">print_name</span><span class="p">(</span><span class="n">College</span><span class="o">*</span> <span class="n">college_ptr</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"%s College</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">college_ptr</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">College</span> <span class="n">best_colleges</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"unimelb"</span><span class="p">,</span> <span class="s">"RMIT"</span><span class="p">,</span> <span class="s">"Monash"</span> <span class="p">};</span>
+	<span class="n">print_name</span><span class="p">(</span><span class="n">best_colleges</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This feature is quite dangerous because I expected a point of class <code class="language-plaintext highlighter-rouge">College</code>, but an array can be passed as the parameter. To avoid ambiguousness, it is a convention to use 2 arguments for an array argument: one pointer for the array, one for the array length.</p>
+
+<p>C++ allows <em>pointer arithmetic</em>, which makes pointers to be dangerous. Move pointer to access unassigned memory will cause <em>undefined behaviour</em>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="n">lower</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"abc?e"</span><span class="p">;</span>
+<span class="o">*</span><span class="p">(</span><span class="n">lower</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="sc">'g'</span><span class="p">;</span> <span class="c1">// buffer overflow</span>
+</code></pre></div></div>
+
+<h3 id="special-pointers">Special Pointers</h3>
+<ul>
+  <li><em>void pointer</em> <code class="language-plaintext highlighter-rouge">void*</code> for irrelevant pointed-to type situation. Pointer arithmetic and dereference is forbidden for void pointers.</li>
+  <li><code class="language-plaintext highlighter-rouge">std::byte</code> pointer use to interact with raw memory. Examples include copying raw data, encryptions.</li>
+  <li><code class="language-plaintext highlighter-rouge">nullptr</code> is a special literal that indicates point to nothing. there is an implicit conversion from pointers to bool. Pointers that is not <code class="language-plaintext highlighter-rouge">nullptr</code>  can be converted to <code class="language-plaintext highlighter-rouge">true</code>.</li>
+</ul>
+
+<h3 id="reference-1">Reference</h3>
+<p>References are generally safer than pointers. They cannot be assigned to null, and cannot be <code class="language-plaintext highlighter-rouge">reseated</code>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">add_year</span><span class="p">(</span><span class="n">ClockOfTheLongNow</span><span class="o">&amp;</span> <span class="n">clock</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// pass by reference </span>
+	<span class="n">clock</span><span class="p">.</span><span class="n">set_year</span><span class="p">(</span><span class="n">clock</span><span class="p">.</span><span class="n">get_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>  <span class="c1">// No deref operator needed </span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Note that the difference between <em>passing by reference</em> and <em>passing by value</em> still applies even the argument is an object of a class in C++.</p>
+
+<h3 id="use-of-pointers-and-references">Use of Pointers and References</h3>
+<ul>
+  <li>Pointers are flexible, and can be reassigned. In many applications like linked list it is necessary to use pointers.</li>
+  <li>Otherwise, use reference as much as possible.</li>
+</ul>
+
+<h3 id="const-correctness">Const correctness</h3>
+<p>The keyword <code class="language-plaintext highlighter-rouge">cost</code> roughly means “I promise not to modify”. And it’s a good tool while using pointers.
+const parameter prevents modifying pointed-to.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">petruchio</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">shrew</span><span class="p">)</span> <span class="p">{</span> 
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Fear not, sweet wench, they shall not touch thee, %s."</span><span class="p">,</span><span class="n">shrew</span><span class="p">);</span> 
+	<span class="n">shrew</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"K"</span><span class="p">;</span>  <span class="c1">// Compiler error! The shrew cannot be tamed. </span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>const (member) methods prevent the function modifying</p>
+
+<h3 id="type-auto">type <code class="language-plaintext highlighter-rouge">auto</code></h3>
+<p>The compiler can do some induction for type automatically.  Not something really impressive though. As a general rule, use auto always.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">the_answer</span> <span class="p">{</span> <span class="mi">42</span> <span class="p">};</span> <span class="c1">// int </span>
+<span class="k">auto</span> <span class="n">foot</span> <span class="p">{</span> <span class="mi">12L</span> <span class="p">};</span> <span class="c1">// long </span>
+<span class="k">auto</span> <span class="n">rootbeer</span> <span class="p">{</span> <span class="mf">5.0</span><span class="n">F</span> <span class="p">};</span> 
+<span class="k">auto</span> <span class="n">cheese</span> <span class="p">{</span> <span class="s">"string"</span> <span class="p">};</span> <span class="c1">// char[7]</span>
+
+<span class="k">auto</span> <span class="n">year</span> <span class="p">{</span> <span class="mi">2019</span> <span class="p">};</span> <span class="c1">// int </span>
+<span class="k">auto</span><span class="o">&amp;</span> <span class="n">year_ref</span> <span class="o">=</span> <span class="n">year</span><span class="p">;</span>
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/c++/2023/11/10/Basic-Types-in-CPP.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

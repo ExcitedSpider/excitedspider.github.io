@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Object Life Cycles [CPP] | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Object Life Cycles [CPP]" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Principals of objects life cycle; good practice: exceptions, RAII, copy and move operations" />
+<meta property="og:description" content="Principals of objects life cycle; good practice: exceptions, RAII, copy and move operations" />
+<link rel="canonical" href="/c++/2023/11/15/Object-Life-Cycles-CPP.html" />
+<meta property="og:url" content="/c++/2023/11/15/Object-Life-Cycles-CPP.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-15T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Object Life Cycles [CPP]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-15T23:42:59+11:00","datePublished":"2023-11-15T00:00:00+11:00","description":"Principals of objects life cycle; good practice: exceptions, RAII, copy and move operations","headline":"Object Life Cycles [CPP]","mainEntityOfPage":{"@type":"WebPage","@id":"/c++/2023/11/15/Object-Life-Cycles-CPP.html"},"url":"/c++/2023/11/15/Object-Life-Cycles-CPP.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Object Life Cycles [CPP]</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-15T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 15, 2023
+      </time><time>
+        Modified At: Nov 15, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>C++</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="memory-storage-duration">Memory Storage Duration</h2>
+<p>Every object need storage.</p>
+<ul>
+  <li><em>allocation</em>: Reserve storage for objects</li>
+  <li><em>deallocation</em>: release the object’s storage</li>
+  <li><em>storage duration</em>: the duration between allocation and deallocation</li>
+  <li><em>lifetime</em>: bound by the storage duration. begins once its constructor complete. ends before a destructor invoked.</li>
+</ul>
+
+<h3 id="automatic-storage-duration">Automatic Storage Duration</h3>
+<p><em>Local variables</em> is allocated at the beginning of an enclosing code block, and its deallocated at the end of the block. Regular variables and function parameters are local variables.</p>
+<h3 id="static-storage-duration">Static Storage Duration</h3>
+<p><em>Static variables</em> is allocated at namespace scope, being allocated when the program starts and deallocated when the program stops Their storage duration is called <em>static storage duration</em>.
+The most common static variables are declared using <code class="language-plaintext highlighter-rouge">static</code> or <code class="language-plaintext highlighter-rouge">extern</code> keywords at root scope. The feature of <code class="language-plaintext highlighter-rouge">extern</code> is that it can be accessed by other <em>translation units</em>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">int</span> <span class="n">rat_things_power</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+ <span class="c1">//...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Local static variables can only be accessed in a function scope, but their lifetimes begin once the first invocation.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">func</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">power</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span> <span class="c1">// A local static variable</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><em>Static members</em> are very similar to static variables but only need to use the scope resolution operator <code class="language-plaintext highlighter-rouge">::</code> to access them.
+<em>Thread-local variables</em> have thread storage duration, which simply indicates each thread has its own copy of a variable. Any variables with <em>static storage duration</em> can be make thread-local by adding <code class="language-plaintext highlighter-rouge">thread_local</code> keywords. This design makes multi-thread programming much safer.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">func</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">static</span> <span class="k">thread_local</span> <span class="kt">int</span> <span class="n">power</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span> <span class="c1">// A local static variable</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="dynamic-storage-duration">Dynamic Storage Duration</h3>
+<p>A <em>new expression</em> allocates a dynamic object and returns the address of that variable at the run time. The way to deallocate them is to use <code class="language-plaintext highlighter-rouge">delete</code>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">my_int_ptr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">;</span>
+
+<span class="c1">//...</span>
+
+<span class="k">delete</span> <span class="n">my_int_ptr</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Note that the value contained in memory where deleted object resided is undefined. Some compilers will not erase the memory for performance sake. Programmers have to implement a custom destructor to zero out sensitive information. 
+Programmers also need to make sure that dynamic objects that allocated are also deallocated. A <em>memory leak</em> is a failure that the memory is no longer needed but the isn’t released by the program.</p>
+<h2 id="normal-object-life-cycle">Normal Object Life Cycle</h2>
+<ol>
+  <li>static global variable constructed</li>
+  <li>thread-local variable constructed</li>
+  <li>local variable constructed</li>
+  <li>dynamic variable constructed</li>
+  <li>local variable destructed</li>
+  <li>thread-local variable destructed</li>
+  <li>static global variable destructed</li>
+</ol>
+
+<h2 id="exceptions">Exceptions</h2>
+<p>One way to jump out of normal object life cycle is to use exceptions. When an exception is thrown, it’s <em>in flight</em>. When there is an in flight exception, the program stops normal execution and search for an exception handler. Objects fall out of scope are destroyed immediately. 
+The grammar of throwing exceptions and handling exceptions have nothing unique comparing to other languages.  There is only one thing need to note that the recommended exception is <code class="language-plaintext highlighter-rouge">std::runtime_error</code> which is declared in <code class="language-plaintext highlighter-rouge">stdexcept.h</code>, along with other standard exception classes.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdexcept&gt;
+</span>
+<span class="kt">void</span> <span class="nf">forget</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"x should be no less than 0"</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Forgot 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">try</span><span class="p">{</span>
+		<span class="n">forget</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+		<span class="n">forget</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// exception here</span>
+		<span class="n">forget</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// not being execute</span>
+	<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Error messages, call stack frame are expected to be find in an exception. Re-throw an exception is allowed in C++ as well.</p>
+<h3 id="noexcept-keyword"><code class="language-plaintext highlighter-rouge">noexcept</code> keyword</h3>
+<p>A function marked <code class="language-plaintext highlighter-rouge">noexcept</code> makes a rigid contract that there is guaranteed to be no exception happened.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">is_odd</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="mi">1</span> <span class="o">==</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span><span class="p">);</span>
+<span class="err">}</span>
+</code></pre></div></div>
+<p>But the compiler will not check for your implementation. If there is an exception within a function marked <code class="language-plaintext highlighter-rouge">noexcept</code>, the program will abort immediately, cannot being recovered.</p>
+<h3 id="throwing-in-destructors">Throwing in destructors</h3>
+<p>There is an interesting case of exception throwing - destructor exception.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">CyberdyneSeries800</span> <span class="p">{</span>
+  <span class="n">CyberdyneSeries800</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"I'm a friend of Sarah Connor."</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="o">~</span><span class="n">CyberdyneSeries800</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">{</span> <span class="s">"I'll be back."</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">CyberdyneSeries800</span> <span class="n">t800</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">{</span> <span class="s">"Come with me if you want to live."</span> <span class="p">};</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Caught exception: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>By the rules of exception, an <em>in flight</em> exception will cause the objects within the original scope being destroyed. But the destructor throws an exception again. How can runtime handle 2 in flight exceptions? The answer is it can’t - just abort.</p>
+<h3 id="exceptions-vs-error-codes">Exceptions vs Error Codes</h3>
+<p>A well accepted pattern is to only use exceptions when <strong>errors cannot be handled locally</strong>. On the other hand, if the error <strong>can be dealt with locally</strong> or is <strong>expected to happen</strong> by some probabilities, generally return an error code.</p>
+<h3 id="exception-and-performance">Exception and Performance</h3>
+<blockquote>
+  <p>Use of exception handling leads to programs that are faster when they execute normally
+– <em>Optimized C++</em></p>
+</blockquote>
+
+<p>Using exceptions to handle errors are elegant but sometimes slower than alternative approaches (Those commonly used in C or legacy C++), but one make huge gains in robustness and maintainability by employ exceptions. It’s only when an exception is thrown that you pay overhead.</p>
+<h2 id="object-life-cycle-in-action---simplestring">Object Life Cycle in Action - <code class="language-plaintext highlighter-rouge">SimpleString</code></h2>
+<p>The <code class="language-plaintext highlighter-rouge">SimpleString</code> class is a basic model that combines resource managing and usage of exceptions:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;stdexcept&gt;
+</span>
+<span class="k">struct</span> <span class="nc">SimpleString</span> <span class="p">{</span>
+  <span class="n">SimpleString</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">max_size</span><span class="p">)</span>
+      <span class="o">:</span> <span class="n">max_size</span><span class="p">{</span> <span class="n">max_size</span> <span class="p">}</span>
+      <span class="p">,</span> <span class="n">length</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">max_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">{</span> <span class="s">"Max size must be at least 1."</span> <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">max_size</span><span class="p">];</span>
+    <span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="o">~</span><span class="n">SimpleString</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">buffer</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">tag</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s: %s"</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">append_line</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">x_len</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x_len</span> <span class="o">+</span> <span class="n">length</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">max_size</span> <span class="o">-</span> <span class="n">length</span><span class="p">);</span>
+    <span class="n">length</span> <span class="o">+=</span> <span class="n">x_len</span><span class="p">;</span>
+    <span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nl">private:</span>
+  <span class="kt">size_t</span> <span class="n">max_size</span><span class="p">;</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">buffer</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">length</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<h3 id="raii">RAII</h3>
+<p>As the the constructor and destructor shows, resources (dynamic memory storage) is managed by the lifecycle of object. The design pattern is recognized as <em>resource acquisition is initialization</em> or <em>RAII</em> in modern C++.</p>
+
+<p>For example, there is another class <code class="language-plaintext highlighter-rouge">SimpleStringOwner</code> that employs <code class="language-plaintext highlighter-rouge">SimpleString</code>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">SimpleStringOwner</span> <span class="p">{</span>
+  <span class="n">SimpleStringOwner</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+      <span class="o">:</span> <span class="n">string</span><span class="p">{</span> <span class="mi">10</span> <span class="p">}</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">string</span><span class="p">.</span><span class="n">append_line</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">{</span> <span class="s">"Not enough memory!"</span> <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="n">string</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Constructed"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="o">~</span><span class="n">SimpleStringOwner</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">string</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"About to destroy"</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nl">private:</span>
+  <span class="n">SimpleString</span> <span class="n">string</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>The implementation of <code class="language-plaintext highlighter-rouge">SimpleStringOwner</code> does not need to take care of the storage resource using by <code class="language-plaintext highlighter-rouge">SimpleString</code> since it follows the RAII pattern.</p>
+
+<p>Another benefit of RAII is that if any exception is thrown, RAII objects in the original scope are destroyed so that the related resources are released.</p>
+
+<p>Note that <strong>members are constructed before the enclosing object’s constructor</strong>, and <strong>destroyed after the object’s destructor is invoked</strong>.</p>
+<h3 id="string-manipulate">String Manipulate</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">strlen</code> is used to get the length of a string.</li>
+  <li><code class="language-plaintext highlighter-rouge">strncpy</code> copy a string to a destination. Note that this function need to be used very careful. Wrong uses including forgetting the <em>null-terminator</em> in the source string, not enough space for destination string all lead to undefined behaviours.
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kt">char</span> <span class="o">*</span><span class="nf">strncpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">dest</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>The program manually maintain a <code class="language-plaintext highlighter-rouge">\0</code> at the end of the string. Though it is easy to implement but many programmers simply forget.</li>
+</ul>
+
+<h3 id="exceptions-and-error-code">Exceptions and Error Code</h3>
+<p>The <code class="language-plaintext highlighter-rouge">SimpleString</code> class throws <code class="language-plaintext highlighter-rouge">runtime_error</code> when there is no enough buffer in the constructor, while use error code in <code class="language-plaintext highlighter-rouge">append_line</code> function to indicate if the operations are executed successfully.  This design is idiomatic in CPP: In the former one, the error cannot be handled locally (The constructor cannot know why it is invoked with 0 space), On the other hand, the later can handles error properly.</p>
+
+<h2 id="copy-semantics">Copy Semantics</h2>
+<p>In C++, a copy happens when</p>
+<ul>
+  <li>An <code class="language-plaintext highlighter-rouge">=</code> symbol is used (copy assignment)</li>
+  <li>A copy constructor is called:
+    <ul>
+      <li>Explicitly invoke the copy constructor</li>
+      <li>A function with <em>pass-by-value</em> parameter is invoked.</li>
+      <li>A function with <em>pass-by-value</em> return-value is finished.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>By default, C++ makes copies by <em>member-wise clone</em>, which means each member gets copied into its corresponding destination.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Point</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="n">Point</span> <span class="nf">make_transpose</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// copy the point p</span>
+	<span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+	<span class="n">p</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+	<span class="n">p</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">p</span><span class="p">;</span> <span class="c1">// copy again</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">Point</span> <span class="n">a</span><span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">};</span>
+	<span class="n">Point</span> <span class="n">b</span><span class="p">{</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span> <span class="p">};</span>
+	<span class="n">Point</span> <span class="n">c</span> <span class="o">=</span> <span class="n">make_transpose</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+	<span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="p">;</span> <span class="c1">// explicitly copy</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>For fundamental and POD types (Plain Old Data, such as the <code class="language-plaintext highlighter-rouge">Point</code> class), the copy is straightforward and generally safe. But for those class which has related resources, this default copy semantic is dangerous. Take the <code class="language-plaintext highlighter-rouge">SimpleString</code> class as an example:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">SimpleString</span> <span class="n">a</span> <span class="p">{</span><span class="s">"Hello Mate"</span><span class="p">};</span>
+	<span class="n">SimpleString</span> <span class="n">b</span> <span class="p">{</span><span class="s">"Good day"</span><span class="p">};</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span> <span class="c1">// copy a</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Remember that the <code class="language-plaintext highlighter-rouge">char* buffer</code> member in <code class="language-plaintext highlighter-rouge">SimpleString</code> is referred to an address at dynamic storage. Now <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code> have the exactly same <code class="language-plaintext highlighter-rouge">buffer</code> member that points to the same space. When one of them is destructed, <code class="language-plaintext highlighter-rouge">buffer</code> will be freed. If the another attempts to read or write to it, you’ll have undefined behaviour! This error is commonly called <em>use after free</em>. Similarly, an another error is <em>double free</em>.</p>
+
+<p>As talked in the beginning, there are 2 ways to customize copy semantics. The first one is the <em>copy constructor</em>, which creates a copy and assign it to a brand-new object:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">SimpleString</span><span class="p">{</span>
+	<span class="n">SimpleString</span><span class="p">(</span><span class="k">const</span> <span class="n">SimpleString</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="c1">// copy constructor</span>
+	    <span class="o">:</span> <span class="n">max_size</span><span class="p">{</span> <span class="n">other</span><span class="p">.</span><span class="n">max_size</span> <span class="p">}</span>
+	    <span class="p">,</span> <span class="n">buffer</span><span class="p">{</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">other</span><span class="p">.</span><span class="n">max_size</span><span class="p">]</span> <span class="p">}</span> <span class="c1">// make a new space</span>
+	    <span class="p">,</span> <span class="n">length</span><span class="p">{</span> <span class="n">other</span><span class="p">.</span><span class="n">length</span> <span class="p">}</span> <span class="p">{</span>
+	  <span class="n">std</span><span class="o">::</span><span class="n">strncpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">max_size</span><span class="p">);</span> <span class="c1">// copy original value</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The second one is the copy operator <code class="language-plaintext highlighter-rouge">=</code></p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">SimpleString</span><span class="p">{</span>
+	<span class="n">SimpleString</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">SimpleString</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+	  <span class="k">if</span><span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">)</span>
+	    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+	  <span class="k">const</span> <span class="k">auto</span> <span class="n">new_buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">other</span><span class="p">.</span><span class="n">max_size</span><span class="p">];</span> <span class="c1">//allocate new resource</span>
+	  <span class="k">delete</span><span class="p">[]</span> <span class="n">buffer</span><span class="p">;</span> <span class="c1">// free orignal resource</span>
+	  <span class="n">buffer</span> <span class="o">=</span> <span class="n">new_buffer</span><span class="p">;</span>
+	  <span class="n">length</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+	  <span class="n">max_size</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">max_size</span><span class="p">;</span>
+	  <span class="n">std</span><span class="o">::</span><span class="n">strncpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">max_size</span><span class="p">);</span> <span class="c1">// make copy</span>
+	  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>It is recommend that programmers should explicitly define the copy assignment operator and the copy constructor <strong>for every class that owns a resource</strong>. If no custom behaviour is needed, one can use <code class="language-plaintext highlighter-rouge">default</code> keyword.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">Point</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+
+  <span class="n">Point</span><span class="p">(</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="n">Point</span><span class="o">&amp;</span> <span class="k">operator</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>Another useful keyword is <code class="language-plaintext highlighter-rouge">delete</code> which tells the compiler to suppress the copy behaviours. Many resources including a network connection or a file should be designed to not allowed to be copied.
+When implementing copy semantics, following criteria helps:</p>
+<ul>
+  <li><strong>Correctness</strong>: make sure the copy is in a legal state (class invariants)</li>
+  <li><strong>Independence</strong>: original and copy shouldn’t change each other’s state during modification</li>
+  <li><strong>Equivalence</strong>: The original and the copy should be the same.</li>
+</ul>
+
+<h3 id="move-instead-of-copy">Move instead of Copy</h3>
+<p>At the semantic level, a copy is to make an equivalent, independent copy of original object, while move is to <em>transfer ownership</em> of resources from one object to another. The main reason for using move is to avoid the cost of copy.
+After the move, the original object should be put in a special state called the <em>move-from state</em>, which only allows 2 operations: reassign or destruct. In consequence, the class invariants aren’t satisfied in this state. Thus, move is quite dangerous.</p>
+
+<p>at the implementation level, The <em>move constructors</em> distinguish them from the copy constructors by taking <em>rvalue reference</em>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">SimpleString</span><span class="p">(</span><span class="n">SimpleString</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">noexcept</span>
+    <span class="o">:</span> <span class="n">max_size</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">max_size</span><span class="p">)</span>
+    <span class="p">,</span> <span class="n">buffer</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">buffer</span><span class="p">)</span>
+    <span class="p">,</span> <span class="n">length</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">other</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">other</span><span class="p">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+  <span class="n">other</span><span class="p">.</span><span class="n">max_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This example shows that the move constructor just copy the pointer to the storage, then assign the original object to be at the <em>copied-from</em> state: assign buffer pointer to <code class="language-plaintext highlighter-rouge">nullptr</code>, and reset other members to 0.</p>
+
+<p>Note that the move constructor only takes right value. This is a safeguard that prevents program accidently perform a move. The only way to convert a lvalue to a rvalue is to use <code class="language-plaintext highlighter-rouge">std::move</code> (from &lt;utility&gt; header)</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">SimpleString</span> <span class="n">a</span><span class="p">{</span> <span class="mi">50</span> <span class="p">};</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">append_line</span><span class="p">(</span><span class="s">"We apologise for the inconvenience"</span><span class="p">);</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="n">SimpleString</span> <span class="n">b</span><span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">};</span> <span class="c1">// use the move constructor</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span> <span class="c1">// a is empty</span>
+<span class="p">}</span>
+<span class="c1">// a: We apologise for the inconvenience</span>
+<span class="c1">// b: We apologise for the inconvenience</span>
+<span class="c1">// a: (null)</span>
+</code></pre></div></div>
+<p>Note that the <code class="language-plaintext highlighter-rouge">std::move</code> only convert a left value to a right value.(Another shit naming from the legacy C++ designs. They should really name it <code class="language-plaintext highlighter-rouge">std:rvalue</code>). This example shows only the copy constructor is invoked on lvalue only when programmers explicitly use <code class="language-plaintext highlighter-rouge">std::move</code>.</p>
+
+<p>Similarly, we can have <em>move assignment</em> instead of <em>copy assignment</em>. The difference is also that move assignment takes rvalue.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">SimpleString</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">SimpleString</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="p">{...}</span>
+</code></pre></div></div>
+
+<h3 id="compiler-generated-methods">Compiler-Generated Methods</h3>
+<p>The compiler generate these 5 methods by default:</p>
+<ul>
+  <li>the destructor</li>
+  <li>the copy constructor</li>
+  <li>the move constructor</li>
+  <li>the copy assignment</li>
+  <li>the move assignment
+But the auto generated results are not guaranteed to work well. To eliminate this implicit complexity, setting them to <code class="language-plaintext highlighter-rouge">default</code> or <code class="language-plaintext highlighter-rouge">delete</code> if the operation is not allowed is a good idea.</li>
+</ul>
+
+  </div><a class="u-url" href="/c++/2023/11/15/Object-Life-Cycles-CPP.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
