@@ -3,7 +3,7 @@ layout: post
 title:  "Transaction Management (1)"
 categories: [CourseNote]
 description: What is under the hood of DB magic  
-tags: ["Formal Method"]
+tags: ["Database"]
 ---
 
 The document summarize transaction management in database.
