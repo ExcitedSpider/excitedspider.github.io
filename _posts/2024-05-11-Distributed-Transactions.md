@@ -83,3 +83,6 @@ Simple read-one/write-all replication is not a realistic scheme, because it cann
 
 A more realistic protocol is local validation. It allows a transaction to write only to available replicas. However, before a transaction commits it checks for any failures (and recoveries) of replica managers of objects it has accessed. A transaction can only commits if there is no failure and recovery of replicas which stores the object used in the transaction.
 
+## Reference
+
+Coulouris, George F., Jean Dollimore, and Tim Kindberg. Distributed systems: concepts and design. pearson education, 2005.
