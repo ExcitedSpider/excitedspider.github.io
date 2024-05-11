@@ -6,7 +6,7 @@ description: Deal with the complexity in distributed systems.
 tags: ["Database"]
 ---
 
-In a distributed DBMS, a transaction usually involves multiple servers. Consider a transaction that a client transfers $10 from account A to C and then transfers $20 from B to D, and each of these accounts is stored in different servers as shown in the graph. If any one server in this transaction fails, the whole transaction needs to abort. 
+In a distributed DBMS, a transaction usually involves multiple servers. Consider a transaction that a client transfers \$10 from account A to C and then transfers \$20 from B to D, and each of these accounts is stored in different servers as shown in the graph. If any one server in this transaction fails, the whole transaction needs to abort. 
 
 ![DistributedTransaction](/assets/images/Pasted image 20240511143920.png)
 
