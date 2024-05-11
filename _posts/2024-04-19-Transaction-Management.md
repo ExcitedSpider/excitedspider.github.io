@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Transaction Management (1)"
+title:  "Transaction Management"
 categories: [CourseNote]
 description: What is under the hood of DB magic  
 tags: ["Database"]
