@@ -36,6 +36,7 @@ There are two reasons (the textbook gives) to recommend small-step semantics ins
 Compared to natural semantics, the implementation of small-step would be more complicated – a single function can’t suffice. Fortunately we are doing this in Coq, which has a very power tool  – Inductive type. 
 
 In the most naïve language where there are only constant (denotes by C) and addition (denotes by P), the informal semantics are: 
+
 $$\frac{}{C~n \to n}$$
 
 $$\frac{t_1 \to n_1,~t_2\to n_2}{P~t_1~t_2 \to n_1 + n_2}$$
@@ -133,7 +134,9 @@ Inductive value : tm → Prop :=
 With the concepts of value, we revise the definition of steps:
 
 $$\frac{t_1 \to t_1',}{P~t_1~t_2 \to P~t_1'~t_2}$$
+
 $$\frac{\text{value}~t_1,~t_2\to t_2'}{P~t_1~t_2 \to P~t_1~t_2'}$$
+
 The second one is crucial. It says we take the step of $t_2$ only when t1 is a value. This definition ensures we always evaluate the first argument (t1) until it reaches the form of value. 
 
 The usage of values doesn’t limit to this. In fact, they are very important and critical in small-step semantics. 
