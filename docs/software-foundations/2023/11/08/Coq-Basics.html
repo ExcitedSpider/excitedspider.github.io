@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Function Programming and Basic Proofs [Coq] | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Function Programming and Basic Proofs [Coq]" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Study Notes on what is software validation, proofers and basic programming" />
+<meta property="og:description" content="Study Notes on what is software validation, proofers and basic programming" />
+<link rel="canonical" href="/software-foundations/2023/11/08/Coq-Basics.html" />
+<meta property="og:url" content="/software-foundations/2023/11/08/Coq-Basics.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-08T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Function Programming and Basic Proofs [Coq]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-20T10:40:39+11:00","datePublished":"2023-11-08T00:00:00+11:00","description":"Study Notes on what is software validation, proofers and basic programming","headline":"Function Programming and Basic Proofs [Coq]","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/11/08/Coq-Basics.html"},"url":"/software-foundations/2023/11/08/Coq-Basics.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Function Programming and Basic Proofs [Coq]</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-08T00:00:00+11:00" itemprop="datePublished">
+        Posted At: Nov 8, 2023
+      </time><time>
+        Modified At: Nov 20, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Introduction: I am studying the online book <a href="https://softwarefoundations.cis.upenn.edu/">software foundations</a>. Then I decide to write something about it for me to better understand this toy from a learner’s perspective. I’m happy if these articles can help you.</p>
+
+<h2 id="basic-ideas">Basic Ideas</h2>
+
+<h3 id="validation">Validation</h3>
+<p><strong>Validation</strong>: mathematical techniques for specifying and reasoning about properties of software and tools for helping validate these properties.</p>
+
+<h3 id="logic">Logic</h3>
+<p>Logic studies the field of proofs.</p>
+<blockquote>
+  <p>Proofs are unassailable arguments for the truth of particular propositions</p>
+</blockquote>
+
+<p>the fundamental tools of <em>inductive proof</em> are ubiquitous in all of computer science.</p>
+
+<h3 id="proof-assistant">Proof Assistant</h3>
+<p>2 types:</p>
+<ul>
+  <li><em>Automated theorem provers</em>: give them a proposition and they return either true or false. Often domain limited. e.g. SAT solvers, model checkers</li>
+  <li><em>Proof assistants</em>: automate the routine aspects of proofs, while depending on human guidance for more difficult aspects. e.g. Isabelle, Coq</li>
+</ul>
+
+<p>Applications of Coq:</p>
+<ul>
+  <li>Modelling programming languages</li>
+  <li>Developing formally certified software (and hardware)</li>
+  <li>Play functional programming in a realistic environment</li>
+  <li>Make mathematical proofs</li>
+</ul>
+
+<h3 id="functional-programming">Functional Programming</h3>
+<p>Origin: Church’s lambda-calculus.
+Most basic tenet of FP: as much as possible, computation should be pure.
+Why FP:</p>
+<ul>
+  <li>it makes programs <strong>easier to understand</strong> and reason about</li>
+  <li>functional programs are often much <strong>easier to parallelize</strong> and physically distribute</li>
+  <li>it serves as a bridge between logic and computer science. <strong>i.e. proofs are programs</strong></li>
+</ul>
+
+<h2 id="features-of-fp-in-general">Features of FP in General</h2>
+<ul>
+  <li><strong>No side effects</strong>: think a program is just a concrete method for computing a mathematical function</li>
+  <li>Functions as the <strong>first class values</strong></li>
+  <li>Others: <strong>algebraic data types</strong> and <strong>pattern matching</strong></li>
+</ul>
+
+<h2 id="data-and-functions-in-coq">Data and Functions in Coq</h2>
+<p>Coq has extremely small built-in features but high flexibility for building types.</p>
+
+<p>A simple coq program shows the ability of Coq to <em>enumerate type</em>:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">day</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">monday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">tuesday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">wednesday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">thursday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">friday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">saturday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">sunday</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">next_weekday</span><span class="w"> </span><span class="o">(</span><span class="no">d</span><span class="p">:</span><span class="w"> </span><span class="no">day</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">day</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="kr">match</span><span class="w"> </span><span class="no">d</span><span class="w"> </span><span class="kp">with</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">monday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">tuesday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">tuesday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">wednesday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">wednesday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">thursday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">thursday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">friday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">friday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">monday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">saturday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">monday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">sunday</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">monday</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_next_weekday</span><span class="p">:</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">(</span><span class="no">next_weekday</span><span class="w"> </span><span class="o">(</span><span class="no">next_weekday</span><span class="w"> </span><span class="no">saturday</span><span class="o">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">tuesday</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>This program ask coq to verify the assertion (that the second weekday after Saturday is Tuesday)
+Note the last sentence simply ask Coq to verity the assertion by proving both sides are evaluate to the same thing.</p>
+<h3 id="example-boolean-function">Example: Boolean Function</h3>
+<p>This example walks through basic Coq features.
+Coq  does not have built-in Boolean type, but it’s easy to define one:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">true</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">false</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Implement Boolean function by <em>pattern matching</em>:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">andb</span><span class="w"> </span><span class="o">(</span><span class="no">b1</span><span class="p">:</span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">b2</span><span class="p">:</span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">b1</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">b2</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">false</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The function can also be implemented by <em>conditioned statement</em></p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">andb</span><span class="w"> </span><span class="o">(</span><span class="no">b1</span><span class="p">:</span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">b2</span><span class="p">:</span><span class="no">bool</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">if</span><span class="w"> </span><span class="no">b1</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="no">b2</span><span class="w">
+  </span><span class="kr">else</span><span class="w"> </span><span class="no">false</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Since <code class="language-plaintext highlighter-rouge">bool</code> type is defined by ourself, Coq actually regards all inductively defined type with exact 2 clauses as Boolean type, and the first clause is evaluated to True.
+Use <code class="language-plaintext highlighter-rouge">Check</code> command to printout the type of an expression</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Check</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="c">(* true: bool *)</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="constructor">Constructor</h2>
+<p>An <code class="language-plaintext highlighter-rouge">Inductive</code> defines a set of <em>constructors</em> and grouping them into a new named type. Constructors are functions can take arguments as well.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">rgb</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="kp">red</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">green</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">blue</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">color</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">black</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">white</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">primary</span><span class="w"> </span><span class="o">(</span><span class="no">p</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">rgb</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">monochrome</span><span class="w"> </span><span class="o">(</span><span class="no">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">color</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">primary</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_primary</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">monochrome</span><span class="w"> </span><span class="o">(</span><span class="no">primary</span><span class="w"> </span><span class="no">green</span><span class="o">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">isRed</span><span class="w"> </span><span class="o">(</span><span class="no">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">color</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">primary</span><span class="w"> </span><span class="kp">red</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_red</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">isRed</span><span class="w"> </span><span class="o">(</span><span class="no">primary</span><span class="w"> </span><span class="kp">red</span><span class="o">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>In this example, <code class="language-plaintext highlighter-rouge">primary</code> can take an argument typed <code class="language-plaintext highlighter-rouge">rgb</code>. In function <code class="language-plaintext highlighter-rouge">monochrome</code>, we match a <code class="language-plaintext highlighter-rouge">primary</code> with any variable it holds. While in <code class="language-plaintext highlighter-rouge">isRed</code>, we only match <code class="language-plaintext highlighter-rouge">primary</code> includes a specific type <code class="language-plaintext highlighter-rouge">red</code>.</p>
+
+<p>Constructors can be group in a <em>module</em> to create a distinct namespace:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Module</span><span class="w"> </span><span class="no">Playground</span><span class="pi">.</span><span class="w">
+  </span><span class="k">Definition</span><span class="w"> </span><span class="no">foo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">rgb</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">blue</span><span class="pi">.</span><span class="w">
+</span><span class="k">End</span><span class="w"> </span><span class="no">Playground</span><span class="pi">.</span><span class="w">
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">foo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="k">Check</span><span class="w"> </span><span class="nn">Playground</span><span class="p">.</span><span class="no">foo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">rgb</span><span class="pi">.</span><span class="w">
+</span><span class="k">Check</span><span class="w"> </span><span class="no">foo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A constructor that takes more than 1 parameters is considered to be a <em>tuple</em></p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">bit</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">B1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">B0</span><span class="pi">.</span><span class="w">
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">nybble</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">bits</span><span class="w"> </span><span class="o">(</span><span class="no">b0</span><span class="w"> </span><span class="no">b1</span><span class="w"> </span><span class="no">b2</span><span class="w"> </span><span class="no">b3</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bit</span><span class="o">).</span><span class="w">
+</span><span class="k">Check</span><span class="w"> </span><span class="o">(</span><span class="no">bits</span><span class="w"> </span><span class="no">B1</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B1</span><span class="w"> </span><span class="no">B0</span><span class="o">)</span><span class="p">:</span><span class="no">nybble</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">all_zero</span><span class="w"> </span><span class="o">(</span><span class="no">nb</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nybble</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">nb</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">bits</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="o">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">bits</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="p">_</span><span class="o">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span><span class="k">Compute</span><span class="w"> </span><span class="o">(</span><span class="no">all_zero</span><span class="w"> </span><span class="o">(</span><span class="no">bits</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="w"> </span><span class="no">B0</span><span class="o">)).</span><span class="w">
+</span></code></pre></div></div>
+<p>here we call <code class="language-plaintext highlighter-rouge">nybble</code>  a tuple type with 4 bits.</p>
+<h2 id="numbers">Numbers</h2>
+<p>Natural numbers in Coq have a very concise definition:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>Here the constructor <code class="language-plaintext highlighter-rouge">S</code> receives another constructor for nat. In the case, 0 is represent by O, 1 by S O, 2 by S (S O). This kind of representation is called <code class="language-plaintext highlighter-rouge">unary representation</code></p>
+
+<p>Algebra Calculations can be  implemented by pattern match:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">plus</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">m</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">plus</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">p32</span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="no">plus</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">2</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="o">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">(n m : nat)</code> just means <code class="language-plaintext highlighter-rouge">(n : nat) (m : nat)</code> for convenience.</li>
+  <li><code class="language-plaintext highlighter-rouge">Fixpoint</code> declares a recursive function</li>
+</ul>
+
+<p>Another example is the factorial calculation: <code class="language-plaintext highlighter-rouge">n! = n(n-1)...1</code></p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">factorial</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">O</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">mult</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">(</span><span class="no">factorial</span><span class="w"> </span><span class="no">n'</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Coq support <code class="language-plaintext highlighter-rouge">Notation</code> for better reading:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Notation</span><span class="w"> </span><span class="s2">"x + y"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">plus</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="o">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Another example shows comparing 2 natural numbers. <code class="language-plaintext highlighter-rouge">leb</code> test if <code class="language-plaintext highlighter-rouge">n</code> is equal to or less than <code class="language-plaintext highlighter-rouge">m</code>:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">leb</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">
+      </span><span class="kr">match</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="kp">with</span><span class="w">
+      </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+      </span><span class="o">|</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="no">m'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">leb</span><span class="w"> </span><span class="no">n'</span><span class="w"> </span><span class="no">m'</span><span class="w">
+      </span><span class="kr">end</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_leb</span><span class="p">:</span><span class="w"> </span><span class="no">leb</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="proof-by-simplification">Proof by simplification</h2>
+<p>We use <em>simplification proof</em> so far. It just means simplify both sides of the equation, then use <em>reflexivity</em> to check that both sides contain identical values.</p>
+
+<p>Look at a more interesting example. We can make a theorem states that for all natural number n, n+0 equals to n.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">plus_O_n</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> 
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Theorem</code> keyword does nothing more than <code class="language-plaintext highlighter-rouge">Example</code> we use. It’s just for readability. Other keywords include <code class="language-plaintext highlighter-rouge">Lemma</code>, <code class="language-plaintext highlighter-rouge">Fact</code>, `Remark</li>
+  <li><code class="language-plaintext highlighter-rouge">Intros m</code> introduces n from the quantifier in to the context of the proof. In particular, it renames <code class="language-plaintext highlighter-rouge">n</code> in the quantifier to <code class="language-plaintext highlighter-rouge">m</code> in the proof.</li>
+  <li><code class="language-plaintext highlighter-rouge">simpl</code> means simplify the both sides of the equation.</li>
+  <li><code class="language-plaintext highlighter-rouge">reflexivity</code> checks the equality of both sides of the equation. In fact, <code class="language-plaintext highlighter-rouge">reflexivity</code> does the simplification jobs as well so it doesn’t require <code class="language-plaintext highlighter-rouge">simpl</code> put in front of it. But <code class="language-plaintext highlighter-rouge">simpl</code> can help developers understand what happened after simplification.</li>
+  <li>The key words <code class="language-plaintext highlighter-rouge">intros</code>, <code class="language-plaintext highlighter-rouge">simpl</code> and <code class="language-plaintext highlighter-rouge">reflexivity</code> are examples of <em>tactics</em>. A tactic is a command that is used between Proof and Qed to guide the process of the proof.</li>
+</ul>
+
+<h2 id="proof-by-rewriting">Proof by Rewriting</h2>
+<p>The <code class="language-plaintext highlighter-rouge">rewrite</code> tactic replace the simple to proof the equation. Example:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">plus_id_exercise</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">o</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w">
+  </span><span class="no">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">o</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">o</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">o</span><span class="pi">.</span><span class="w"> </span><span class="c">(* 1 *)</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">H1</span><span class="w"> </span><span class="no">H2</span><span class="pi">.</span><span class="w"> </span><span class="c">(* 2 *)</span><span class="w">
+  </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="c">(* 3 *)</span><span class="w">
+  </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">H2</span><span class="pi">.</span><span class="w"> </span><span class="c">(* 4 *)</span><span class="w">
+  </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="c">(* 5 *)</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>1 moves variables m n o into context. 2 introduces two hypothesis into context. 3 and 4 <strong>rewrite the equation from left to right by the 2 assumptions</strong>.</p>
+<ol>
+  <li>In the beginning, the equation is: $n + m = m + o$</li>
+  <li>After rewrite by the first assumption $n=m$, the equation became $m + m = m + o$</li>
+  <li>After rewrite by the second assumption $m = o$, the equation became $o + o = o + o$</li>
+  <li>Finally, use reflexivity tactic to check if the both sides of the equation is equal.
+Note: The arrow <code class="language-plaintext highlighter-rouge">-&gt;</code> means “implies” in the theorem while note the rewrite direction in the proof. For example, if 4 is write as
+    <div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H2</span><span class="w">
+</span></code></pre></div>    </div>
+    <p>The equation is rewrited from right to left, becoming $m + m = m + m$
+The <code class="language-plaintext highlighter-rouge">rewrite</code> is able to also refer to other theorems (or lemmas, facts…) to make a proof.</p>
+  </li>
+</ol>
+
+<h2 id="proof-by-case-analysis">Proof by Case Analysis</h2>
+<p>Many proofs need proofer to think different case. This kind of proof is <code class="language-plaintext highlighter-rouge">Case Analysis</code>.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">plus_1_neq_0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w">
+  </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">)</span><span class="w"> </span><span class="o">=?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="pi">.</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">n'</span><span class="o">]</span><span class="w"> </span><span class="no">eqn</span><span class="p">:</span><span class="no">E</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>This theorem states that for every natural number n, n+1 is not equal to 0.  The proof is by case analysis. By the definition of <code class="language-plaintext highlighter-rouge">nat</code>, there are 2 cases (constructors) which are enumerated in the <code class="language-plaintext highlighter-rouge">as</code> clause. <code class="language-plaintext highlighter-rouge">as [| n']</code> is read as “for the 2 constructors of <code class="language-plaintext highlighter-rouge">nat</code>, assign the <code class="language-plaintext highlighter-rouge">n'</code> as the name of the parameter of second constructor”. After <code class="language-plaintext highlighter-rouge">destruct</code>, the proof is spitted into 2 subgoals - for n = O and for n = S n’, we want to have $(n+1) =? 0$ for each case.  The 2 subgoals is proved in 2 parts, marked with <code class="language-plaintext highlighter-rouge">-</code> bullet symbols, with a simple reflexivity proof respectively.</p>
+
+<p>Note:</p>
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">as</code> clause can be omitted if no constructor need to bind variables or no need to specify the name of binding variables.</li>
+  <li>It is legit to use <code class="language-plaintext highlighter-rouge">destruct</code> inside a subgoal, generating yet more proof obligation</li>
+  <li>Besides <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">*</code> are also standard bullet symbols. use braces <code class="language-plaintext highlighter-rouge">{}</code> to enclose sub-proofs are also acceptable</li>
+</ul>
+
+<p>This example shows how to combine case analysis together with rewrite</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">andb_true_elim2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">,</span><span class="w">
+</span><span class="no">andb</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="no">eqn</span><span class="p">:</span><span class="no">E</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* c = true *)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* c = false *)</span><span class="w">
+  </span><span class="c">(* note that the assumption H becomes "(and b false) = true"*)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+    </span><span class="c">(* rewrite "false = true" to "false = (and b false)"*)</span><span class="w">
+    </span><span class="kp">destruct</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">eqn</span><span class="p">:</span><span class="no">Eb</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Also, this example shows how to use a “false assumption” to avoid a “false goal” (contradiction).</p>
+
+<p>Because <code class="language-plaintext highlighter-rouge">intros</code> + <code class="language-plaintext highlighter-rouge">destruct</code> is so common in a proof, there is a simplified grammar for case analysis - <code class="language-plaintext highlighter-rouge">intros []</code>, i.e. introduce a variable and destruct it. Using this grammar to make the same proof:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">andb_true_elim2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bool</span><span class="o">,</span><span class="w">
+</span><span class="no">andb</span><span class="w"> </span><span class="no">b</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* introduct b and c then destruct then into 4 cases:
+   (true, true), (true, false), (false, true), (false, false)  *)</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="o">[].</span><span class="w"> 
+  </span><span class="c">(* goal: true = true. *)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* goal: false = true *)</span><span class="w">
+  </span><span class="c">(* The goal is a contradiction. Need to replace the right side "true" by the assumption "and b c = true".*)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* goal: true = true *)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="c">(* goal: false = true *)</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+  </div><a class="u-url" href="/software-foundations/2023/11/08/Coq-Basics.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
