@@ -87,6 +87,7 @@ You will find that both are identical **except there is one more jump from WSL t
 **Accessing WSL from Windows**
 
 On Windows, you can access networking apps in WSL using localhost. There is an auto-forwarding feature working: 
+
 ![Experiment: Accessing WSL Networking application ](/assets/images/Pasted%20image%2020250222170500.png)
 
 You can also access networking apps by using the assigned IP address of WSL. 
@@ -123,6 +124,17 @@ You will find there is not a jump to Windows host.
 
 The only thing we know about the implementation is that it utilizes Hyper-V virtual switch feature. 
 MS do not share more detailed information about it.
+
+## Mounting a Device
+
+> Shout out to [https://askubuntu.com/questions/1116200/how-can-i-access-my-usb-drive-from-my-windows-subsystem-for-linux-ubuntu-dist]
+
+Suppose there is a new USB device mounted on G: on windows. 
+To access it on WSL: 
+
+1. Create the mount point: `mkdir /mnt/g` 
+2. Mount the drive to the directory using `sudo mount -t drvfs G: /mnt/g`
+
 
 # References
 1. MS WSL Doc https://learn.microsoft.com/en-us/windows/wsl/about
