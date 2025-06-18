@@ -15,6 +15,7 @@ Install Deps
 ```shell
 bundle install
 ```
+
 Build and serve
 ```
 bundle exec jekyll serve -i
