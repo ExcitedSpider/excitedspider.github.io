@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>CPP Functions | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="CPP Functions" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="As functions are the most common structure in a program, it’s worth a visit to it." />
+<meta property="og:description" content="As functions are the most common structure in a program, it’s worth a visit to it." />
+<link rel="canonical" href="/c++/2023/12/06/Functions-CPP.html" />
+<meta property="og:url" content="/c++/2023/12/06/Functions-CPP.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-12-06T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="CPP Functions" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-12-06T06:51:19+00:00","datePublished":"2023-12-06T00:00:00+00:00","description":"As functions are the most common structure in a program, it’s worth a visit to it.","headline":"CPP Functions","mainEntityOfPage":{"@type":"WebPage","@id":"/c++/2023/12/06/Functions-CPP.html"},"url":"/c++/2023/12/06/Functions-CPP.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">CPP Functions</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-12-06T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Dec 6, 2023
+      </time><time>
+        Modified At: Dec 6, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>C++</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="markdown-toc">
+  <li><a href="#function-declarations" id="markdown-toc-function-declarations">Function Declarations</a>    <ul>
+      <li><a href="#prefix-modifiers" id="markdown-toc-prefix-modifiers">Prefix Modifiers</a></li>
+      <li><a href="#suffix-modifiers" id="markdown-toc-suffix-modifiers">Suffix Modifiers</a></li>
+      <li><a href="#automatic-return-type" id="markdown-toc-automatic-return-type">Automatic Return Type</a></li>
+      <li><a href="#overload-resolution" id="markdown-toc-overload-resolution">Overload Resolution</a></li>
+    </ul>
+  </li>
+  <li><a href="#variadic-functions" id="markdown-toc-variadic-functions">Variadic Functions</a>    <ul>
+      <li><a href="#variadic-templates" id="markdown-toc-variadic-templates">Variadic Templates</a></li>
+    </ul>
+  </li>
+  <li><a href="#function-pointers" id="markdown-toc-function-pointers">Function Pointers</a>    <ul>
+      <li><a href="#stdfunction" id="markdown-toc-stdfunction"><code class="language-plaintext highlighter-rouge">std::function</code></a></li>
+    </ul>
+  </li>
+  <li><a href="#function-objects" id="markdown-toc-function-objects">Function Objects</a></li>
+  <li><a href="#lambda-expressions" id="markdown-toc-lambda-expressions">Lambda Expressions</a></li>
+  <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+</ul>
+<p>There are many gadgets playing with functions in CPP. As functions are the most common structure in a program, it’s worth a visit to it.</p>
+
+<h2 id="function-declarations">Function Declarations</h2>
+<p>Function declarations have the following familiar form:</p>
+<pre><code class="language-plain">prefix return-type func-name(arguments) suffix;
+</code></pre>
+
+<p>There are two types of <em>modifiers</em> to functions, which alter a function’s behavior in some ways. But there isn’t a clear standard why certain modifiers appear as prefixes or suffixes. I believe it’s just another historical burden of CPP.</p>
+
+<h3 id="prefix-modifiers">Prefix Modifiers</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">static</code></td>
+      <td>The function isn’t a member of a class.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">virtual</code></td>
+      <td>The method can be overridden.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">override</code></td>
+      <td>The method is intended to override a virtual method.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">constexpr</code></td>
+      <td>The function should be evaluated at compile time.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">[[noreturn]]</code> *</td>
+      <td>The function won’t return for optimization.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">inline</code> *</td>
+      <td>Inline the function for optimization.</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>The modifier <code class="language-plaintext highlighter-rouge">[[noreturn]]</code> is not the same with return type <code class="language-plaintext highlighter-rouge">void</code>, but with control flow not return to the caller anymore. e.g. a function that exits or loop forever.</li>
+  <li>The modifier <code class="language-plaintext highlighter-rouge">inline</code> tells the compiler to inline the function, which means there is no cost for function call procedure (place arguments in call stack - jump and call - jump back when done). The size of binary would increase as the function code is not reusable anymore.</li>
+</ul>
+
+<h3 id="suffix-modifiers">Suffix Modifiers</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">noexcept</code></td>
+      <td>The function never throw an exception.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">const</code></td>
+      <td>The function wouldn’t modify an instance of its class.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">final</code>*</td>
+      <td>The function cannot be overridden.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">volatile</code>*</td>
+      <td>A method can be invoked on volatile objects</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>The difference between <code class="language-plaintext highlighter-rouge">virtual</code>, <code class="language-plaintext highlighter-rouge">final</code> and default (no such two modifiers)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">virtual</code> methods are invoked by object types</li>
+      <li>methods by default, are invoked by reference types</li>
+      <li><code class="language-plaintext highlighter-rouge">final</code> methods give error when you try to declare a same name method in child class. The <code class="language-plaintext highlighter-rouge">final</code> modifier encourage the compiler to perform a type of optimization called <code class="language-plaintext highlighter-rouge">devirtualization</code>.</li>
+    </ul>
+  </li>
+  <li>If an object is <code class="language-plaintext highlighter-rouge">volatile</code>, the compiler must treat all accesses to it as visible side effects. It roughly means no optimization (e.g. re-order) applied.</li>
+</ul>
+
+<h3 id="automatic-return-type">Automatic Return Type</h3>
+<p>Return types can be <code class="language-plaintext highlighter-rouge">auto</code>. But it’s mainly used in templates as a regular function should provide return type for readability.</p>
+
+<p>When <code class="language-plaintext highlighter-rouge">auto</code> is used in the return type of template functions, it can be paired with a <code class="language-plaintext highlighter-rouge">decltype</code> expression.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">X</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Y</span><span class="p">&gt;</span>
+<span class="k">auto</span> <span class="nf">add</span><span class="p">(</span><span class="n">X</span> <span class="n">x</span><span class="p">,</span> <span class="n">Y</span> <span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">my_double</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mf">100.</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"decltype(double + int) = double; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">my_double</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">my_uint</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="mi">100U</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"decltype(uint + int) = uint; %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">my_uint</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">my_ulonglong</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="kt">char</span><span class="p">{</span> <span class="mi">100</span> <span class="p">},</span> <span class="mi">54'999'900ull</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"decltype(char + ulonglong) = ulonglong; %llu</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">my_ulonglong</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<h3 id="overload-resolution">Overload Resolution</h3>
+<p><em>Overload resolution</em> is the process that the compiler executes when matching a function invocation with a proper implementation by the function declaration.</p>
+<ol>
+  <li>The compiler will look for an exact type match.</li>
+  <li>The compiler will try to use built-in promotion rules (e.g. <code class="language-plaintext highlighter-rouge">int</code> to <code class="language-plaintext highlighter-rouge">long</code>) to find a match.</li>
+  <li>The compiler will try to use user-defined type conversion to find a match</li>
+  <li>The compiler will look for a variadic function.</li>
+</ol>
+
+<h2 id="variadic-functions">Variadic Functions</h2>
+<p>A variadic function can take a undetermined number of parameters. A canonical example is the function <code class="language-plaintext highlighter-rouge">printf</code>, which accepts any number of parameters.</p>
+
+<p>You declare variadic functions by placing <code class="language-plaintext highlighter-rouge">...</code> as the final parameter. To access variadic parameters, it is needed to use <code class="language-plaintext highlighter-rouge">&lt;cstdarg&gt;</code>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;cstdarg&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+  <span class="kt">va_list</span> <span class="n">args</span><span class="p">;</span>
+  <span class="n">va_start</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">result</span><span class="p">{};</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">n</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">next_element</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+    <span class="n">result</span> <span class="o">+=</span> <span class="n">next_element</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">va_end</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"The answer is %d."</span><span class="p">,</span> <span class="n">sum</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that variadic arguments are not type-safe, and the number of elements must be tracked separately. These two facts make this language feature not that attractive.  A more interesting usage of variadic arguments is in templates.</p>
+
+<h3 id="variadic-templates">Variadic Templates</h3>
+<p>A classic example of variadic is the function <code class="language-plaintext highlighter-rouge">sum</code>, which calculates a list of numbers. The template <code class="language-plaintext highlighter-rouge">sum</code> absorbs the first argument, then pack the reminder into <code class="language-plaintext highlighter-rouge">args</code>. It halts until there is only one argument left. This trick is called <em>compile-time recursion</em>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="n">T</span> <span class="nf">sum</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">,</span> <span class="k">typename</span><span class="o">...</span> <span class="nc">Args</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="n">T</span> <span class="n">sum</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sum</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"The answer is %d."</span><span class="p">,</span> <span class="n">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>There are two advantages for variadic template over regular variadic functions:</p>
+<ul>
+  <li>You can use <code class="language-plaintext highlighter-rouge">sizeof(args)</code> to obtain the parameter pack’s size.</li>
+  <li>You can invoke a function with <code class="language-plaintext highlighter-rouge">...</code> to expands the parameter pack.</li>
+</ul>
+
+<h2 id="function-pointers">Function Pointers</h2>
+<p>In <em>functional programming</em>, one major concept is to pass a function as a parameter to another function. It can be done with function pointers in C++.</p>
+
+<p>Unfortunately, the grammar for function pointers are extremely ugly.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="nf">add</span><span class="p">(</span><span class="kt">float</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">subtract</span><span class="p">(</span><span class="kt">float</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">float</span> <span class="n">first</span><span class="p">{</span> <span class="mi">100</span> <span class="p">};</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">second</span><span class="p">{</span> <span class="mi">20</span> <span class="p">};</span>
+
+  <span class="kt">float</span> <span class="p">(</span><span class="o">*</span><span class="n">operation</span><span class="p">)(</span><span class="kt">float</span><span class="p">,</span> <span class="kt">int</span><span class="p">){};</span> <span class="c1">// a function pointer</span>
+  
+  <span class="n">operation</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">add</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%g + %d = %g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">operation</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">));</span>
+
+  <span class="n">operation</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">subtract</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"%g - %d = %g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">operation</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>As a result, it is encouraged to use type aliases to program with function pointers.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">operation_func</span> <span class="o">=</span> <span class="kt">float</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">float</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="stdfunction"><code class="language-plaintext highlighter-rouge">std::function</code></h3>
+<p>A more modern generic function pointer is the <code class="language-plaintext highlighter-rouge">std::function</code> template.</p>
+<pre><code class="language-plain">std::function&lt;return-type(arg-type-1, arg-type-2, etc.)&gt;
+</code></pre>
+
+<h2 id="function-objects">Function Objects</h2>
+<p>A user-defined type can be made invocable by implementing the function-call operator <code class="language-plaintext highlighter-rouge">operator()()</code>. Accordingly, an object with function-call operator is called <em>function object</em>.</p>
+
+<p>An interesting example follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="nc">CountIf</span> <span class="p">{</span>
+  <span class="n">CountIf</span><span class="p">(</span><span class="kt">char</span> <span class="n">x</span><span class="p">)</span> <span class="o">:</span> <span class="n">x</span><span class="p">{</span> <span class="n">x</span> <span class="p">}</span> <span class="p">{}</span>
+  
+  <span class="kt">size_t</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">index</span><span class="p">{},</span> <span class="n">result</span><span class="p">{};</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">++</span><span class="p">;</span>
+      <span class="n">index</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nl">private:</span>
+  <span class="k">const</span> <span class="kt">char</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">CountIf</span> <span class="n">s_counter</span><span class="p">{</span> <span class="sc">'s'</span> <span class="p">};</span> <span class="c1">// count how many 's' are there in a string.</span>
+  <span class="k">auto</span> <span class="n">sally</span> <span class="o">=</span> <span class="n">s_counter</span><span class="p">(</span><span class="s">"Sally sells seashells by the seashore."</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The example is actually a practice for <em>partial applications</em>, which is yet another important concept in functional programming.</p>
+
+<p>Apart from partial applications, function-call operators are commonly used in <code class="language-plaintext highlighter-rouge">std</code> libraries as well.</p>
+
+<h2 id="lambda-expressions">Lambda Expressions</h2>
+<p>A more fancy and modern way to write functions is the <em>lambda expressions</em>. I am glad that CPP is willing to adapt more functional programming styles. The syntax for lambda expression is</p>
+<pre><code class="language-plain">[captures] (parameters) modifiers -&gt; return-type {body}
+</code></pre>
+<p>Only captures and the body are required.</p>
+
+<p>Each lambda expression has a direct analogue in a function object. Especially, the member variables in a function object are analogous to a lambda’s capture. Thus, there is no additional functionality for lambda expression comparing to old-fashioned ways, but it only provides aesthetics.</p>
+
+<p>This example defines the famous higher-order function <a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function)">fold</a>, which is also called <code class="language-plaintext highlighter-rouge">reduce</code> in many other languages. The function <code class="language-plaintext highlighter-rouge">fold</code> describes a process that apply a combining operation on a list.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span><span class="cpf">&lt;cstdio&gt;</span><span class="cp">
+</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Fn</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">In</span><span class="p">,</span> <span class="k">typename</span> <span class="nc">Out</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="n">Out</span> <span class="nf">fold</span><span class="p">(</span><span class="n">Fn</span> <span class="n">function</span><span class="p">,</span> <span class="n">In</span><span class="o">*</span> <span class="n">input</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">,</span> <span class="n">Out</span> <span class="n">initial</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">auto</span> <span class="n">accumulation</span> <span class="o">=</span> <span class="n">initial</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">accumulation</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">input</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">accumulation</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">accumulation</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">data</span><span class="p">[]{</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span> <span class="p">};</span>
+	<span class="kt">size_t</span> <span class="n">data_len</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+	<span class="k">auto</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">fold</span><span class="p">([](</span><span class="k">auto</span> <span class="n">x</span><span class="p">,</span> <span class="k">auto</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span> <span class="p">},</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_len</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Sum: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+
+	<span class="k">auto</span> <span class="n">maximum</span> <span class="o">=</span> <span class="n">fold</span><span class="p">([](</span><span class="k">auto</span> <span class="n">x</span><span class="p">,</span> <span class="k">auto</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">y</span><span class="p">;</span> <span class="p">},</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_len</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Maximum: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">maximum</span><span class="p">);</span>
+
+	<span class="k">auto</span> <span class="n">numOfG200</span> <span class="o">=</span> <span class="n">fold</span><span class="p">([](</span><span class="k">auto</span> <span class="n">x</span><span class="p">,</span> <span class="k">auto</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="o">?</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">y</span><span class="p">;</span> <span class="p">},</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_len</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Number of Elements greater than 200: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">numOfG200</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>By define different types of lambda expression, we make use of <code class="language-plaintext highlighter-rouge">fold</code> for different purposes: calculating the sum, the maximum and counting the number of elements greater than 200. It is easy to comprehend the elegant of lambdas for its readability and succinctness.</p>
+
+<h2 id="summary">Summary</h2>
+<p>The topics we mentioned are:</p>
+<ul>
+  <li>Function declarations, including modifiers and  overload resolution</li>
+  <li>Variadic functions</li>
+  <li>Function Pointers</li>
+  <li>Function objects and lambda expressions.</li>
+</ul>
+
+  </div><a class="u-url" href="/c++/2023/12/06/Functions-CPP.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
