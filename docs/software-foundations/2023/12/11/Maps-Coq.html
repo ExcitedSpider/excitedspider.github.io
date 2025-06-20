@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Maps in Functional Programming | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Maps in Functional Programming" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Define data structure as functions." />
+<meta property="og:description" content="Define data structure as functions." />
+<link rel="canonical" href="/software-foundations/2023/12/11/Maps-Coq.html" />
+<meta property="og:url" content="/software-foundations/2023/12/11/Maps-Coq.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-12-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Maps in Functional Programming" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-12-22T03:40:08+00:00","datePublished":"2023-12-11T00:00:00+00:00","description":"Define data structure as functions.","headline":"Maps in Functional Programming","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/12/11/Maps-Coq.html"},"url":"/software-foundations/2023/12/11/Maps-Coq.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Maps in Functional Programming</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>Coq</span>
+        
+      </span><time class="dt-published" datetime="2023-12-11T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Dec 11, 2023
+      </time><time>
+        Modified At: Dec 22, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>Maps</em> are ubiquitous data structures in programming. There are two maps: <em>total</em> maps, which have a “default” element to be returned when the key doesn’t exist; and <em>partial</em> maps, which returns an <em>option</em> to indicate success or failure<sup id="fnref:0" role="doc-noteref"><a href="#fn:0" class="footnote" rel="footnote">1</a></sup>. Apparently, the latter is based on the former one.</p>
+
+<h2 id="total-maps">Total Maps</h2>
+<p>There is a very unique and interesting way to define a total map, that is, using (higher-order) functions.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">string</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">A</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">t_empty</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">v</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="kr">fun</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">v</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">t_update</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w">
+                    </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">string</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">v</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">fun</span><span class="w"> </span><span class="no">x'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="nn">String</span><span class="p">.</span><span class="no">eqb</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x'</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x'</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A map is a function <code class="language-plaintext highlighter-rouge">string -&gt; A</code>. The function <code class="language-plaintext highlighter-rouge">t_update</code> takes a key-value pair and map, then returns a new function. This novelty here works because what we are talking about is a total map, which implies we don’t need to have a “delete” operation - To delete a key, we can just update the key to return the default value.</p>
+
+<p>Here’s a few notations for (total) maps:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Notation</span><span class="w"> </span><span class="s2">"'_' '!-&gt;' v"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">t_empty</span><span class="w"> </span><span class="no">v</span><span class="o">)</span><span class="w">
+  </span><span class="o">(</span><span class="kp">at</span><span class="w"> </span><span class="no">level</span><span class="w"> </span><span class="mi">100</span><span class="o">,</span><span class="w"> </span><span class="no">right</span><span class="w"> </span><span class="no">associativity</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Notation</span><span class="w"> </span><span class="s2">"x '!-&gt;' v ';' m"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">t_update</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v</span><span class="o">)</span><span class="w">
+                              </span><span class="o">(</span><span class="kp">at</span><span class="w"> </span><span class="no">level</span><span class="w"> </span><span class="mi">100</span><span class="o">,</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="kp">at</span><span class="w"> </span><span class="no">next</span><span class="w"> </span><span class="no">level</span><span class="o">,</span><span class="w"> </span><span class="no">right</span><span class="w"> </span><span class="no">associativity</span><span class="o">).</span><span class="w">
+
+</span><span class="c">(* A map with 2 keys mapping to true: "bar" and "foo". *)</span><span class="w"> 
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">examplemap'</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="w"> </span><span class="s2">"bar"</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">true</span><span class="p">;</span><span class="w">
+    </span><span class="s2">"foo"</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">true</span><span class="p">;</span><span class="w">
+    </span><span class="p">_</span><span class="w">     </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">false</span><span class="w">
+  </span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>With the help of notations, the use of maps seems to be really declarative. Some properties of map follows:</p>
+
+<p>Property 1: If we update the map at key $x$ with value $v$, then we look up $x$, we will get $v$.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise: t_update_eq  *)</span><span class="w">
+
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">t_update_eq</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v</span><span class="o">,</span><span class="w">
+  </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">v</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">t_update</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_refl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Property 2: If we update a map at key $x_1$ and then look up a different key $x_2$, we get the same result before updating.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise: t_update_neq  *)</span><span class="w">
+
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">t_update_neq</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="no">v</span><span class="o">,</span><span class="w">
+  </span><span class="no">x1</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+  </span><span class="o">(</span><span class="no">x1</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x2</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">t_update</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="no">x2</span><span class="o">).</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">unfold</span><span class="w"> </span><span class="no">not</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">e</span><span class="pi">.</span><span class="w"> </span><span class="kp">exfalso</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">e</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">  
+</span></code></pre></div></div>
+
+<p>Property 3: Update a map two times at the same key $x$ is equal to only perform the last update.</p>
+
+<p>Notice that to reason about equality relation of two functions, we need the functional extensionality rule<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">2</a></sup>.We say two functions are equal if on every possible input, both give same outputs. In other words, we don’t care about the internal structure of a function.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* Exercise: t_update_shadow *)</span><span class="w">
+
+</span><span class="no">Axiom</span><span class="w"> </span><span class="no">functional_extensionality</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="no">Y</span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w">
+</span><span class="err"> </span><span class="w"> </span><span class="err"> </span><span class="w"> </span><span class="o">{</span><span class="no">f</span><span class="w"> </span><span class="no">g</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">Y</span><span class="o">},</span><span class="w">
+</span><span class="o">(</span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="p">:</span><span class="no">X</span><span class="o">),</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">g</span><span class="w"> </span><span class="no">x</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">g</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">t_update_shadow</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v1</span><span class="w"> </span><span class="no">v2</span><span class="o">,</span><span class="w">
+  </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v2</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v2</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">functional_extensionality</span><span class="pi">.</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">x'</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">t_update</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x'</span><span class="o">).</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="no">trivial</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="no">trivial</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">  
+</span></code></pre></div></div>
+
+<p>Property 4: the operation that update a map m at x to assign the value as it already in m will not modify the map</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">t_update_same</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="no">x</span><span class="o">,</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">m</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">t_update</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">functional_extensionality</span><span class="pi">.</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">x'</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x'</span><span class="o">).</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">e</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="no">trivial</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w"> 
+</span></code></pre></div></div>
+
+<p>Property 5: if we update a map at two distinct keys, the order doesn’t matter.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Theorem</span><span class="w"> </span><span class="no">t_update_permute</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w">
+                                  </span><span class="no">v1</span><span class="w"> </span><span class="no">v2</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="no">x2</span><span class="o">,</span><span class="w">
+  </span><span class="no">x2</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+  </span><span class="o">(</span><span class="no">x1</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v2</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">)</span><span class="w">
+  </span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="no">x2</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v2</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">v1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">apply</span><span class="w"> </span><span class="no">functional_extensionality</span><span class="pi">.</span><span class="w"> </span><span class="kp">intros</span><span class="w"> </span><span class="no">x</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">unfold</span><span class="w"> </span><span class="no">t_update</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x1</span><span class="w"> </span><span class="no">x</span><span class="o">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[</span><span class="no">H0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">H0</span><span class="o">].</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="no">x</span><span class="o">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[</span><span class="no">H1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">H2</span><span class="o">].</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="no">H0</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="kp">unfold</span><span class="w"> </span><span class="no">not</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H</span><span class="pi">.</span><span class="w"> </span><span class="kp">apply</span><span class="w"> </span><span class="no">H</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="no">H1</span><span class="pi">.</span><span class="w"> </span><span class="no">contradiction</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="kp">destruct</span><span class="w"> </span><span class="o">(</span><span class="nn">String</span><span class="p">.</span><span class="no">eqb_spec</span><span class="w"> </span><span class="no">x2</span><span class="w"> </span><span class="no">x</span><span class="o">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[</span><span class="no">H1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">H2</span><span class="o">].</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="partial-map">Partial Map</h2>
+
+<p>We know that partial maps are built on the foundation of total maps. So basically they share same properties. But partial maps are more safe in practice.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">partial_map</span><span class="w"> </span><span class="o">(</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">total_map</span><span class="w"> </span><span class="o">(</span><span class="no">option</span><span class="w"> </span><span class="no">A</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">empty</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="w"> </span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="no">t_empty</span><span class="w"> </span><span class="no">None</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">update</span><span class="w"> </span><span class="o">{</span><span class="no">A</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w">
+           </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">string</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">v</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">A</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="o">!-&gt;</span><span class="w"> </span><span class="no">Some</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="no">m</span><span class="o">).</span><span class="w">
+
+</span><span class="c">(** We introduce a similar notation for partial maps: *)</span><span class="w">
+</span><span class="k">Notation</span><span class="w"> </span><span class="s2">"x '|-&gt;' v ';' m"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">update</span><span class="w"> </span><span class="no">m</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v</span><span class="o">)</span><span class="w">
+  </span><span class="o">(</span><span class="kp">at</span><span class="w"> </span><span class="no">level</span><span class="w"> </span><span class="mi">100</span><span class="o">,</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="kp">at</span><span class="w"> </span><span class="no">next</span><span class="w"> </span><span class="no">level</span><span class="o">,</span><span class="w"> </span><span class="no">right</span><span class="w"> </span><span class="no">associativity</span><span class="o">).</span><span class="w">
+
+</span><span class="c">(** We can also hide the last case when it is empty. *)</span><span class="w">
+</span><span class="k">Notation</span><span class="w"> </span><span class="s2">"x '|-&gt;' v"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">update</span><span class="w"> </span><span class="no">empty</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">v</span><span class="o">)</span><span class="w">
+  </span><span class="o">(</span><span class="kp">at</span><span class="w"> </span><span class="no">level</span><span class="w"> </span><span class="mi">100</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">examplepmap</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="s2">"Church"</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="s2">"Turing"</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="no">false</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="references">References</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:0" role="doc-endnote">
+      <p>Software Foundations (Dec. 2023) https://softwarefoundations.cis.upenn.edu/lf-current/Maps.html <a href="#fnref:0" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:1" role="doc-endnote">
+      <p>Extensionality, Wikipedia (Dec. 2023) https://en.wikipedia.org/wiki/Extensionality <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><a class="u-url" href="/software-foundations/2023/12/11/Maps-Coq.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
