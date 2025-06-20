@@ -2,7 +2,7 @@
 layout: post
 title:  "An Abstract Interpretor Based on Compositional Semantics"
 categories: [PL]
-description: A study note.
+description: A study note on Rival's Textbook.
 tags: [PL]
 ---
 
