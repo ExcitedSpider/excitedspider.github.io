@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Simple Theory of Naive Bayes Classifier | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Simple Theory of Naive Bayes Classifier" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The math foundation" />
+<meta property="og:description" content="The math foundation" />
+<link rel="canonical" href="/machinelearning/2023/10/28/Naive-Bayes.html" />
+<meta property="og:url" content="/machinelearning/2023/10/28/Naive-Bayes.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-10-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Simple Theory of Naive Bayes Classifier" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-14T07:59:27+00:00","datePublished":"2023-10-28T00:00:00+00:00","description":"The math foundation","headline":"Simple Theory of Naive Bayes Classifier","mainEntityOfPage":{"@type":"WebPage","@id":"/machinelearning/2023/10/28/Naive-Bayes.html"},"url":"/machinelearning/2023/10/28/Naive-Bayes.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Simple Theory of Naive Bayes Classifier</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-10-28T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Oct 28, 2023
+      </time><time>
+        Modified At: Nov 14, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>MachineLearning</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="basic-bayesian-decision-theory">Basic Bayesian Decision Theory</h2>
+
+<p>Suppose in a data set, there are N distinct class labels, that is:</p>
+
+\[y = \{ c_1, c_2, ...c_n\}\]
+
+<p>What we want to do now is to calculate which class is the most probable one, that is:</p>
+
+\[h^* = \arg\max_{c\in y} P(c|x)\]
+
+<p>P(c|x) is the posterior probability of given instance $ x = {x_1,x_2, …, x_d} $, the probability of x to be c. The function argmax means we want to output the class $ c \in { c_1, c_2, …c_n} $ which gives the highest posibility.</p>
+
+<p>According to bayes’ theorem, $P(c|x)$ can be written as</p>
+
+\[P(c|x) = \frac{P(c)P(x|c)}{P(x)}\]
+
+<p>Because P(x) is the probability of the probability of instance being x, which is a fixed value and doesn’t have an impact on the problem we want to solve (to determine which class c is of highest probability). As we don’t want to know the actual probability of x being c( we just want to know the highest one), we can omit calculate P(x):</p>
+
+\[\hat{c} = \arg\max_{c \in y} P(c)P(x|c)\]
+
+<p>I interpret this formula to be:</p>
+
+<p>“Given an observation x, find the class c, which can maximize the likelihood ‘x being the class c’.”</p>
+
+<p>Because x contains many features x = $[x_1, x_2, …, x_m]$ ,thus</p>
+
+\[\hat{c} = \arg\max P(x_1, x_2, ..., x_m|c)P(c)\]
+
+<p>We can just use the frequency of c as P(c), it’s a efficiently computable way to do that. What really matter is $ P(x|c) $. If every instance in the dataset has d binary attributes, there are 2^d combination of attributes. The probability of one instance with a label c being a specific attributes $x = {x_1,x_2, …, x_m}$ is hard to estimate.</p>
+
+<h2 id="naive-bayes-classifier-theory">Naive Bayes Classifier Theory</h2>
+
+<p>Because P(x|c) is hard to get, the naive bayes classifier make an assumption to reduce this problem to another rather easy one: <strong>Assume</strong></p>
+
+<ul>
+  <li>
+    <p><strong>all attributes of instance are independent,</strong> so we can transform the object faction</p>
+
+\[\hat{y} = \arg\max_{y \in y} P(y)P(x|y) = \arg\max_{y \in y} P(x,y)\]
+
+    <p>and we can estimate P(x|y) to be</p>
+  </li>
+</ul>
+
+\[P(x_1, x_2, ..., x_m|y) = P(x_1|y)P(x_2|y)...P(x_m|y) = \prod_{m=1}^PP(x_m|y)\]
+
+<ul>
+  <li>
+    <p><strong>continuous attributes comply the Gaussian Distribution.</strong></p>
+
+\[\begin{equation}
+      f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+  \end{equation}\]
+
+    <p>where</p>
+
+    <ul>
+      <li>$\mu$ is the mean of the distribution</li>
+      <li>$\sigma^2$ is the variance of the distribution.</li>
+    </ul>
+  </li>
+  <li>
+    <p>The distribution of data in the training set is the same as the distribution of data in the test set</p>
+  </li>
+</ul>
+
+<p>With this assumption, we can easily estimate</p>
+
+\[P(x|c) = \prod_{m=1}^PP(x_m|c)\]
+
+<p>So that</p>
+
+\[P(x,y) =P(y)\prod_m^M P(x_m|y)\]
+
+<p>A really simple idea to implement P</p>
+
+<ul>
+  <li>
+    <p>For discrete features, $ P(x_i|c) $ is the frequency of instances which has a class c and has the attribute x_i.</p>
+
+\[P(x_i|c) = \frac{|D_{c,x_i}|}{|D_c|}\]
+
+    <p>where $|D_{c,x_i}|$ is simply the number of instances with class c and attribute c_i.</p>
+  </li>
+  <li>
+    <p>For continuous features, we assume these features comply gaussian distribution, thus we can use the formular to calculate its possibility.</p>
+  </li>
+</ul>
+
+<p>Thus, the calculation of naive bayes classifier can be quite simple.</p>
+
+<h2 id="types-of-nb-classifier">Types of NB Classifier</h2>
+
+<p>We are going to build a classifier for $x \rightarrow y$, where x is an observation of instance and y is the class</p>
+
+<h3 id="gaussian-naive-bayes">Gaussian Naive Bayes</h3>
+
+<p><strong>Apply if features of x are numerical (real-valued) and y is binary.</strong></p>
+
+<p>For each y, calculate</p>
+
+\[p(x,y) = p(y)\prod_m^M p(x|y)\\
+=BN(y|\phi)\prod_m^M N(x|\psi=\{\mu_{m,y}, \delta_{m,y}\})\]
+
+<p>where BN is the probability of y under bernoulli distribution and N is the probability of x under gaussian distribution.</p>
+
+<p>Find the distribution:</p>
+
+<p><a href="https://www.notion.so/Distribution-09f29a398a8c4520b5566df8f440e754?pvs=21">Distribution</a></p>
+
+<p>Find the y which maximize p(x,y)</p>
+
+<h3 id="bernoulli-naive-bayes">Bernoulli Naive Bayes</h3>
+
+<p><strong>Apply if features of x are binary and y is binary</strong></p>
+
+<p>Similar to gaussian naive bayes, the object function is:</p>
+
+\[p(x,y) = p(y)\prod_m^M p(x|y)\\
+=BN(y|\mu_y)\prod_m^M BN(x|\mu_x)\]
+
+<h3 id="categorical-naive-bayes">Categorical Naive Bayes</h3>
+
+<p><strong>Apply if features of x are and y are categorical</strong></p>
+
+\[p(x,y) = p(y)\prod_m^M p(x|y)\\
+=Cat(y|\phi)\prod_m^M Cat(x|\psi)\]
+
+<p>where Cat is the categorical distribution probability. In practice, one can just count the instances in the dataset to get the probability</p>
+
+\[Cat(y) = \frac{count(y)}{N}\]
+
+<h2 id="smoothing">Smoothing</h2>
+
+<p>Even in Naive Bayes Classifier, chances are there could be not enough instance has a specific value of feature and a class (unseen features). Thus some of the $ P(x_i|c) $ could be 0, which is a destroyer to our classifier because $ \prod_{i=0}^dP(x_i|c) $ will be 0 if one of the term is 0.</p>
+
+<p>Smoothing is a technique to solve this problem. The most common one is Laplacian correction, which simply add one to the numerator:</p>
+
+\[P(x_i|c) = \frac{|D_{c,x_i}| + 1}{|D_c|}\]
+
+<p>This technique can avoid $ |D_{c,x_i}| $ being 0.</p>
+
+  </div><a class="u-url" href="/machinelearning/2023/10/28/Naive-Bayes.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

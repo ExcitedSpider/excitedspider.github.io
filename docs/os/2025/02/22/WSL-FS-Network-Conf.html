@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>WSL – File System, Networking, Configuration | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="WSL – File System, Networking, Configuration" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="My story with Linux subsystem." />
+<meta property="og:description" content="My story with Linux subsystem." />
+<link rel="canonical" href="/os/2025/02/22/WSL-FS-Network-Conf.html" />
+<meta property="og:url" content="/os/2025/02/22/WSL-FS-Network-Conf.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-22T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="WSL – File System, Networking, Configuration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2025-02-25T00:37:25+00:00","datePublished":"2025-02-22T00:00:00+00:00","description":"My story with Linux subsystem.","headline":"WSL – File System, Networking, Configuration","mainEntityOfPage":{"@type":"WebPage","@id":"/os/2025/02/22/WSL-FS-Network-Conf.html"},"url":"/os/2025/02/22/WSL-FS-Network-Conf.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">WSL -- File System, Networking, Configuration</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>OS</span>
+        
+      </span><time class="dt-published" datetime="2025-02-22T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Feb 22, 2025
+      </time><time>
+        Modified At: Feb 25, 2025
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>OS</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="background">Background</h2>
+
+<p>I’m a Windows user, and Windows Subsystem Linux (WSL) is the most frequent tool I need to use. 
+I use WSL primarily for coding and dev, while Windows for entertaining.
+My goal is <strong>not installing anything related to coding in Windows</strong>.
+However, I find that I have little knowledge about how it works.
+It sometimes makes me confused. 
+So I decided to spend sometime and take a note about it.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>WSL 2 uses virtualization to run a Linux kernel inside a VM.
+WSL 2 features</p>
+<ul>
+  <li>Faster File IO</li>
+  <li>Full System Call Compatibility
+      This allows full access to Linux apps like Docker (why)</li>
+</ul>
+
+<p>Architecture Change from WSL 1</p>
+<ul>
+  <li>WSLv1 uses a translation-based approach, which translates a Linux system call to Windows kernel. 
+      This approach can be less compatible because system calls in win and Linux can have different semantics. 
+      It also slows down the IO speed somehow.</li>
+  <li>WSLv2 is VM-based approach. It has a full Linux kernel.</li>
+</ul>
+
+<h2 id="working-with-file-system">Working with File System</h2>
+
+<p>You can run Linux tools from a Windows Command Line</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#powershell</span>
+wsl <span class="nb">ls</span> <span class="nt">-la</span>
+wsl <span class="nb">ls</span> <span class="nt">-la</span> <span class="s2">"/mnt/c/Program Files"</span> <span class="c"># note that you need to use linux file path  </span>
+</code></pre></div></div>
+
+<p>You can also run Windows tools in WSL by <code class="language-plaintext highlighter-rouge">[tool-name].exe</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#bash</span>
+ipconfig.exe | <span class="nb">grep </span>IPv4 | <span class="nb">cut</span> <span class="nt">-d</span>: <span class="nt">-f2</span>
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>WSL allows user providing a configuration file <code class="language-plaintext highlighter-rouge">%UserProfile%/.wslconfig</code>. 
+See <a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config#main-wsl-settings">Main WSL Settings</a> for the full configuration table.</p>
+
+<p>By the way, I prefer using WSL setting app for config.</p>
+
+<h2 id="networking-consideration">Networking Consideration</h2>
+
+<p>Currently, WSL2 offers two modes of networking: NAT and Mirrored.</p>
+
+<h3 id="nat-mode">NAT Mode</h3>
+
+<p>NAT Mode means that WSL is running in a <strong>virtualized network environment</strong> where it is assigned with a <strong>private IP address</strong>, and Windows serves as the adapter.</p>
+
+<p><strong>Accessing Internet from WSL</strong></p>
+
+<p>WSL runs on NAT mode implies that Windows serves as the adapter, rewriting request from WSL with its IP.</p>
+
+<p>Try this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wsl curl 'https://api.ipify.org?format=json'
+&gt; curl 'https://api.ipify.org?format=json'
+</code></pre></div></div>
+
+<p>The API simply returns the IP of the client. 
+You can see that both are identical and is the IP address of the Windows.</p>
+
+<p>Another experiment is that, you can trace network packets:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>traceroute google.com <span class="c"># On wsl</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tracert google.com <span class="c"># On wsl</span>
+</code></pre></div></div>
+
+<p>You will find that both are identical <strong>except there is one more jump from WSL to Windows</strong></p>
+
+<p><strong>Accessing WSL from Windows</strong></p>
+
+<p>On Windows, you can access networking apps in WSL using localhost. There is an auto-forwarding feature working:</p>
+
+<p><img src="/assets/images/Pasted%20image%2020250222170500.png" alt="Experiment: Accessing WSL Networking application " /></p>
+
+<p>You can also access networking apps by using the assigned IP address of WSL.</p>
+
+<p>The Windows host can use this command to query the IP address</p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">&gt;</span><span class="w"> </span><span class="n">wsl</span><span class="w"> </span><span class="nt">-d</span><span class="w"> </span><span class="err">&lt;</span><span class="nx">DistributionName</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">hostname</span><span class="w"> </span><span class="nt">-I</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Accessing WSL from LAN</strong></p>
+
+<p>To enable devices on your LAN to access WSL, it needs proper proxy setup. See <a href="https://learn.microsoft.com/en-us/windows/wsl/networking#accessing-a-wsl-2-distribution-from-your-local-area-network-lan">Accessing a WSL 2 distribution from your local area network (LAN)</a></p>
+
+<h3 id="mirrored-networking-mode">Mirrored Networking Mode</h3>
+
+<p>In mirrored mode, WSL works as <strong>if they are the same machine in network</strong>. Benefits are:</p>
+<ul>
+  <li>IPv6 Support</li>
+  <li>Connect to Windows servers from within Linux using the localhost address <code class="language-plaintext highlighter-rouge">127.0.0.1</code>.</li>
+  <li>Improved networking compatibility for VPNs</li>
+  <li>Connect to WSL directly from your local area network (LAN)</li>
+</ul>
+
+<p>It implies that both Windows and WSL Apps connect to the same physical network of the Windows host.</p>
+
+<p>The VM “mirrors” all network settings from Windows.</p>
+
+<p>This can be validate by tracing network parcels:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># on WSL
+traceroute google.com
+</code></pre></div></div>
+
+<p>You will find there is not a jump to Windows host.</p>
+
+<p>The only thing we know about the implementation is that it utilizes Hyper-V virtual switch feature. 
+MS do not share more detailed information about it.</p>
+
+<h2 id="mounting-a-device">Mounting a Device</h2>
+
+<blockquote>
+  <p>Shout out to [https://askubuntu.com/questions/1116200/how-can-i-access-my-usb-drive-from-my-windows-subsystem-for-linux-ubuntu-dist]</p>
+</blockquote>
+
+<p>Suppose there is a new USB device mounted on G: on windows. 
+To access it on WSL:</p>
+
+<ol>
+  <li>Create the mount point: <code class="language-plaintext highlighter-rouge">mkdir /mnt/g</code></li>
+  <li>Mount the drive to the directory using <code class="language-plaintext highlighter-rouge">sudo mount -t drvfs G: /mnt/g</code></li>
+</ol>
+
+<h1 id="references">References</h1>
+<ol>
+  <li>MS WSL Doc https://learn.microsoft.com/en-us/windows/wsl/about</li>
+  <li>Intro to WSL2 Video https://youtu.be/MrZolfGm8Zk?si=pRhVjzF84i49Zoqi</li>
+</ol>
+
+  </div><a class="u-url" href="/os/2025/02/22/WSL-FS-Network-Conf.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

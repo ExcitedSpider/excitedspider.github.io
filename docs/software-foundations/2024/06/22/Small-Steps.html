@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Small-Step Operational Semantics | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Small-Step Operational Semantics" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Finding the meaning of a program" />
+<meta property="og:description" content="Finding the meaning of a program" />
+<link rel="canonical" href="/software-foundations/2024/06/22/Small-Steps.html" />
+<meta property="og:url" content="/software-foundations/2024/06/22/Small-Steps.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-06-22T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Small-Step Operational Semantics" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2024-06-22T05:27:12+00:00","datePublished":"2024-06-22T00:00:00+00:00","description":"Finding the meaning of a program","headline":"Small-Step Operational Semantics","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2024/06/22/Small-Steps.html"},"url":"/software-foundations/2024/06/22/Small-Steps.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Small-Step Operational Semantics</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>Coq</span>
+        
+          <span>PLT</span>
+        
+      </span><time class="dt-published" datetime="2024-06-22T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Jun 22, 2024
+      </time><time>
+        Modified At: Jun 22, 2024
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Even if I have walked through all the content and practices in the <a href="https://softwarefoundations.cis.upenn.edu/plf-current/Smallstep.html">textbook</a>, it still confuses me about what “Small-Step Operational Semantics” is. It is partly because the study of the chapter is segmented into pieces because I have to only use my free time to do it. It also because this chapter is way too long such that one can’t get to the important points immediately.</p>
+
+<h2 id="small-step-semantics">Small-step Semantics</h2>
+
+<p><em>Small-step</em> means the evaluation of the semantics from the program can be carried out step-by-step. Some would also describe it as “structural operational semantics” because the the method usually follows the structure of programs. It might takes multiple steps to get the final semantics of a statement. Conversely, <em>natural semantics</em> directly evaluate a statement to the final state, which can be steadily implemented in a evaluation function.</p>
+
+<p>For example, given the statement</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1 + 3) + (2 + 4)
+</code></pre></div></div>
+
+<p>It might takes multiple steps to get the semantics:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(4) + (2 + 4)
+(4) + (6)
+10 &lt;-- final semantics
+</code></pre></div></div>
+
+<p>There are two reasons (the textbook gives) to recommend small-step semantics instead of natural semantics.</p>
+<ul>
+  <li>We includes the intermediate states that it passes through along the way. Observable execution is critical in many situation.</li>
+  <li>By only define one-step evaluation, we allow <em>undefined behaviours</em> in the program.</li>
+</ul>
+
+<h2 id="implementation-comparison">Implementation Comparison</h2>
+
+<p>Compared to natural semantics, the implementation of small-step would be more complicated – a single function can’t suffice. Fortunately we are doing this in Coq, which has a very power tool  – Inductive type.</p>
+
+<p>In the most naïve language where there are only constant (denotes by C) and addition (denotes by P), the informal semantics are:</p>
+
+\[\frac{}{C~n \to n}\]
+
+\[\frac{t_1 \to n_1,~t_2\to n_2}{P~t_1~t_2 \to n_1 + n_2}\]
+
+<p>The formal semantics can be encoded in Coq:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">C</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="c">(* Constant *)</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="no">tm</span><span class="pi">.</span><span class="w"> </span><span class="c">(* Plus *)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The natural semantics is a function defined in a very straightforward way</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">evalF</span><span class="w"> </span><span class="o">(</span><span class="no">t</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">tm</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">C</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">n</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">t1</span><span class="w"> </span><span class="no">t2</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">evalF</span><span class="w"> </span><span class="no">t1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">evalF</span><span class="w"> </span><span class="no">t2</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This evaluation function can easily handle statement such as:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">C 3</code></li>
+  <li><code class="language-plaintext highlighter-rouge">P (C 3) (C 5)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">P (C 3) (P (C 2) (C 3))</code></li>
+</ul>
+
+<p>Conversely, the small step semantics involves a inductive relation describing how to take a step forward:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">step</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="kr">Prop</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">ST_PlusConstConst</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="no">n1</span><span class="w"> </span><span class="no">n2</span><span class="o">,</span><span class="w">
+      </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">C</span><span class="w"> </span><span class="no">n1</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">C</span><span class="w"> </span><span class="no">n2</span><span class="o">)</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="no">C</span><span class="w"> </span><span class="o">(</span><span class="no">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="no">n2</span><span class="o">)</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">ST_Plus1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="no">t1</span><span class="w"> </span><span class="no">t1'</span><span class="w"> </span><span class="no">t2</span><span class="o">,</span><span class="w">
+      </span><span class="no">t1</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="no">t1'</span><span class="w"> </span><span class="p">→</span><span class="w">
+      </span><span class="no">P</span><span class="w"> </span><span class="no">t1</span><span class="w"> </span><span class="no">t2</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="no">t1'</span><span class="w"> </span><span class="no">t2</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">ST_Plus2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="no">n1</span><span class="w"> </span><span class="no">t2</span><span class="w"> </span><span class="no">t2'</span><span class="o">,</span><span class="w">
+      </span><span class="no">t2</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="no">t2'</span><span class="w"> </span><span class="p">→</span><span class="w">
+      </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">C</span><span class="w"> </span><span class="no">n1</span><span class="o">)</span><span class="w"> </span><span class="no">t2</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="no">P</span><span class="w"> </span><span class="o">(</span><span class="no">C</span><span class="w"> </span><span class="no">n1</span><span class="o">)</span><span class="w"> </span><span class="no">t2'</span><span class="w">
+
+  </span><span class="no">where</span><span class="w"> </span><span class="s2">" t '--&gt;' t' "</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">step</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="no">t'</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>And another inductive relation which defines a multi step evaluation as multiple consecutive single-step evaluations:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">multi</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">multi_refl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w"> </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">multi_step</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+                    </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="p">→</span><span class="w">
+                    </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">→</span><span class="w">
+                    </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">z</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This example shows the difference. You can clearly see that small-step semantics is quite complicated compared to natural semantics, which is only a function.</p>
+
+<h2 id="properties-of-small-step-semantics">Properties of Small-step Semantics</h2>
+
+<h3 id="deterministic">Deterministic</h3>
+
+<p>Firstly, given two same programs, the semantics that we found should be identical. In other word, there should be no randomness get in the way for this tiny toy language. This property is called <em>deterministic</em>.</p>
+
+<p><strong>Deterministic Property</strong>: “for each t, there is at most one t’ such that t steps to t’ (t –&gt; t’ is provable).”</p>
+
+<p>It sounds intuitive but the proof is not so straightforward. Readers can check the textbook <code class="language-plaintext highlighter-rouge">Theorem step_deterministic</code> if interested.</p>
+<h3 id="values">Values</h3>
+
+<p>There is a slight problem. When dealing with expressions such as</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>P (P (C 1) (C 3)) (P (C 2) (C 4))
+</code></pre></div></div>
+
+<p>There are actually two directions to step forward: – either handle 1 + 3 or 2 + 4, which results in different intermediate states. This is not we typically want and sometimes causes trouble.</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">P</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">3</span><span class="p">))</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">))</span>
+<span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">))</span>
+<span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">6</span><span class="p">)</span>
+<span class="kt">C</span> <span class="mi">10</span>
+<span class="c1">-- or</span>
+<span class="kt">P</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">3</span><span class="p">))</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">))</span>
+<span class="kt">P</span> <span class="p">(</span><span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">3</span><span class="p">))</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">6</span><span class="p">)</span>
+<span class="kt">P</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="kt">C</span> <span class="mi">6</span><span class="p">)</span>
+<span class="kt">C</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<p>This problem can be solved by defining <em>values</em>. We always want the final term to be some special forms, which we called <em>values</em>. In this language, we expect the final semantics to some constant terms.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">value</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">tm</span><span class="w"> </span><span class="p">→</span><span class="w"> </span><span class="kr">Prop</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">v_const</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="no">n</span><span class="o">,</span><span class="w"> </span><span class="no">value</span><span class="w"> </span><span class="o">(</span><span class="no">C</span><span class="w"> </span><span class="no">n</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>With the concepts of value, we revise the definition of steps:</p>
+
+\[\frac{t_1 \to t_1',}{P~t_1~t_2 \to P~t_1'~t_2}\]
+
+\[\frac{\text{value}~t_1,~t_2\to t_2'}{P~t_1~t_2 \to P~t_1~t_2'}\]
+
+<p>The second one is crucial. It says we take the step of $t_2$ only when t1 is a value. This definition ensures we always evaluate the first argument (t1) until it reaches the form of value.</p>
+
+<p>The usage of values doesn’t limit to this. In fact, they are very important and critical in small-step semantics.</p>
+
+<h3 id="progress-and-normal-forms">Progress and Normal Forms</h3>
+
+<p>In a large language, sometimes people can easily forget one or more rules, which results in a incomplete definition. One should prove its semantics to be <em>strong progress</em> to show there is nothing left.</p>
+
+<p><strong>Theorem Strong Progress</strong>: If t is a term, then either t is a value or else there exists a term t’ such that t–&gt;t’.</p>
+
+<p>When there are statement that doesn’t make sense, we don’t want to define every possible combination of terms. For example, if there are lists in the language, how could <code class="language-plaintext highlighter-rouge">1 + []</code> proceeds? The solution is called <em>typed progress</em>, which involves defining type systems to distinguish what statement doesn’t make sense, and only well-typed terms are progress. We don’t discuss more about types in this article.</p>
+
+<p>Terms that cannot make progress are called <em>normal forms</em>. In this language, only values cannot make a further step. This is quite something that suggests our definition tend to be correct. Why? Because value is a syntactic concept – it is defined by looking at the way a term is written – while normal form is a semantic one – it is defined by looking at how the term steps.</p>
+
+<h2 id="multi-step-reduction">Multi-Step Reduction</h2>
+
+<p>Recall how multi-step evaluation relation is defined:</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">multi</span><span class="w"> </span><span class="o">{</span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="o">}</span><span class="w"> </span><span class="o">(</span><span class="no">R</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">relation</span><span class="w"> </span><span class="no">X</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">multi_refl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w"> </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">x</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">multi_step</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">∀</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">X</span><span class="o">),</span><span class="w">
+                    </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="p">→</span><span class="w">
+                    </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">z</span><span class="w"> </span><span class="p">→</span><span class="w">
+                    </span><span class="no">multi</span><span class="w"> </span><span class="no">R</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">z</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This relation has a few properties</p>
+<ul>
+  <li>It is obviously <em>reflexive</em> (from the rule <code class="language-plaintext highlighter-rouge">multi_refl</code>).</li>
+  <li>In the second rule, it takes a step relation $R$ to define what is multi-step evaluation of $R$. This is called <em>closure</em> of <em>R</em>.</li>
+  <li>Third, it is <em>transitive</em>. i.e. If <code class="language-plaintext highlighter-rouge">multi t1 t2</code> and <code class="language-plaintext highlighter-rouge">multi t2 t3</code>, we have <code class="language-plaintext highlighter-rouge">multi t1 t3</code></li>
+</ul>
+
+<h3 id="normal-forms-in-multi-steps">Normal Forms in Multi-Steps</h3>
+
+<p>If t reduces to t’ in zero or more steps and t’ is a normal form, we say that “t’ is a normal form of t.”</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">normal_form_of</span><span class="w"> </span><span class="o">(</span><span class="no">t</span><span class="w"> </span><span class="no">t'</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">tm</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">(</span><span class="no">t</span><span class="w"> </span><span class="o">--&gt;*</span><span class="w"> </span><span class="no">t'</span><span class="w"> </span><span class="p">∧</span><span class="w"> </span><span class="no">step_normal_form</span><span class="w"> </span><span class="no">t'</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This definition is important because it define what is typically the end of the evaluation.</p>
+
+<p>We have seen single-step evaluation is deterministic. Following that, we also want to ensure that if t can reach a normal form, then this normal form is unique.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This article explains what is small-step operational semantics and what are the properties that developers should be aware of.</p>
+
+  </div><a class="u-url" href="/software-foundations/2024/06/22/Small-Steps.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Distributed Transactions | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Distributed Transactions" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deal with the complexity in distributed systems." />
+<meta property="og:description" content="Deal with the complexity in distributed systems." />
+<link rel="canonical" href="/coursenote/2024/05/11/Distributed-Transactions.html" />
+<meta property="og:url" content="/coursenote/2024/05/11/Distributed-Transactions.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Distributed Transactions" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2024-05-11T06:45:56+00:00","datePublished":"2024-05-11T00:00:00+00:00","description":"Deal with the complexity in distributed systems.","headline":"Distributed Transactions","mainEntityOfPage":{"@type":"WebPage","@id":"/coursenote/2024/05/11/Distributed-Transactions.html"},"url":"/coursenote/2024/05/11/Distributed-Transactions.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Distributed Transactions</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>Database</span>
+        
+      </span><time class="dt-published" datetime="2024-05-11T00:00:00+00:00" itemprop="datePublished">
+        Posted At: May 11, 2024
+      </time><time>
+        Modified At: May 11, 2024
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>CourseNote</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In a distributed DBMS, a transaction usually involves multiple servers. Consider a transaction that a client transfers 10 dollars from account A to C and then transfers 20 dollars from B to D, and each of these accounts is stored in different servers as shown in the graph. If any one server in this transaction fails, the whole transaction needs to abort.</p>
+
+<p><img src="/assets/images/Pasted image 20240511143920.png" alt="DistributedTransaction" /></p>
+
+<p>A client transaction becomes distributed if it invokes operations in several different servers. This document talks about the main strategies to achieve ACID properties for distributed transactions.</p>
+
+<h2 id="two-phase-commit-protocol">Two-Phase Commit Protocol</h2>
+
+<p>The two-phase commit protocol (2PC) was devised to ensure the atomicity property in a distributed DBMS. where the atomicity property requires that when a distributed transaction comes to an end, <strong>either all of its operations are carried out or none of them</strong>.</p>
+
+<!-- ![[Pasted image 20240511143920.png]] -->
+
+<p>In 2PC, firstly, a server is selected to be the coordinator, which communicates with the client and coordinate the work on all servers.</p>
+
+<p><img src="/assets/images/Pasted image 20240511144355.png" alt="DistributedTransaction" />
+<!-- ![[Pasted image 20240511144355.png]] --></p>
+
+<p>In the first phase of 2PC, each participant votes for the transaction to be committed or aborted. Once a participant has voted to commit a transaction, it is not allowed to abort it. Therefore, before a participant votes to commit a transaction, <strong>it must ensure that it will eventually be able to carry out its part of the commit protocol</strong>, even if it fails. A participant to said to be in a <em>prepared</em> state if it votes to commit.</p>
+
+<p>In the second phase of the protocol, the coordinator decides the final decision (either abort or commit), every participant in the transaction carries out the joint decision.</p>
+
+<p>To formally define the protocol, we first list the operations (interfaces) in the protocol:</p>
+<ul>
+  <li><em>canCommit</em>(trans) Yes / No
+    <ul>
+      <li>Call from coordinator to participant to ask whether it can commit a transaction. Participant replies with its vote.</li>
+    </ul>
+  </li>
+  <li>*doCommit(trans)
+    <ul>
+      <li>Call from coordinator to participant to commit its part of a transaction.</li>
+    </ul>
+  </li>
+  <li><em>doAbort</em>(trans)
+    <ul>
+      <li>Call from coordinator to participant to abort its part of a transaction.</li>
+    </ul>
+  </li>
+  <li><em>haveCommitted</em>(trans, participant)
+    <ul>
+      <li>Call from participant to coordinator to confirm that it has committed the transaction.</li>
+      <li>Just for deleting stale information on the coordinator.</li>
+    </ul>
+  </li>
+  <li><em>getDecision</em>(trans) -&gt; Yes / No
+    <ul>
+      <li>Call from participant to coordinator to ask for the decision on a transaction after it has voted Yes but has still had no reply after some delay. Used to recover from server crash or delayed messages.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Phase 1</p>
+<ol>
+  <li>The coordinator sends a <em>canCommit</em>? request to each of the participants in the transaction.</li>
+  <li>When a participant receives a <em>canCommit</em>? request it replies with its vote (Yes or No) to the coordinator. Before voting Yes, it prepares to commit by saving objects in permanent storage. If the vote is No, the participant aborts immediately.</li>
+</ol>
+
+<p>Phase 2</p>
+<ol>
+  <li>The coordinator collects the votes (including its own).
+    <ol>
+      <li>If there are no failures and all the votes are Yes, the coordinator decides to commit the transaction and sends a <em>doCommit</em> request to each of the participants.</li>
+      <li>Otherwise, the coordinator decides to abort the transaction and sends <em>doAbort</em> requests to all participants that voted Yes.</li>
+    </ol>
+  </li>
+  <li>Participants that voted Yes are waiting for a <em>doCommit</em> or <em>doAbort</em> request from the coordinator. When a participant receives one of these messages it acts accordingly and, in the case of commit, makes a <em>haveCommitted</em> call as confirmation to the coordinator.</li>
+</ol>
+
+<p><img src="/assets/images/Pasted image 20240511145431.png" alt="DistributedTransaction" />
+<!-- ![[Pasted image 20240511145431.png]] --></p>
+
+<p>Timeout is employed in 2PC.</p>
+<ul>
+  <li>If a participant votes yes, but not receiving any reply from the coordinator after a certain time, it enters the <em>uncertain</em> state. It can make a <em>getDecision</em> request to the coordinator to determine the outcome.</li>
+  <li>Since after a participant votes yes, it can’t do anything until receive a decision from the coordinator. Thus, if a coordinator fails, it must be replaced.</li>
+  <li>Conversely, if a participant can’t vote in a certain time, the coordinator must announce <em>doAbort</em> to all participants.</li>
+</ul>
+
+<h2 id="timestamp-ordering">Timestamp Ordering</h2>
+
+<p>Similarly, the isolation property needs to be preserved in distributed transactions. There are two meanings behind isolation in distributed DBMSs:</p>
+<ol>
+  <li>Each server needs to be responsible for applying concurrency control to its own objects.</li>
+  <li>All members of a distributed transactions are jointly responsible for ensuring that they are performed in a serially equivalent manner.</li>
+</ol>
+
+<p>We mainly talk about 2 in this article, where “serially equivalent manner” or “serializability” means if transaction T is before transaction U in their conflicting access to objects at one of the servers, then they must be in that order at all of the servers whose objects are accessed in a conflicting manner by both T and U.</p>
+
+<p>The most common protocol is the timestamp ordering. in the protocol, similarly, a central coordinator is selected.</p>
+<ul>
+  <li>The coordinator issues a timestamp – the globally unique transaction timestamps – to each transaction when it starts to participants. All members are responsible for ensuring that transactions execute in the order of timestamp.</li>
+  <li>The transaction timestamp is passed to the coordinator at each server whose objects perform an operation in the transaction. In this way, the coordinator can find the potential inconsistency</li>
+</ul>
+
+<h2 id="one-copy-serializability">One-copy Serializability</h2>
+
+<p>There is a final concerns of distributed transactions. Usually, for increasing data availability, there are replicas for objects. From a client’s viewpoint, a transaction on replicated objects should appear the same as one with non-replicated objects. This property is named <em>one-copy serializability</em>. It is similar to, but not to be confused with, sequential consistency or sequential serializability.</p>
+
+<p>The simplest protocol to achieve one-copy serializability is <strong>read-one/write-all</strong>. As its name suggests, when it reads, it can read from any one of the replicas. But a write requests must be performed on all replicas by the replica manager.</p>
+
+<p><img src="/assets/images/Pasted image 20240511161255.png" alt="DistributedTransaction" />
+<!-- ![[Pasted image 20240511161255.png]] --></p>
+
+<p>Simple read-one/write-all replication is not a realistic scheme, because it cannot be carried out if some of the replica managers are unavailable. This deficiency essentially contradicts with the purpose of replicas because replicas scheme is designed to allow for some replica managers being temporarily unavailable.</p>
+
+<p>A more realistic protocol is local validation. It allows a transaction to write only to available replicas. However, before a transaction commits it checks for any failures (and recoveries) of replica managers of objects it has accessed. A transaction can only commits if there is no failure and recovery of replicas which stores the object used in the transaction.</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>Coulouris, George F., Jean Dollimore, and Tim Kindberg. Distributed systems: concepts and design. pearson education, 2005.</p>
+
+  </div><a class="u-url" href="/coursenote/2024/05/11/Distributed-Transactions.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
