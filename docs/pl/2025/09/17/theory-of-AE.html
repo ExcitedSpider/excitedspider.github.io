@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Theory of Abstract Interpretation | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Theory of Abstract Interpretation" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A note on Cousot POPL’77 Foundational Paper." />
+<meta property="og:description" content="A note on Cousot POPL’77 Foundational Paper." />
+<link rel="canonical" href="/pl/2025/09/17/theory-of-AE.html" />
+<meta property="og:url" content="/pl/2025/09/17/theory-of-AE.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-17T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Theory of Abstract Interpretation" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2025-09-17T02:11:57+00:00","datePublished":"2025-09-17T00:00:00+00:00","description":"A note on Cousot POPL’77 Foundational Paper.","headline":"Theory of Abstract Interpretation","mainEntityOfPage":{"@type":"WebPage","@id":"/pl/2025/09/17/theory-of-AE.html"},"url":"/pl/2025/09/17/theory-of-AE.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Theory of Abstract Interpretation</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>PL</span>
+        
+      </span><time class="dt-published" datetime="2025-09-17T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Sep 17, 2025
+      </time><time>
+        Modified At: Sep 17, 2025
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>PL</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This note is created for the Cousot POPL77 paper about <em>abstract interpretation</em>^[1] .</p>
+<h2 id="syntax-and-semantics-of-programs">Syntax And Semantics of Programs</h2>
+
+<h3 id="syntax">Syntax</h3>
+
+<p>Programs are represented as finite flowcharts, also known as <em>control flow graphs</em>. 
+The graph is built by a set “Nodes”. A node $n \in \text{Nodes}$ is</p>
+<ul>
+  <li>An Entry. nodes with no predecessors and one successor</li>
+  <li>An Assignment. id(n) := expr(n)</li>
+  <li>A Test. A test node has two successors. <code class="language-plaintext highlighter-rouge">forall n in Tests, n-succ(n) = { n-succ-t(n), n-succ-f(n) }</code></li>
+  <li>A Junction node has more than 1 predecessor and one successor</li>
+  <li>An Exit node has one predecessor and no successor</li>
+</ul>
+
+<p>The set “Arcs” are edges in the graph, that is
+<code class="language-plaintext highlighter-rouge">Arcs = {&lt;n,m&gt; | (n in Nodes) and (m in n-succ(n))}</code></p>
+<h3 id="operational-semantics">Operational Semantics</h3>
+<p>Let’s define the constructive or operational semantics.</p>
+
+<p>The set “States” are all the information that can occur during computation<br />
+<code class="language-plaintext highlighter-rouge">States = Arcs^0 times Env</code>
+<code class="language-plaintext highlighter-rouge">Env = Ident^0 -&gt; Values</code>
+Where Values are concrete program values. 
+So a <code class="language-plaintext highlighter-rouge">state in States = &lt;r, e&gt;</code> records that for program point <code class="language-plaintext highlighter-rouge">r</code>, the mapping of each variable id to its value.</p>
+
+<p>The initial state is defined as
+<code class="language-plaintext highlighter-rouge">I-States = {&lt;a-succ(m), bottom | m in Entries &gt;}</code>
+i.e. for all entry nodes <code class="language-plaintext highlighter-rouge">m</code>, get its successor arc <code class="language-plaintext highlighter-rouge">m</code> and set all the variables to empty (bottom, in lattice language).</p>
+
+<p>The state transfer function are defined as equation systems
+<code class="language-plaintext highlighter-rouge">n-state: States -&gt; States</code>
+Its implementation is forward computation. i.e. computing the state of next arc using current arc.</p>
+<ul>
+  <li>For test node, the semantics uses <code class="language-plaintext highlighter-rouge">val[test(n)](env)</code> to pick the branch</li>
+  <li>For assignment node, the semantics uses replacement <code class="language-plaintext highlighter-rouge">env’ = env[val(expr(n))/id(n)]</code>.</li>
+  <li>…</li>
+</ul>
+
+<p>Finally, a computation sequence is repeatedly apply the state transfer function on the initial state <code class="language-plaintext highlighter-rouge">i_s in I-states</code> 
+<code class="language-plaintext highlighter-rouge">s_n = n-state^n(i_s) for n = 0, 1, ...</code></p>
+
+<p>Consequently, the final state is a the least fixpoint of the functional.
+<code class="language-plaintext highlighter-rouge">λF.(n-state ∘ F)</code>
+i.e. An equation systems is derived by the cfg and the state transfer function, and <code class="language-plaintext highlighter-rouge">F in State</code> is a state that no longer change under the equation system :
+<code class="language-plaintext highlighter-rouge">λF.(n-state ∘ F) (F) = F</code></p>
+<h3 id="static-semantics">Static Semantics</h3>
+
+<p>The operational semantics require analysis of every program execution, which is practically impossible for building a realistic verification tool. By Floyd^[2], to prove static properties of program, it is often sufficient to consider the <em>sets</em> of states associated with each program point.</p>
+
+<p>The context is the set of all environments which may be associated in any computation sequences.  <code class="language-plaintext highlighter-rouge">Context = Pow(Env)</code></p>
+
+<p>Define the context vector as</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cv: Arcs^0 -&gt; Context
+Cv = λq.{e | (exists n &gt;= 0, exists i_s in I-states | &lt;q, e&gt; = n-state^n(i_s))}
+</code></pre></div></div>
+<p>Naturally, this represents all the possible program states at program point <code class="language-plaintext highlighter-rouge">q</code>. Notice how it is different from the “States” set in operational semantics: it does not care about the execution trace anymore.</p>
+
+<p>It is proved that the context vector is equal to the operational semantics: For all q in Arcs,</p>
+<ol>
+  <li>Cv(q) contains <em>at least</em> the environment e which is associated to q during any execution</li>
+  <li>Cv(q) contains <em>only</em> the environment e which is associated to q during an execution.</li>
+</ol>
+
+<p>This static view is more suitable for analysis to be performed, which forms the foundation of abstract interpretation: replace sthe concrete <code class="language-plaintext highlighter-rouge">Context</code> with <em>abstract</em> context  that over-approximates it.</p>
+<h3 id="abstract-interpretation">Abstract Interpretation</h3>
+
+<h3 id="general-framework">General Framework</h3>
+
+<p>We use <code class="language-plaintext highlighter-rouge">A-Cont</code> to as the abstract context which soundly over-approximates the concrete <code class="language-plaintext highlighter-rouge">Context</code>.
+The set of abstract context vector can be defined as 
+<code class="language-plaintext highlighter-rouge">A-CV = Arcs^0 -&gt; A-Cont</code>
+(Note that the paper use <code class="language-plaintext highlighter-rouge">\tilde(A-Cont)</code> to represent abstract context but i don’t find it appealing)</p>
+
+<p>We then can find an interpretation that works on the abstract context:
+`Int: Arcs^0 times A-CV -&gt; A-Cont</p>
+
+<p><code class="language-plaintext highlighter-rouge">Int</code> is supposed to be other-preserving. 
+Using <code class="language-plaintext highlighter-rouge">Int</code>, we can find a system of equations with the program. 
+<code class="language-plaintext highlighter-rouge">Int-CV :: A-CV -&gt; A-CV</code>
+<code class="language-plaintext highlighter-rouge">Int-CV(CV: A-CV) = λr.Int(r,Cv)</code></p>
+
+<p>Finally putting everything together, an general abstract interpretation of a program P is a tuple <code class="language-plaintext highlighter-rouge">I = &lt;A-Cont, ⊔, ≤, Top, Bottom, Int&gt;</code> where</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">⊔</code> The join operator on abstract context</li>
+  <li><code class="language-plaintext highlighter-rouge">≤</code> The partial ordering on the abstract context</li>
+</ul>
+
+<p>What is implicit here is that the abstract context is typically designed as a complete lattice, That is, <code class="language-plaintext highlighter-rouge">x ≤ y ⇔ x ⊔ y = y</code>. This is a not drastic requirement and proved to be very handy in designing analysis. Typically in ensuring termination and efficient merge contexts by joining.</p>
+<h3 id="example-data-flow-analysis">Example: Data Flow Analysis</h3>
+<p><em>Available Expression</em> problem is that asks whether an expression <code class="language-plaintext highlighter-rouge">e</code> is available on arc <code class="language-plaintext highlighter-rouge">r</code>. Specifically, we want to know if <code class="language-plaintext highlighter-rouge">e</code> has been previously computed and since last computation, no argument of the expression has had its value changed.</p>
+
+<p>The abstract context of this problem is a vector that maps all expressions to a boolean value:
+<code class="language-plaintext highlighter-rouge">B-vect: Expr -&gt; { true, false }</code>
+Where <code class="language-plaintext highlighter-rouge">Expr</code> is the set of expressions occurring in a program <code class="language-plaintext highlighter-rouge">P</code>.</p>
+
+<p>The Int function follows</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>avail(r, Bv)
+  let n be origin(r) within
+    case n in
+      Entries =&gt; λe . false
+      Assignments ∪ Tests ∪ Junctions =&gt;
+        λe. (generated(n)(e) 
+             or ( ( ∀ p ∈ a-pred(n). Bv(p)(e) )
+                  and transparent(n)(e) ))
+    esac
+</code></pre></div></div>
+
+<ul>
+  <li>Nothing is available at the entry nodes.</li>
+  <li>An expression <code class="language-plaintext highlighter-rouge">e</code> is available if
+    <ul>
+      <li>e is generated on node <code class="language-plaintext highlighter-rouge">n</code> (<code class="language-plaintext highlighter-rouge">r</code> is the exit of node <code class="language-plaintext highlighter-rouge">n</code>)</li>
+      <li>e is available at the predecessors of <code class="language-plaintext highlighter-rouge">n</code>  and does not been modified on node <code class="language-plaintext highlighter-rouge">n</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The analysis is forward reasoning and terminates at the <em>maximal solution</em> of the equation systems generated by <code class="language-plaintext highlighter-rouge">avail</code>.
+Maximal solution = Starts with every expression to be true.</p>
+<blockquote>
+  <p>But more fundamentally: maximality is <strong>with respect to the lattice ordering</strong> (here: <code class="language-plaintext highlighter-rouge">false ≤ true</code>). So the maximal solution means: among all fixpoints, we take the greatest in that ordering. It’s not just “we want precision”—it’s mathematically required by the chosen ordering.</p>
+</blockquote>
+
+<p>Why we go for the maximal solution? Considering variables in a loop. if we take the minimal solution, which starts the analysis from all variables to bottom, the variables in the loop might be always “not available”, which is sound but too preservative and not very precise. Rather, the maximum fixpoint is also sound but more precise.</p>
+<h3 id="typology-of-abstract-interpretation">Typology of Abstract Interpretation</h3>
+
+<p>There are three dimensions for abstract interpretation according to Cousot:</p>
+<ul>
+  <li>Using join (∪) or meet (∩) for junctions</li>
+  <li>Forward (→) or backward (←) analysis</li>
+  <li>Computing Maximum (↑) or Minimum (↓) fixpoints</li>
+</ul>
+
+<h2 id="consistent-abstract-interpretation">Consistent Abstract Interpretation</h2>
+
+<p>Let $C_v$ as the concrete context vector and $C_v’$ as the abstract context vector. 
+(A context vector is $Arc \times Cont$)</p>
+
+<p>We can define two functions $\alpha: C_v \to C_v’, \gamma: C_v’ \to C_v$ as the abstraction &amp; concretization function respectively. We typically requires that:</p>
+<ul>
+  <li>$\forall x \in \text{A-Cont}, x=\alpha(\gamma(x))$. Concretization losses no information</li>
+  <li>$\forall x\in \text{C-Cont}, x \leq \gamma(\alpha(x))$. Allowing abstraction to be only an approximation</li>
+</ul>
+
+<p>In addition, we requires following local hypothesis on the interpretation function:
+\(\forall(a, x) \in Arcs \times \text{A-Cont}, \gamma(Int(a,x)) \geq Int(a, \gamma(x))\)
+Which is equivalent to
+\(\forall(a, x) \in Arcs \times \text{C-Cont}, Int(a, \alpha{(x)}) \geq \alpha(Int(a, x))\)
+Or, is equivalent to following picture:</p>
+
+<p><img src="/assets/images/Pasted%20image%2020250916142333.png" alt="" /></p>
+
+<p>This allows the interpretation to be sound. i.e. The abstract context always over-approximates the concrete one.</p>
+
+<h2 id="the-lattice-of-abstract-interpretation">The lattice of Abstract Interpretation</h2>
+<p>For the concrete context of integers. $I_{SS} = Pow(\mathbb{Z})$, we might have abstract interpretations:</p>
+<ul>
+  <li>(Intervals $I_I$) $\alpha(S) = [min(a), max(b)]$
+Which can be further abstracted as</li>
+  <li>(Constant Propagation a $I_{CP}$) $\alpha([a, b]) =$  if $a=b$ then $a$ else $\top$; or</li>
+  <li>(Rules of Signs $I_{RS}$) $\alpha([a, b]) =$ if $a \gt 0$ then $+$ elif $b \lt 0$ then $-$ else $\pm$; or</li>
+  <li>(Constants + Signs $I_{CS}$) $\alpha([a, b]) =$ if $a = b$ then a elif $a \geq 0$ then $+$ elif $b \leq 0$ then $-$ else $\pm$</li>
+  <li>(Reachability $I_R$) $\alpha(i)=$ if $i \neq \bot$ then $\top$ else $\bot$</li>
+</ul>
+
+<p>The context of $I_{CS}$ looks like this:
+<img src="/assets/images/IMG_2390.jpeg" alt="" /></p>
+
+<p>These interpretation forms a lattice themselves. For example, the interpretations we mentioned can formed a lattice like this: 
+<img src="/assets/images/IMG_2391.jpeg" alt="" />
+(Actually, $I_R$ is not the bottom as we can find a trivial interpretation that the context lattice is only a single bottom)</p>
+
+<p>If $I_a \gt I_b$, it is generally that $I_a$ is more precise but more computationally expensive.
+For example, $I_R$ can only detects if a variable is reachable, but would it’s pretty fast on detect unused variables. 
+So the choice of abstraction level really depends on the analysis task.</p>
+
+<h2 id="abstract-evaluation-of-programs">Abstract Evaluation of Programs</h2>
+
+<p>This section briefly mentions the correctness, termination and efficiency proofs of abstract interpretations in related works. If I’m going to do formal correctness proofs then I might go back to this section but now it is interested to me.</p>
+
+<h2 id="fixpoints-approximation-methods">Fixpoints Approximation Methods</h2>
+
+<p>The sequence of a program’s context is modeled as an ascending Kleen’s sequence:
+\(Int^n(\bot)\)
+We typically require $Int$ is designed in such a way this sequence to be not strictly increasing. In particular, through making it order-preserving on the lattice of context. 
+Then an AE terminates when one fixpoint is reached. But this can be slow.</p>
+
+<p>Techniques to approximate the fixpoint can improve. By <em>approximate</em> we mean the AE should satisfies this correctness property:
+\(\forall n \geq 0,\;
+C = \widetilde{\text{Int}}^{\,n}(\bot)
+\;\wedge\;
+\neg\bigl(\text{Int}(C) \sqsubseteq C \bigr)
+\;\;\Longrightarrow\;\;
+C \circ \text{Int}(C) \;\sqsubseteq\; \widetilde{\text{Int}}(C).\)
+Where $\widetilde{\text{Int}}$ is the approximated interpretation and $\text{Int}$ is the original interpretation. The $\circ$ is the join operator $\sqcup$.</p>
+
+<p>Note: I would argue the condition <code class="language-plaintext highlighter-rouge">not (Int(C) &lt;= C)</code> is not necessary. But it is rather used for loosen the condition: it only put requirement on the approximated interpretation <em>when the fixpoint has not been reached</em>. Because after a fixpoint is reached, AE stops naturally.</p>
+<h3 id="widening">Widening</h3>
+<p><em>Widening</em> is a technique that accelerates the convergence by approximation.
+A widening $\nabla: ACont \times ACont \to ACont$ is a binary operator such that</p>
+<ul>
+  <li>$\forall (C, C’) \in ACont^2, C \nabla C’ \ge C \sqcup C’$</li>
+  <li>With arbitrary sequence $C_i$ of $ACont$, The sequence is not strictly increasing:
+  $x_{0}, \quad x_{1} = x_0 \nabla C_0, \quad x_{2} = x_1 \nabla C_1, \quad \dots$</li>
+</ul>
+
+<p>The first one ensures widening “goes up” on the lattice. I found it more intuitive to explain why is that going “up” in the context lattice always safely over-approximates the concrete context but goes “down” might lose soundness.</p>
+
+<p>The second one is also for termination of course.</p>
+
+<p>We also labels the arc which has been performed widening by adding them into the $\text{W-Arcs}$ set.</p>
+
+<p>Finally, the approximated interpretation is:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A-Int q, Cv = if q in W-Arcs then
+  Cv(q) ∇ Int(q, Cv)
+else
+  Int(q, Cv)
+fi
+</code></pre></div></div>
+
+<p>They proved that the correctness property (at the beginning of this section) is satisfied.</p>
+
+<p>Note that the two requirements of widening does not limit how precise the operator ∇ is designed. An extreme but valid one is simply <code class="language-plaintext highlighter-rouge">∇ _ _ = top</code>, but this will produce very imprecise over-approximation. So also we try to be as precise as possible.</p>
+<h3 id="narrowing">Narrowing</h3>
+<p>Widening produces an upper bound $S_m = \widetilde{\text{A-Int}}^m(\bot)$ of the least fixpoint of the (un-approximated) interpretation $C_v = \widetilde{\text{Int}}^n(\bot)$. i.e. $S_m \ge C_v$. If $S_m$ is not a fixpoint of $\text{Int}$, we might want to find a better approximation $C_v \leq S’_m \leq S_m$. 
+(For notation: $\widetilde{\text{Int}}$ is the whole program interpretation and $\widetilde{\text{A-Int}}$ is modified from  $\widetilde{\text{Int}}$  by adding widening)</p>
+
+<p>A binary operator <code class="language-plaintext highlighter-rouge">△: A-Cont × A-Cont → A-Cont</code> is a <em>narrowing</em> if it satisfies two requirements:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">∀ (C, C') ⋿ A-Cont ⨉ A-Cont, { C ≥ C} → { C ≥ C △ C' ≥ C' } </code></li>
+  <li>For any arbitrary sequence <code class="language-plaintext highlighter-rouge">C0, C1, ... Cn, ...</code>, the infinite sequence <code class="language-plaintext highlighter-rouge">S(0) = C0, S(n) = S(n-1) △ Cn</code> is not strictly decreasing.</li>
+</ul>
+
+<p>And we can modify the interpretation as:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>D-Int q Cv = 
+	if q in W-arcs then
+		Cv(q) △ Int(q, Cv)
+	else
+		Int(q, Cv)
+	fi
+</code></pre></div></div>
+
+<h4 id="mathematical-intuition-of-narrowing">Mathematical Intuition of Narrowing</h4>
+<p>The second requirement of narrowing is straightforward: we want to ensure termination of the <code class="language-plaintext highlighter-rouge">D-Int</code> function. But the first one is a bit random at the first glance. I want to take a note here to explain it.</p>
+
+<p>Remember $S_m$ is produced by the approximated interpretation ($\widetilde{\text{Int}}$ with widening), then $S_m$ is no less than  $C_v$, the least fixpoint of  $\widetilde{\text{Int}}$. We have $\widetilde{\text{Int}}(S_m) \leq S_m$ since  $\widetilde{\text{Int}}$ is required to be order-preserving.
+And therefore we can construct a descending sequence:
+\(\text{DKS}: S_m \ge \widetilde{\text{Int}}(S_m) \ge \widetilde{\text{Int}}^2(S_m) \ge \dots \ge \widetilde{\text{Int}}^n(S_m) \ge C_v\)
+So the limit of $\widetilde{\text{Int}^i}(S_m), \forall i \in \mathbb{N}$ is sure a better approximation of $C_v$. A naive approach is to repeatedly applying $\widetilde{\text{Int}}$. But we face a same problem as widening: DKS can be computationally expensive to converge; Or it might be an infinite sequence. So it is practical to soundly truncate the sequence.</p>
+
+<p>From step n, the most ideal truncate point <code class="language-plaintext highlighter-rouge">D</code> might satisfies
+\(\widetilde{\text{Int}}^{n+1}(S_m) \gt D \ge C_v \tag{CoT'}\)
+However, we do not know $C_v$ in the practice. Hence this condition gives little information about how to choose a $D$. 
+So we have to modify the correctness of truncate as
+\(\widetilde{\text{Int}}^{n+1}(S_m) \gt D \ge \widetilde{\text{Int}}(D) \tag{CoT}\)
+It is sound to replace $C_v$ because it is the least fixpoint and interpretation is order-preserving.<br />
+This is where the first condition comes from: The <code class="language-plaintext highlighter-rouge">D-Int</code> satisfies CoT by case analysis: when <code class="language-plaintext highlighter-rouge">q ⋿ W-arcs</code>, applying the first requirement get us CoT; otherwise, CoT trivially holds because interpretation is order-preserving.</p>
+
+<h2 id="references">References</h2>
+
+<p>^[1]: Cousot, Patrick, and Radhia Cousot. “Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs by Construction or Approximation of Fixpoints.” <em>Proceedings of the 4th ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages  - POPL ’77</em>, ACM Press, 1977, 238–52. <a href="https://doi.org/10.1145/512950.512973">https://doi.org/10.1145/512950.512973</a></p>
+
+<p>^[2]: Floyd, Robert W. “Assigning meanings to programs.” <em>Program Verification: Fundamental Issues in Computer Science</em>. Dordrecht: Springer Netherlands, 1993. 65-81.</p>
+
+  </div><a class="u-url" href="/pl/2025/09/17/theory-of-AE.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

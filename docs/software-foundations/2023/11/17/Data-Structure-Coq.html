@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Reasoning Proofs with Basic Data Structures | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Reasoning Proofs with Basic Data Structures" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pair, List, Map, Options" />
+<meta property="og:description" content="Pair, List, Map, Options" />
+<link rel="canonical" href="/software-foundations/2023/11/17/Data-Structure-Coq.html" />
+<meta property="og:url" content="/software-foundations/2023/11/17/Data-Structure-Coq.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-17T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Reasoning Proofs with Basic Data Structures" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2023-11-19T23:40:39+00:00","datePublished":"2023-11-17T00:00:00+00:00","description":"Pair, List, Map, Options","headline":"Reasoning Proofs with Basic Data Structures","mainEntityOfPage":{"@type":"WebPage","@id":"/software-foundations/2023/11/17/Data-Structure-Coq.html"},"url":"/software-foundations/2023/11/17/Data-Structure-Coq.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Reasoning Proofs with Basic Data Structures</h1>
+    <p class="post-meta"><span class="tags">
+        
+      </span><time class="dt-published" datetime="2023-11-17T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Nov 17, 2023
+      </time><time>
+        Modified At: Nov 19, 2023
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>Software-Foundations</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This note refers to the the online book series <a href="https://softwarefoundations.cis.upenn.edu/lf-current/Lists.html">software foundation</a>.</p>
+<h2 id="pair">Pair</h2>
+<p>In <em>inductive</em> type definition, constructors can take arbitrary number of parameters.</p>
+
+<p>For example, here is a pair type:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">natprod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">pair</span><span class="w"> </span><span class="o">(</span><span class="no">n1</span><span class="w"> </span><span class="no">n2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>We can also give a notation for this type</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Notation</span><span class="w"> </span><span class="s2">"( x , y )"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">pair</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>Example for using pair</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">fst</span><span class="w"> </span><span class="o">(</span><span class="no">p</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natprod</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">p</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="o">,</span><span class="no">y</span><span class="o">)</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">x</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+  
+</span><span class="k">Example</span><span class="w"> </span><span class="no">fst1</span><span class="p">:</span><span class="w"> </span><span class="no">fst</span><span class="w"> </span><span class="o">(</span><span class="mi">3</span><span class="o">,</span><span class="mi">5</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="o">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Pair is an extremely basic type but illustrates the idea of how data structure is like in Coq.</p>
+<h2 id="list">List</h2>
+<p>The most common list type is given</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">natlist</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">cons</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>This definition can be read:
+Any <code class="language-plaintext highlighter-rouge">natlist</code> type is either empty <code class="language-plaintext highlighter-rouge">nil</code>, or is composed by a number with another <code class="language-plaintext highlighter-rouge">natlist</code>.</p>
+
+<p>Similarly, we can define notations parse rules for list</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Notation</span><span class="w"> </span><span class="s2">"x :: l"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">l</span><span class="o">)</span><span class="w">
+                     </span><span class="o">(</span><span class="kp">at</span><span class="w"> </span><span class="no">level</span><span class="w"> </span><span class="mi">60</span><span class="o">,</span><span class="w"> </span><span class="no">right</span><span class="w"> </span><span class="no">associativity</span><span class="o">).</span><span class="w">
+</span><span class="k">Notation</span><span class="w"> </span><span class="s2">"[ ]"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">nil</span><span class="pi">.</span><span class="w">
+</span><span class="k">Notation</span><span class="w"> </span><span class="s2">"[ x ; .. ; y ]"</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="o">(</span><span class="no">cons</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">nil</span><span class="o">)</span><span class="w"> </span><span class="o">..).</span><span class="w">
+
+</span><span class="c">(* These 3 definitions are identical *)</span><span class="w">
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">mylist1</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="o">(</span><span class="mi">2</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="o">(</span><span class="mi">3</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">nil</span><span class="o">)).</span><span class="w">
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">mylist2</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">nil</span><span class="pi">.</span><span class="w">
+</span><span class="k">Definition</span><span class="w"> </span><span class="no">mylist3</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="o">].</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The operation on list follows a recursive style. e.g. get the length of a list:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">length</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="p">:</span><span class="no">natlist</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">O</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">length</span><span class="w"> </span><span class="no">t</span><span class="o">)</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A more non-trivial example of operations on list is <code class="language-plaintext highlighter-rouge">nonzeros</code>, which filter 0 out of a list. (From exercise)</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">nonzeros</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="p">:</span><span class="no">natlist</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">n</span><span class="p">::</span><span class="no">l'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kr">match</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kp">with</span><span class="w">
+      </span><span class="o">|</span><span class="w"> </span><span class="no">O</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nonzeros</span><span class="w"> </span><span class="no">l'</span><span class="w">
+      </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">h</span><span class="p">::</span><span class="o">(</span><span class="no">nonzeros</span><span class="w"> </span><span class="no">l'</span><span class="o">)</span><span class="w">
+      </span><span class="kr">end</span><span class="w">
+    </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_nonzeros</span><span class="p">:</span><span class="w">
+  </span><span class="no">nonzeros</span><span class="w"> </span><span class="o">[</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="o">].</span><span class="w">
+  </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="bag">Bag</h3>
+<p>A <em>bag</em> is another data structure, which is like a set but an element can appear multiple times. A naïve implementation of bag is list.</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">bag</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">natlist</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This function <code class="language-plaintext highlighter-rouge">count</code> counts how many target items in a bag:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Fixpoint</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="o">(</span><span class="no">v</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">s</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">bag</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">s</span><span class="w"> </span><span class="kp">with</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">O</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">n</span><span class="p">::</span><span class="no">s'</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="no">eq_nat</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="no">s'</span><span class="o">)</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="no">s'</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+  
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_count1</span><span class="p">:</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="o">.</span><span class="w">
+  </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span><span class="k">Example</span><span class="w"> </span><span class="no">test_count2</span><span class="p">:</span><span class="w"> </span><span class="no">count</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">3</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="w">
+  </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Here we gives a proof related to bag and count function to show how to reason data structure in coq</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* adding an element makes the count increase by 1 *)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">add_inc_count</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">s</span><span class="p">:</span><span class="w"> </span><span class="no">bag</span><span class="o">,</span><span class="w"> 
+  </span><span class="no">count</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="p">::</span><span class="no">s</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">S</span><span class="w"> </span><span class="o">(</span><span class="no">count</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">s</span><span class="o">).</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">s</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="no">s</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">s'</span><span class="o">].</span><span class="w">
+  </span><span class="o">+</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">eq_self</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">+</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">eq_self</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w"> 
+</span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>where <code class="language-plaintext highlighter-rouge">eq_self</code> states that a natural number equal to itself</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Lemma</span><span class="w"> </span><span class="no">eq_self</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">n</span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">,</span><span class="w"> </span><span class="no">eq_nat</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="no">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It’s hard to just read the proof and figure out how the proof works without an Coq session. For example, the proof for both subgoals seems to be identical, but it’s not in fact. We can translate it into a informal proof:</p>
+
+<ul>
+  <li>
+    <p>Theorem: for all natural number n, for all bag s, count n (n::s) = S (count n s).
+  Proof by considering the 2 possible constructors of s.</p>
+
+    <p>First let s to be <code class="language-plaintext highlighter-rouge">nil</code>, we want to prove that</p>
+
+    <p><code class="language-plaintext highlighter-rouge">count n \[n\] = S (count n \[\ ])</code></p>
+
+    <p>by the definition of count, the above equation is equivalent to</p>
+
+    <p><code class="language-plaintext highlighter-rouge">(if eq_nat n n then 1 else 0) = 1</code></p>
+
+    <p>This equation can be made true by applying the eq_self theorem.</p>
+
+    <p>Then we consider s to be <code class="language-plaintext highlighter-rouge">n::s'</code>, we want to show that</p>
+
+    <p><code class="language-plaintext highlighter-rouge">count n (n :: s' :: s) = S (count n (s' :: s))</code></p>
+
+    <p>Similarly, we use the definition of count to extend the equation. then we will find the expression <code class="language-plaintext highlighter-rouge">eq_nat n n</code> again. Then follow <code class="language-plaintext highlighter-rouge">eq_self</code> theorem we can make the both side to be identical.</p>
+  </li>
+</ul>
+
+<p>Another example shows the “proofs by induction” tactics applying on structured data. <code class="language-plaintext highlighter-rouge">natlist</code> has 2 constructors: <code class="language-plaintext highlighter-rouge">nil</code> or <code class="language-plaintext highlighter-rouge">cons</code>, which can be used to make induction proof because a list has only 2 possible form: either empty or <code class="language-plaintext highlighter-rouge">cons</code> applies to another list. By induction, we need to show that</p>
+<ul>
+  <li>P holds true when <code class="language-plaintext highlighter-rouge">l</code> is <code class="language-plaintext highlighter-rouge">nil</code></li>
+  <li>P holds true when <code class="language-plaintext highlighter-rouge">l</code> is consists of some number <code class="language-plaintext highlighter-rouge">n</code> and a smaller list <code class="language-plaintext highlighter-rouge">l'</code>, given P holds true for <code class="language-plaintext highlighter-rouge">l'</code></li>
+</ul>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">(* reverse a list *)</span><span class="w">
+</span><span class="k">Fixpoint</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="p">:</span><span class="no">natlist</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">nil</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">h</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="no">h</span><span class="o">]</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+
+</span><span class="c">(* The reverse of the concatenation of 2 lists is the concatenation of 2 reversed lists in reverse order*)</span><span class="w">
+</span><span class="k">Theorem</span><span class="w"> </span><span class="no">rev_app_distr</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">l1</span><span class="w"> </span><span class="no">l2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="o">,</span><span class="w">
+  </span><span class="no">rev</span><span class="w"> </span><span class="o">(</span><span class="no">l1</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">l2</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">l2</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">l1</span><span class="pi">.</span><span class="w">
+</span><span class="k">Proof</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">intros</span><span class="w"> </span><span class="no">l1</span><span class="w"> </span><span class="no">l2</span><span class="pi">.</span><span class="w">
+  </span><span class="kp">destruct</span><span class="w"> </span><span class="no">l2</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">l2'</span><span class="o">].</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="c">(* rev (l1 ++ [ ]) = rev [ ] ++ rev l1 *)</span><span class="w"> </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">rev_emp</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="o">-</span><span class="w"> </span><span class="c">(* rev (l1 ++ l2' :: l2) = rev (l2' :: l2) ++ rev l1 *)</span><span class="w"> 
+   </span><span class="kp">induction</span><span class="w"> </span><span class="no">l1</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="o">[|</span><span class="w"> </span><span class="no">n1</span><span class="w"> </span><span class="no">l1'</span><span class="w"> </span><span class="no">IHl1</span><span class="o">].</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="c">(* rev ([ ] ++ l2' :: l2) = rev (l2' :: l2) ++ rev [ ] *)</span><span class="w"> 
+    </span><span class="kp">rewrite</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="no">app_nil_r</span><span class="pi">.</span><span class="w"> </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+    </span><span class="o">+</span><span class="w"> </span><span class="c">(* rev ((n1 :: l1') ++ l2' :: l2) = rev (l2' :: l2) ++ rev (n1 :: l1') *)</span><span class="w">
+    </span><span class="kp">simpl</span><span class="pi">.</span><span class="w"> 
+    </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">IHl1</span><span class="pi">.</span><span class="w"> 
+    </span><span class="kp">rewrite</span><span class="w"> </span><span class="no">app_assoc</span><span class="pi">.</span><span class="w">
+    </span><span class="ne">reflexivity</span><span class="pi">.</span><span class="w">
+  </span><span class="k">Qed</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>where the lemmas are:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Lemma</span><span class="w"> </span><span class="no">rev_emp</span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">l</span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="o">,</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">])</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">rev</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+</span><span class="k">Lemma</span><span class="w"> </span><span class="no">app_nil_r</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">forall</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="o">,</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">l</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>Although I make the comments on the branches, but it’s still hard to follow. It is way easier to see what’s going on if you are reading the proof in an interactive Coq session. In this proof, we have 2 extra lemmas. The good practice for lemmas is to make it as general as possible.</p>
+
+<h3 id="search-command">Search command</h3>
+
+<p>To build a big proof, the common way is to split it to be several small lemmas. But it is sometimes difficult to remember the names of those lemmas. The <code class="language-plaintext highlighter-rouge">Search</code> command can search lemma in the context by a given pattern.</p>
+
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Search</span><span class="w"> </span><span class="no">rev</span><span class="pi">.</span><span class="w">
+</span><span class="k">Search</span><span class="w"> </span><span class="o">(</span><span class="p">_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">_</span><span class="o">).</span><span class="w">
+</span><span class="k">Search</span><span class="w"> </span><span class="o">(</span><span class="p">_</span><span class="o">++</span><span class="p">_</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="map">Map</h2>
+<p>A map is a type of data structure that map an id (or a <em>key</em>) to a value.</p>
+
+<p>We give a definition of map in coq:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="no">Id</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">).</span><span class="w">
+
+</span><span class="k">Inductive</span><span class="w"> </span><span class="no">partial_map</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">empty</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">record</span><span class="w"> </span><span class="o">(</span><span class="no">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">id</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">v</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">m</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="o">).</span><span class="w">
+</span></code></pre></div></div>
+<p>Here the <code class="language-plaintext highlighter-rouge">id</code> is simply a <code class="language-plaintext highlighter-rouge">nat</code> internally. But by introducing another name, we make the type more <strong>readable</strong> and <strong>flexible</strong> if we want to change the implementation in the future.</p>
+
+<p>The declaration of <code class="language-plaintext highlighter-rouge">partial_map</code> can be read: “ There are 2 ways to construct a <code class="language-plaintext highlighter-rouge">partial_map</code>: either an empty or combines a k-v pair with a <code class="language-plaintext highlighter-rouge">partial_map</code>”</p>
+
+<p>There are 2 operations regarding a map: put (update) and get (find):</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">update</span><span class="w"> </span><span class="o">(</span><span class="no">d</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="o">)(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">id</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">value</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="no">record</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">value</span><span class="w"> </span><span class="no">d</span><span class="pi">.</span><span class="w">
+
+</span><span class="k">Fixpoint</span><span class="w"> </span><span class="no">find</span><span class="w"> </span><span class="o">(</span><span class="no">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">id</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="no">d</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">partial_map</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natoption</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">d</span><span class="w"> </span><span class="kp">with</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">empty</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="no">None</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">record</span><span class="w"> </span><span class="no">y</span><span class="w"> </span><span class="no">v</span><span class="w"> </span><span class="no">d'</span><span class="w"> </span><span class="p">⇒</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="no">eqb_id</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">y</span><span class="w">
+                     </span><span class="kr">then</span><span class="w"> </span><span class="no">Some</span><span class="w"> </span><span class="no">v</span><span class="w">
+                     </span><span class="kr">else</span><span class="w"> </span><span class="no">find</span><span class="w"> </span><span class="no">x</span><span class="w"> </span><span class="no">d'</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>There might be some confusion about why the <code class="language-plaintext highlighter-rouge">update</code> is just put a new record on the original map, instead of checking if there is an existing key. It is my understanding that <strong>it doesn’t matter</strong> in this context because the <code class="language-plaintext highlighter-rouge">find</code> function always returns the first item that it found. If there is a need for <code class="language-plaintext highlighter-rouge">delete</code> function, it is also compatible because the implementation of <code class="language-plaintext highlighter-rouge">delete</code> can just delete all the same keys.</p>
+
+<h2 id="options">Options</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Option</code> is a common FP pattern that explicitly distinguish null values and non-null values by providing a responsive “container” for the value. This design pattern is so popular that even Java has an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html">Optional</a>  class as well.</p>
+
+<p>Here is the practice of <code class="language-plaintext highlighter-rouge">Option</code> in coq</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Inductive</span><span class="w"> </span><span class="no">natoption</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kr">Type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">Some</span><span class="w"> </span><span class="o">(</span><span class="no">n</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">nat</span><span class="o">)</span><span class="w">
+  </span><span class="o">|</span><span class="w"> </span><span class="no">None</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If there is a non-null value, we say there is “Some” value; Otherwise, there is “None” value. This pattern is even more useful in coq since it doesn’t have build-in <code class="language-plaintext highlighter-rouge">null</code> object as many programming languages do.
+Here’s an example using <code class="language-plaintext highlighter-rouge">natoption</code> inductive type to write a safer function:</p>
+<div class="language-coq highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Definition</span><span class="w"> </span><span class="no">hd_error</span><span class="w"> </span><span class="o">(</span><span class="no">l</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natlist</span><span class="o">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">natoption</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w">
+  </span><span class="kr">match</span><span class="w"> </span><span class="no">l</span><span class="w"> </span><span class="kp">with</span><span class="w"> 
+    </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">None</span><span class="w">
+    </span><span class="o">|</span><span class="w"> </span><span class="no">n</span><span class="p">::</span><span class="no">l</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="no">Some</span><span class="w"> </span><span class="no">n</span><span class="w">
+  </span><span class="kr">end</span><span class="pi">.</span><span class="w">
+</span></code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">hd_error</code> function returns the first element of list <code class="language-plaintext highlighter-rouge">l</code>. If the list is empty, it gives a “None”; elsewise, it gives “Some” value.</p>
+
+  </div><a class="u-url" href="/software-foundations/2023/11/17/Data-Structure-Coq.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

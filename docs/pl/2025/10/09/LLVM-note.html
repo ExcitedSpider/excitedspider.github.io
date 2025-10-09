@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A Note on LLVM | Chew’s Everyday Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="A Note on LLVM" />
+<meta name="author" content="Chew Y. Feng" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A reading note of LLVM Core Libraries book" />
+<meta property="og:description" content="A reading note of LLVM Core Libraries book" />
+<link rel="canonical" href="/pl/2025/10/09/LLVM-note.html" />
+<meta property="og:url" content="/pl/2025/10/09/LLVM-note.html" />
+<meta property="og:site_name" content="Chew’s Everyday Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-10-09T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A Note on LLVM" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chew Y. Feng"},"dateModified":"2025-10-09T09:29:51+00:00","datePublished":"2025-10-09T00:00:00+00:00","description":"A reading note of LLVM Core Libraries book","headline":"A Note on LLVM","mainEntityOfPage":{"@type":"WebPage","@id":"/pl/2025/10/09/LLVM-note.html"},"url":"/pl/2025/10/09/LLVM-note.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chew&apos;s Everyday Blog" /><script>
+    // for MathJax inline
+    window.MathJax = {
+      tex: {
+        inlineMath: [['_', '_'], ['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.37.4/css-doodle.min.js"></script>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Teko">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TZZDRT6JY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4TZZDRT6JY');
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Chew&#39;s Everyday Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="page-content-background">
+        <css-doodle click-to-update>
+          <style>
+            @grid: 1 / 100vw 100vh / #0a0c27;
+            background-size: 200px 200px;
+            background-image: @doodle(
+              @grid: 6 / 100%;
+              @size: 4px;
+              font-size: 4px;
+              color: hsl(@r240, 30%, 50%);
+              box-shadow: @m3x5(
+                calc(4em - @nx * 1em) calc(@ny * 1em)
+                  @p(@m3(currentColor), @m2(transparent)),
+                calc(2em + @nx * 1em) calc(@ny * 1em)
+                  @lp
+              );
+            );
+          </style>
+        </css-doodle>
+      </div>
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">A Note on LLVM</h1>
+    <p class="post-meta"><span class="tags">
+        
+          <span>PL</span>
+        
+      </span><time class="dt-published" datetime="2025-10-09T00:00:00+00:00" itemprop="datePublished">
+        Posted At: Oct 9, 2025
+      </time><time>
+        Modified At: Oct 9, 2025
+      </time><span class="dt-tags">
+        Category:
+        
+          <span>PL</span>
+        
+      </span></p>
+  </header>
+
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This is a note for Lopes’ <em>Getting Started with LLVM Core Libraries</em>. n.d. Accessed October 2, 2025. <a href="https://learning.oreilly.com/library/view/getting-started-with/9781782166924/">https://learning.oreilly.com/library/view/getting-started-with/9781782166924/</a>.</p>
+<h2 id="tools-and-design">Tools and Design</h2>
+
+<p>LLVM IR:</p>
+<ul>
+  <li>Single Static Assignment form (SSA)</li>
+  <li>Infinite number of Registers</li>
+  <li>Easy link-time optimizations by storing entire programs in an on-disk IR representation</li>
+</ul>
+
+<p>Apart from IR, other forms of program representations are:</p>
+<ul>
+  <li><a href="https://clang.llvm.org/doxygen/classclang_1_1TranslationUnitDecl.html">Abstract Syntax Tree (AST)</a>, immediate result from parsing</li>
+  <li><a href="https://llvm.org/doxygen/classllvm_1_1SelectionDAG.html">Directed Acyclic Gragh (DAG)</a> , after generation</li>
+  <li><a href="https://llvm.org/doxygen/classllvm_1_1Module.html">Modules</a></li>
+</ul>
+
+<p>Fun fact that LLVM is originally aims for a vm runtime, like JVM. I’m glad they do not go this direction:</p>
+<blockquote>
+  <p>As the project matured, the design decision of maintaining an on-disk representation of the compiler IR remained as an enabler of link-time optimizations, giving less attention to the original idea of lifelong program optimizations. Eventually, LLVM’s core libraries formalized their lack of interest in becoming a platform by renouncing the acronym Low Level Virtual Machine, adopting just the name LLVM for historical reasons, making it clear that the LLVM project is geared to being a strong and practical C/C++ compiler rather than a Java platform competitor.</p>
+</blockquote>
+
+<p>How LLVM works:
+<img src="Pasted%20image%2020251007142158.png" alt="" /></p>
+
+<p>Actually, “clang” is a driver of many llvm tools and platform tools.  For example:</p>
+<ul>
+  <li>“clang -cc1” The llvm C frontend for IR generation</li>
+  <li>“ld”: linux linker</li>
+  <li>“opt”: IR level optimisation tool</li>
+</ul>
+
+<p>Use <code class="language-plaintext highlighter-rouge">clang -###</code> to view what tools are driving by clang</p>
+
+<p>Those tools can be used individually:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>clang <span class="nt">-emit-llvm</span> –S <span class="nt">-c</span> main.c <span class="nt">-o</span> main.ll
+<span class="nv">$ </span>clang <span class="nt">-emit-llvm</span> –S <span class="nt">-c</span> sum.c <span class="nt">-o</span> sum.ll
+
+</code></pre></div></div>
+
+<h2 id="llvm-ir">LLVM IR</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>define i32 @sum(i32 %a, i32 %b) #0 {
+entry:
+  %a.addr = alloca i32, align 4
+  %b.addr = alloca i32, align 4
+  store i32 %a, i32* %a.addr, align 4
+  store i32 %b, i32* %b.addr, align 4
+  %0 = load i32* %a.addr, align 4
+  %1 = load i32* %b.addr, align 4
+  %add = add nsw i32 %0, %1
+  ret i32 %add
+}
+
+  
+attributes #0 = { nounwind ssp uwtable ... }
+</code></pre></div></div>
+
+<ul>
+  <li>Local Values are analogs of the registers in the assembly language.</li>
+  <li>Local identifiers are with <code class="language-plaintext highlighter-rouge">%</code> and globals are with <code class="language-plaintext highlighter-rouge">@</code></li>
+  <li>An array is written as <code class="language-plaintext highlighter-rouge">[&lt;number of elements&gt; x &lt;element type&gt;]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes</code> are translation of C/C++ function decorators such as no throwing exceptions (<code class="language-plaintext highlighter-rouge">nounwind</code>, use stack smash protector <code class="language-plaintext highlighter-rouge">ssp</code>)</li>
+  <li>function body is divided into basic blocks (BBs)</li>
+  <li>Each instruction is in the form of three address code</li>
+  <li><code class="language-plaintext highlighter-rouge">alloca</code> instruction reserves space on the stack frame</li>
+</ul>
+
+<h2 id="optimisation-on-llvm-ir">Optimisation on LLVM IR</h2>
+
+<p>The optimisation tool <a href="https://llvm.org/docs/NewPassManager.html#invoking-opt">opt</a> supports optimisation flags <code class="language-plaintext highlighter-rouge">-Ox</code>. <code class="language-plaintext highlighter-rouge">O0</code> means no optimisation, <code class="language-plaintext highlighter-rouge">O2</code> includes most optimisation and <code class="language-plaintext highlighter-rouge">Oz</code> is the highest level of optimisation.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clang -emit-llvm -O0 -S ./sum.c -o ./sum.ll
+opt -Oz ./sum.ll -o ./sum.oz.ll -S
+</code></pre></div></div>
+
+<p>One can also use <code class="language-plaintext highlighter-rouge">--passes</code> to select specific optimisation pass. See <a href="https://llvm.org/docs/NewPassManager.html#invoking-opt">Invoke OPT</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">opt</code> operates on the llvm IR level.</p>
+
+<h2 id="clang-static-analyzer">Clang Static Analyzer</h2>
+
+<p>The clang static analyzer , also known as the <code class="language-plaintext highlighter-rouge">scan-build</code> tool leverages a set of <strong>checkers</strong> to build elaborate bug reports.</p>
+
+<p>It relies on symbolic execution engine and thus it has exponential time complexity.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>⬢ [qfeng@toolbx ❱ llvm-experiment code]$ cat ./scan-test2.c 
+#include &lt;stdio.h&gt;
+
+int main() { return 0; }
+
+void my_function(int unknownvalue) {
+    int schroedinger_integer;
+    if (unknownvalue)
+        schroedinger_integer = 5;
+    printf("hi");
+    if (!unknownvalue)
+        printf("%d", schroedinger_integer);
+}
+⬢ [qfeng@toolbx ❱ llvm-experiment code]$ scan-build clang ./scan-test2.c 
+scan-build: Using '/usr/local/bin/clang-19' for static analysis
+./scan-test2.c:11:9: warning: 2nd function call argument is an uninitialized value [core.CallAndMessage]
+   11 |         printf("%d", schroedinger_integer);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+scan-build: 1 bug found.
+</code></pre></div></div>
+
+<p>The analysis is path-sensitive but no sound or complete guarantee.</p>
+
+  </div><a class="u-url" href="/pl/2025/10/09/LLVM-note.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <h2 class="footer-heading">Chew&#39;s Everyday Blog</h2>By wisdom a house is built, and through understanding it is established.</div>
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Author: Chew Y. Feng</li><li>
+              <span>
+                Mail: 
+              </span>
+            <a class="u-email" href="mailto:chew.y.feng@outlook.com">chew.y.feng@outlook.com</a></li><div>
+              Find me:<ul class="social-media-list"><li><a href="https://github.com/excitedspider"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">excitedspider</span></a></li><li><a href="https://www.linkedin.com/in/qiuyi-feng-348968287"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">qiuyi-feng-348968287</span></a></li></ul>
+</div>
+            <div class="footer-col-rss">
+              <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+            </div>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
