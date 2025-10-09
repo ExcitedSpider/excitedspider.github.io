@@ -4,7 +4,7 @@ This is my blog. Thanks for visiting.
 
 ## Dev
 
-1. Install [ruby-devel](https://packages.fedoraproject.org/pkgs/ruby/ruby-devel/) and all other development tools.
+1. Install [ruby-devl](https://packages.fedoraproject.org/pkgs/ruby/ruby-devel/) and c/c++ build essentials.
 2. Install jekyll dependencies
     ```
     bundle install
